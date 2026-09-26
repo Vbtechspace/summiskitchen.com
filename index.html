@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Summi's Kitchen</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="logo-180.png">
@@ -649,6 +654,8 @@
     .drawer, .scrim, .stepper button{transition:none!important;}
   }
 </style>
+</head>
+<body>
 
 <header class="top">
   <div class="brand-row">
@@ -845,6 +852,13 @@
 <script>
 (function(){
   "use strict";
+
+  // ---------- register service worker (required by Android Chrome to treat this as an installable app) ----------
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
 
   var WA_NUMBER = "918095450378";
   var UPI_ID = "vbtechspace1@kotak";
@@ -1574,3 +1588,5 @@
   renderDrawer();
 })();
 </script>
+</body>
+</html>
