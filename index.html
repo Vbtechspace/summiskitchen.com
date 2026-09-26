@@ -684,6 +684,10 @@
 <nav class="cats" id="catNav"></nav>
 
 <main>
+  <div class="install-note">
+    <svg class="icon" viewBox="0 0 20 20"><rect x="4" y="2.5" width="12" height="15" rx="2"/><path d="M9 15.2h2"/></svg>
+    <span>Tip: open this page in your phone's browser and choose <b>Add to Home Screen</b> to get a Summi's Kitchen app icon, no app store needed.</span>
+  </div>
   <div class="promo-banner" id="promoBanner">
     <div class="promo-banner-text">
       <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
@@ -699,13 +703,6 @@
   <section class="about">
     <h2 style="font-size:1.15rem;font-weight:600;">Visit &amp; contact</h2>
     <div class="about-grid">
-      <div class="about-card">
-        <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
-        <div>
-          <h4>Kitchen address</h4>
-          <p>Shop Number 7, Tilawa Market, Sector 81, Gurgaon, Haryana</p>
-        </div>
-      </div>
       <div class="about-card">
         <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>
         <div>
@@ -728,10 +725,17 @@
         </div>
       </div>
       <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><path d="M3 6.5l7-3.5 7 3.5-7 3.5-7-3.5z"/><path d="M3 6.5v7l7 3.5 7-3.5v-7"/><path d="M10 10v7"/></svg>
+        <div>
+          <h4>Delivery T&amp;C</h4>
+          <p>Minimum order value: <b>&#8377;229</b> (excluding delivery charges). Free delivery up to 8&nbsp;km from our kitchen &middot; &#8377;15/km beyond that.</p>
+        </div>
+      </div>
+      <div class="about-card">
         <svg class="icon" viewBox="0 0 20 20"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M2.5 8h15"/></svg>
         <div>
           <h4>Pay by UPI</h4>
-          <p>Free delivery up to 8&nbsp;km &middot; &#8377;15/km beyond that &middot; No packaging charges</p>
+          <p>No packaging charges.</p>
           <div class="copy-row">
             <code>vbtechspace1@kotak</code>
             <button class="copy-btn" data-copy="vbtechspace1@kotak" data-label="UPI ID">
@@ -748,6 +752,13 @@
           <p>Legal name: VB Techspace Private Limited<br>
           GSTIN: 06XXXXXXXXXX1ZP<br>
           FSSAI Lic No: 20823005002649</p>
+        </div>
+      </div>
+      <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
+        <div>
+          <h4>Kitchen address</h4>
+          <p>Shop Number 7, Tilawa Market, Sector 81, Gurgaon, Haryana</p>
         </div>
       </div>
     </div>
@@ -773,17 +784,12 @@
       </div>
     </div>
 
-    <div class="install-note">
-      <svg class="icon" viewBox="0 0 20 20"><rect x="4" y="2.5" width="12" height="15" rx="2"/><path d="M9 15.2h2"/></svg>
-      <span>Tip: open this page in your phone's browser and choose <b>Add to Home Screen</b> to get a Summi's Kitchen app icon, no app store needed.</span>
-    </div>
   </section>
 
   <footer>
     Summi&#39;s Kitchen &middot; Simple. Wholesome. Honest.<br>
     Operated by VB Techspace Private Limited<br>
-    GSTIN 06XXXXXXXXXX1ZP &middot; FSSAI Lic No. 20823005002649<br>
-    Minimum order value: &#8377;229 (excluding delivery charges)
+    GSTIN 06XXXXXXXXXX1ZP &middot; FSSAI Lic No. 20823005002649
   </footer>
 </main>
 
@@ -833,6 +839,7 @@
         <label for="note">Any notes (spice level, timing, etc.)</label>
         <textarea id="note" placeholder="Optional" rows="2"></textarea>
       </div>
+      <p class="pay-note">Minimum order value: <b>&#8377;229</b> (excluding delivery charges).</p>
       <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
       <div class="discount-hint" id="discountHint" hidden></div>
       <div class="summary-row" id="discountRow" hidden><span>Discount (20% OFF)</span><span id="sumDiscount">&minus;&#8377;0</span></div>
@@ -1050,7 +1057,7 @@
       ]
     },
     {
-      id: "drinks", name: "Beverages", total: 3,
+      id: "drinks", name: "Beverages", total: 2,
       items: [
         {
           id: "coca-cola",
