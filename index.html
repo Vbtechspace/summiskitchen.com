@@ -782,7 +782,8 @@
   <footer>
     Summi&#39;s Kitchen &middot; Simple. Wholesome. Honest.<br>
     Operated by VB Techspace Private Limited<br>
-    GSTIN 06XXXXXXXXXX1ZP &middot; FSSAI Lic No. 20823005002649
+    GSTIN 06XXXXXXXXXX1ZP &middot; FSSAI Lic No. 20823005002649<br>
+    Minimum order value: &#8377;229 (excluding delivery charges)
   </footer>
 </main>
 
@@ -845,7 +846,7 @@
       <svg class="icon" viewBox="0 0 20 20" style="stroke:currentColor;"><path d="M3 6l7 5 7-5"/><rect x="2.5" y="4" width="15" height="12" rx="2"/></svg>
       Checkout on WhatsApp
     </a>
-    <p class="checkout-hint">Opens WhatsApp with your order filled in &mdash; review and hit send.</p>
+    <p class="checkout-hint" id="checkoutHint">Opens WhatsApp with your order filled in &mdash; review and hit send.</p>
   </div>
 </div>
 
@@ -864,6 +865,7 @@
   var UPI_ID = "vbtechspace1@kotak";
   var DISCOUNT_PERCENT = 20;
   var DISCOUNT_THRESHOLD = 499; // flat 20% off applies only when the items subtotal exceeds this
+  var MIN_ORDER_VALUE = 229; // items subtotal must reach this before checkout is allowed
 
   function computeDiscount(subtotal){
     if (subtotal > DISCOUNT_THRESHOLD) return Math.round(subtotal * DISCOUNT_PERCENT / 100);
@@ -1324,6 +1326,8 @@
   var sumDelivery = document.getElementById("sumDelivery");
   var sumTotal = document.getElementById("sumTotal");
   var checkoutBtn = document.getElementById("checkoutBtn");
+  var checkoutHint = document.getElementById("checkoutHint");
+  var checkoutHintDefault = "Opens WhatsApp with your order filled in — review and hit send.";
   var addrField = document.getElementById("addr");
   var kmField = document.getElementById("km");
   var kmHint = document.getElementById("kmHint");
@@ -1489,6 +1493,13 @@
     if (t.count === 0){
       checkoutBtn.setAttribute("aria-disabled", "true");
       checkoutBtn.removeAttribute("href");
+      checkoutHint.textContent = checkoutHintDefault;
+      return;
+    }
+    if (t.total < MIN_ORDER_VALUE){
+      checkoutBtn.setAttribute("aria-disabled", "true");
+      checkoutBtn.removeAttribute("href");
+      checkoutHint.textContent = "Add ₹" + (MIN_ORDER_VALUE - t.total) + " more to reach our ₹" + MIN_ORDER_VALUE + " minimum order value.";
       return;
     }
     var d = deliveryInfo();
@@ -1521,6 +1532,7 @@
     checkoutBtn.href = url;
     checkoutBtn.setAttribute("aria-disabled", "false");
     checkoutBtn.removeAttribute("aria-disabled");
+    checkoutHint.textContent = checkoutHintDefault;
   }
 
   // ---------- copy buttons ----------
