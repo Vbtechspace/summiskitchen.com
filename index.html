@@ -1,0 +1,1576 @@
+<title>Summi's Kitchen</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo-180.png">
+<link rel="icon" href="logo-32.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Summi's Kitchen">
+<meta name="theme-color" content="#472210" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17100A" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+  :root{
+    --bg:#FBF5EC;
+    --surface:#FFFFFF;
+    --surface-2:#F2E6D3;
+    --ink:#2B1508;
+    --ink-muted:#8A6A50;
+    --brand:#8A3E20;
+    --brand-strong:#6B2E17;
+    --gold:#B9812E;
+    --gold-soft:#F1DCB2;
+    --olive:#5C6B3C;
+    --olive-soft:#E1E7CE;
+    --spice:#B5432B;
+    --cta:#A8391F;
+    --cta-ink:#FFF7EE;
+    --line:rgba(43,21,8,0.14);
+    --shadow:0 10px 30px -12px rgba(43,21,8,0.28);
+    --header-bg:#40200E;
+    --header-ink:#F7ECDD;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#18110B;
+      --surface:#241A11;
+      --surface-2:#2F2216;
+      --ink:#F2E6D6;
+      --ink-muted:#B79C81;
+      --brand:#E2914F;
+      --brand-strong:#F0A860;
+      --gold:#D9A54D;
+      --gold-soft:#40331B;
+      --olive:#A9C07D;
+      --olive-soft:#2B3420;
+      --spice:#E2745A;
+      --cta:#D6602F;
+      --cta-ink:#211205;
+      --line:rgba(242,230,214,0.14);
+      --shadow:0 10px 30px -12px rgba(0,0,0,0.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#18110B;
+    --surface:#241A11;
+    --surface-2:#2F2216;
+    --ink:#F2E6D6;
+    --ink-muted:#B79C81;
+    --brand:#E2914F;
+    --brand-strong:#F0A860;
+    --gold:#D9A54D;
+    --gold-soft:#40331B;
+    --olive:#A9C07D;
+    --olive-soft:#2B3420;
+    --spice:#E2745A;
+    --cta:#D6602F;
+    --cta-ink:#211205;
+    --line:rgba(242,230,214,0.14);
+    --shadow:0 10px 30px -12px rgba(0,0,0,0.5);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', system-ui, -apple-system, sans-serif;
+    padding-inline:0;
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', Georgia, serif;
+    text-wrap:balance;
+    margin:0;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;}
+  .icon{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:-0.15em;}
+  .icon.filled{fill:currentColor;stroke:none;}
+
+  /* ---------- Header ---------- */
+  header.top{
+    position:sticky;
+    top:env(safe-area-inset-top, 0px);
+    z-index:30;
+    background:var(--header-bg);
+    color:var(--header-ink);
+    padding:14px 16px 14px;
+    box-shadow:var(--shadow);
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-row img{
+    width:52px;height:52px;border-radius:50%;
+    object-fit:cover;
+    box-shadow:0 0 0 2px rgba(255,255,255,0.18);
+    flex:none;
+  }
+  .brand-copy h1{font-size:1.3rem;font-weight:700;color:var(--header-ink);line-height:1.1;}
+  .brand-copy p{margin:2px 0 0;font-size:0.78rem;letter-spacing:0.04em;text-transform:uppercase;color:#E7C9A3;}
+  .chip-row{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent);
+    -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+  .chip-row::-webkit-scrollbar{display:none;}
+  .info-chip{
+    display:flex;align-items:center;gap:5px;
+    background:rgba(255,255,255,0.12);
+    color:var(--header-ink);
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:0.76rem;
+    white-space:nowrap;
+    flex:none;
+  }
+  .info-chip .icon{width:0.95em;height:0.95em;}
+
+  /* ---------- Category nav ---------- */
+  nav.cats{
+    position:sticky;
+    top:calc(env(safe-area-inset-top, 0px) + 88px);
+    z-index:29;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:10px 12px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent);
+    -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+  nav.cats::-webkit-scrollbar{display:none;}
+  nav.cats button{
+    flex:none;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink-muted);
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:0.82rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  nav.cats button.active{
+    background:var(--brand);
+    border-color:var(--brand);
+    color:var(--cta-ink);
+  }
+
+  /* ---------- Main / sections ---------- */
+  main{
+    max-width:640px;
+    margin:0 auto;
+    padding:18px 16px 8px;
+  }
+  .intro-note{
+    background:var(--surface-2);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:0.86rem;
+    color:var(--ink);
+    margin-bottom:22px;
+    line-height:1.5;
+  }
+  .intro-note strong{color:var(--brand-strong);}
+
+  .promo-banner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:linear-gradient(135deg, var(--spice), var(--brand-strong));
+    color:#FFF7EE;
+    border-radius:14px;
+    padding:12px 14px;
+    margin-bottom:14px;
+    box-shadow:var(--shadow);
+  }
+  .promo-banner[hidden]{display:none!important;}
+  .promo-banner-text{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:0.86rem;
+    line-height:1.4;
+  }
+  .promo-banner-text .icon{flex:none;width:1.3em;height:1.3em;color:var(--gold-soft);}
+  .promo-banner-text strong{font-family:'Fraunces', Georgia, serif;font-size:1.05rem;}
+  .promo-close{
+    flex:none;
+    background:rgba(255,255,255,0.18);
+    border:none;
+    color:#FFF7EE;
+    width:26px;height:26px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .promo-close .icon{width:12px;height:12px;}
+
+  section.cat{
+    margin-bottom:30px;
+    scroll-margin-top:calc(env(safe-area-inset-top, 0px) + 150px);
+  }
+  .cat-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .cat-head h2{font-size:1.18rem;font-weight:600;color:var(--ink);}
+  .cat-count{
+    font-size:0.74rem;
+    color:var(--ink-muted);
+    white-space:nowrap;
+  }
+
+  .item-list{display:flex;flex-direction:column;gap:14px;}
+  .item-card{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+    box-shadow:var(--shadow);
+  }
+  .item-thumb{
+    width:96px;height:96px;flex:none;
+    border-radius:12px;
+    overflow:hidden;
+    background:var(--surface-2);
+  }
+  .item-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .item-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1px;}
+  .badge{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:0.68rem;font-weight:700;letter-spacing:0.02em;
+    padding:2px 8px;border-radius:999px;
+  }
+  .badge.gold{background:var(--gold-soft);color:var(--brand-strong);}
+  .badge.olive{background:var(--olive-soft);color:var(--olive);}
+  .badge.spice{background:transparent;color:var(--spice);padding-left:0;gap:3px;}
+  .item-body h3{font-size:0.98rem;font-weight:600;line-height:1.25;color:var(--ink);}
+  .item-sub{font-size:0.78rem;color:var(--ink-muted);margin-top:-2px;}
+  .item-desc{
+    font-size:0.8rem;
+    color:var(--ink-muted);
+    line-height:1.4;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    cursor:pointer;
+  }
+  .item-desc.expanded{
+    -webkit-line-clamp:unset;
+    overflow:visible;
+  }
+  .item-foot{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:4px;
+  }
+  .price{font-weight:700;font-size:0.98rem;font-variant-numeric:tabular-nums;color:var(--ink);}
+
+  .variant-list{margin-top:6px;display:flex;flex-direction:column;}
+  .variant-row{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 0;
+    border-top:1px dashed var(--line);
+  }
+  .variant-row:first-child{border-top:none;padding-top:2px;}
+  .variant-row .v-label{flex:1;min-width:0;font-size:0.85rem;color:var(--ink);font-weight:500;}
+  .variant-row .v-price{font-weight:700;font-size:0.85rem;font-variant-numeric:tabular-nums;color:var(--ink);}
+
+  .variant-more{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 0 2px;
+    border-top:1px dashed var(--line);
+  }
+  .variant-select{
+    flex:1;min-width:0;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    border-radius:8px;
+    padding:7px 8px;
+    font-family:inherit;
+    font-size:0.8rem;
+  }
+  .variant-select:focus{outline:2px solid var(--brand);outline-offset:1px;}
+
+  .add-btn{
+    background:var(--cta);
+    color:var(--cta-ink);
+    border:none;
+    border-radius:9px;
+    padding:7px 16px;
+    font-weight:700;
+    font-size:0.82rem;
+    cursor:pointer;
+  }
+  .stepper{
+    display:flex;align-items:center;gap:10px;
+    background:var(--cta);
+    border-radius:9px;
+    padding:5px 6px;
+  }
+  .stepper button{
+    width:24px;height:24px;border:none;background:rgba(255,255,255,0.18);
+    color:var(--cta-ink);border-radius:6px;font-size:1rem;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .stepper span{color:var(--cta-ink);font-weight:700;font-size:0.85rem;min-width:14px;text-align:center;font-variant-numeric:tabular-nums;}
+
+  .placeholder-card{
+    border:1.5px dashed var(--line);
+    border-radius:16px;
+    padding:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:var(--ink-muted);
+    font-size:0.82rem;
+    line-height:1.45;
+  }
+  .placeholder-card .icon{width:26px;height:26px;flex:none;color:var(--ink-muted);}
+  .placeholder-card b{color:var(--ink);}
+
+  /* ---------- About / footer ---------- */
+  section.about{
+    margin-top:8px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+  }
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    margin-top:14px;
+  }
+  .about-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px;
+    display:flex;
+    gap:12px;
+  }
+  .about-card .icon{width:20px;height:20px;flex:none;color:var(--brand);margin-top:2px;}
+  .about-card h4{font-size:0.86rem;font-weight:700;margin:0 0 3px;color:var(--ink);}
+  .about-card p{font-size:0.8rem;color:var(--ink-muted);margin:0;line-height:1.5;}
+  .copy-row{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;}
+  .copy-row code{
+    background:var(--surface-2);
+    padding:3px 8px;
+    border-radius:6px;
+    font-size:0.78rem;
+    color:var(--ink);
+  }
+  .copy-btn{
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--brand);
+    font-size:0.72rem;
+    font-weight:700;
+    padding:4px 9px;
+    border-radius:999px;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:4px;
+  }
+
+  .install-note{
+    margin-top:18px;
+    background:var(--surface-2);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:0.79rem;
+    color:var(--ink-muted);
+    line-height:1.5;
+    display:flex;
+    gap:10px;
+  }
+  .install-note .icon{width:18px;height:18px;flex:none;color:var(--brand);margin-top:2px;}
+
+  .terms-block{margin-top:14px;}
+  .terms-toggle{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px;
+    font-family:inherit;
+    font-size:0.86rem;
+    font-weight:700;
+    color:var(--ink);
+    cursor:pointer;
+    text-align:left;
+  }
+  .terms-block.open .terms-toggle{border-radius:14px 14px 0 0;border-bottom:none;}
+  .terms-toggle .chev{width:16px;height:16px;color:var(--brand);flex:none;transition:transform .2s ease;}
+  .terms-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .terms-body{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-top:none;
+    border-radius:0 0 14px 14px;
+    padding:2px 14px 16px;
+    font-size:0.79rem;
+    color:var(--ink-muted);
+    line-height:1.6;
+  }
+  .terms-body p{margin:10px 0 0;}
+  .terms-body ul{margin:8px 0 0;padding-left:18px;}
+  .terms-body li{margin-bottom:6px;}
+
+  footer{
+    text-align:center;
+    padding:26px 16px 10px;
+    font-size:0.72rem;
+    color:var(--ink-muted);
+  }
+
+  /* ---------- Floating cart bar ---------- */
+  .cart-bar{
+    position:fixed;
+    left:16px;right:16px;
+    bottom:calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index:40;
+    background:var(--brand-strong);
+    color:var(--cta-ink);
+    border-radius:16px;
+    padding:12px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 14px 30px -10px rgba(0,0,0,0.45);
+    max-width:608px;
+    margin:0 auto;
+    cursor:pointer;
+    border:none;
+    width:calc(100% - 32px);
+  }
+  .cart-bar[hidden]{display:none!important;}
+  .cart-bar .left{display:flex;flex-direction:column;align-items:flex-start;gap:1px;}
+  .cart-bar .count{font-size:0.72rem;opacity:0.85;}
+  .cart-bar .amount-row{display:flex;align-items:baseline;gap:6px;}
+  .cart-bar .amount-orig{font-size:0.8rem;opacity:0.7;text-decoration:line-through;font-variant-numeric:tabular-nums;}
+  .cart-bar .amount{font-weight:700;font-size:1rem;font-variant-numeric:tabular-nums;}
+  .cart-bar .view{
+    display:flex;align-items:center;gap:5px;
+    font-weight:700;font-size:0.86rem;
+  }
+
+  /* ---------- Cart drawer ---------- */
+  .scrim{
+    position:fixed;inset:0;
+    background:rgba(20,10,4,0.5);
+    z-index:49;
+    opacity:0;pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  .scrim.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;left:0;right:0;bottom:0;
+    z-index:50;
+    background:var(--bg);
+    border-radius:20px 20px 0 0;
+    max-width:640px;margin:0 auto;
+    max-height:86vh;
+    display:flex;flex-direction:column;
+    transform:translateY(105%);
+    transition:transform .25s cubic-bezier(.3,.9,.4,1);
+    padding-bottom:env(safe-area-inset-bottom, 0px);
+    box-shadow:0 -20px 50px -10px rgba(0,0,0,0.4);
+  }
+  .drawer.open{transform:translateY(0);}
+  .drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 16px 10px;
+    border-bottom:1px solid var(--line);
+    flex:none;
+  }
+  .drawer-head h2{font-size:1.1rem;font-weight:700;}
+  .drawer-close{
+    width:32px;height:32px;border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--surface);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;color:var(--ink);
+  }
+  .drawer-body{padding:12px 16px 4px;overflow-y:auto;flex:1;}
+  .cart-empty{
+    text-align:center;color:var(--ink-muted);
+    padding:36px 10px;font-size:0.88rem;
+  }
+  .cart-line{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .cart-line:last-child{border-bottom:none;}
+  .cart-line .name{flex:1;min-width:0;}
+  .cart-line .name b{display:block;font-size:0.88rem;font-weight:600;color:var(--ink);}
+  .cart-line .name span{font-size:0.76rem;color:var(--ink-muted);}
+  .cart-line .line-total{font-size:0.86rem;font-weight:700;font-variant-numeric:tabular-nums;min-width:52px;text-align:right;}
+  .remove-btn{
+    background:none;border:none;color:var(--ink-muted);
+    width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+
+  .field{margin:14px 0;}
+  .field label{
+    display:block;font-size:0.78rem;font-weight:700;color:var(--ink);margin-bottom:6px;
+  }
+  .field textarea{
+    width:100%;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:0.86rem;
+    resize:vertical;
+    min-height:52px;
+  }
+  .field textarea:focus{outline:2px solid var(--brand);outline-offset:1px;}
+  .km-row{display:flex;gap:8px;align-items:stretch;}
+  .km-row input[type="number"]{
+    flex:1;
+    min-width:0;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:0.86rem;
+  }
+  .km-row input[type="number"]:focus{outline:2px solid var(--brand);outline-offset:1px;}
+  .locate-btn{
+    flex:none;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--brand);
+    font-size:0.74rem;
+    font-weight:700;
+    padding:0 12px;
+    border-radius:10px;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;
+    white-space:nowrap;
+    font-family:inherit;
+  }
+  .locate-btn:disabled{opacity:0.6;cursor:default;}
+  .locate-btn .icon{width:14px;height:14px;flex:none;}
+  .km-hint{
+    display:block;
+    margin-top:6px;
+    font-size:0.76rem;
+    color:var(--ink-muted);
+  }
+  .km-hint.charge{color:var(--brand);font-weight:700;}
+
+  .summary-row{
+    display:flex;justify-content:space-between;
+    font-size:0.86rem;color:var(--ink-muted);
+    padding:4px 0;
+  }
+  .summary-row#discountRow{color:var(--olive);font-weight:600;}
+  .discount-hint{
+    font-size:0.76rem;
+    color:var(--ink-muted);
+    padding:2px 0 4px;
+  }
+  .discount-hint[hidden]{display:none;}
+  .summary-row.total{
+    font-size:1.02rem;font-weight:700;color:var(--ink);
+    padding-top:8px;margin-top:4px;border-top:1px solid var(--line);
+    font-variant-numeric:tabular-nums;
+  }
+  .pay-note{
+    background:var(--surface-2);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:0.78rem;
+    color:var(--ink-muted);
+    margin:12px 0;
+    line-height:1.5;
+  }
+
+  .drawer-foot{
+    flex:none;
+    padding:12px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    border-top:1px solid var(--line);
+    background:var(--bg);
+  }
+  .checkout-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;
+    background:var(--cta);
+    color:var(--cta-ink);
+    text-decoration:none;
+    font-weight:700;
+    font-size:0.96rem;
+    padding:13px;
+    border-radius:12px;
+  }
+  .checkout-btn[aria-disabled="true"]{
+    opacity:0.5;pointer-events:none;
+  }
+  .checkout-hint{
+    text-align:center;font-size:0.72rem;color:var(--ink-muted);margin-top:8px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .drawer, .scrim, .stepper button{transition:none!important;}
+  }
+</style>
+
+<header class="top">
+  <div class="brand-row">
+    <img src="logo-192.png" alt="Summi's Kitchen logo">
+    <div class="brand-copy">
+      <h1>Summi's Kitchen</h1>
+      <p>Simple. Wholesome. Honest.</p>
+    </div>
+  </div>
+  <div class="chip-row">
+    <span class="info-chip">
+      <svg class="icon" viewBox="0 0 20 20"><path d="M5 15L15 5M9 5h6v6"/></svg>
+      Available on Zomato &amp; Swiggy
+    </span>
+    <span class="info-chip">
+      <svg class="icon filled" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
+      4.4 &middot; 1000+ orders delivered daily
+    </span>
+    <span class="info-chip">
+      <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>
+      25&ndash;30 min
+    </span>
+  </div>
+</header>
+
+<nav class="cats" id="catNav"></nav>
+
+<main>
+  <div class="promo-banner" id="promoBanner">
+    <div class="promo-banner-text">
+      <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
+      <span><strong>Flat 20% OFF</strong> on orders above &#8377;499 &mdash; applied automatically at checkout.</span>
+    </div>
+    <button type="button" class="promo-close" id="promoClose" aria-label="Dismiss offer">
+      <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+  </div>
+  <p class="intro-note"><strong>Order direct, skip the platform fee</strong> &mdash; same home-style food, straight from our kitchen to your door. Pay by UPI, confirm on WhatsApp.</p>
+  <div id="catalog"></div>
+
+  <section class="about">
+    <h2 style="font-size:1.15rem;font-weight:600;">Visit &amp; contact</h2>
+    <div class="about-grid">
+      <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
+        <div>
+          <h4>Kitchen address</h4>
+          <p>Shop Number 7, Tilawa Market, Sector 81, Gurgaon, Haryana</p>
+        </div>
+      </div>
+      <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>
+        <div>
+          <h4>Hours</h4>
+          <p>10:00 AM &ndash; 3:00 PM &nbsp;&amp;&nbsp; 6:00 PM &ndash; 9:45 PM, daily</p>
+        </div>
+      </div>
+      <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><path d="M3 6l7 5 7-5"/><rect x="2.5" y="4" width="15" height="12" rx="2"/></svg>
+        <div>
+          <h4>Order on WhatsApp</h4>
+          <p>Use the cart below, or message us directly.</p>
+          <div class="copy-row">
+            <code id="waNumber">+91 80954 50378</code>
+            <button class="copy-btn" data-copy="+91 80954 50378" data-label="number">
+              <svg class="icon" viewBox="0 0 20 20" style="width:0.85em;height:0.85em;"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M4 13V4a1 1 0 0 1 1-1h9"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M2.5 8h15"/></svg>
+        <div>
+          <h4>Pay by UPI</h4>
+          <p>Free delivery up to 8&nbsp;km &middot; &#8377;15/km beyond that &middot; No packaging charges</p>
+          <div class="copy-row">
+            <code>vbtechspace1@kotak</code>
+            <button class="copy-btn" data-copy="vbtechspace1@kotak" data-label="UPI ID">
+              <svg class="icon" viewBox="0 0 20 20" style="width:0.85em;height:0.85em;"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M4 13V4a1 1 0 0 1 1-1h9"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="about-card">
+        <svg class="icon" viewBox="0 0 20 20"><rect x="3" y="2.5" width="14" height="15" rx="2"/><path d="M6.5 6.5h7M6.5 9.5h7M6.5 12.5h4"/></svg>
+        <div>
+          <h4>Legal &amp; registration</h4>
+          <p>Legal name: VB Techspace Private Limited<br>
+          GSTIN: 06XXXXXXXXXX1ZP<br>
+          FSSAI Lic No: 20823005002649</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="terms-block" id="termsBlock">
+      <button type="button" class="terms-toggle" id="termsToggle" aria-expanded="false" aria-controls="termsBody">
+        <span>Terms of Service</span>
+        <svg class="icon chev" viewBox="0 0 20 20"><path d="M5 7.5l5 5 5-5"/></svg>
+      </button>
+      <div class="terms-body" id="termsBody" hidden>
+        <p>By placing an order with Summi&#39;s Kitchen (operated by VB Techspace Private Limited), you agree to the following:</p>
+        <ul>
+          <li>Orders are confirmed only once payment is received via UPI and the screenshot is shared with us on WhatsApp.</li>
+          <li>Prices shown are current at the time of ordering and may change without prior notice.</li>
+          <li>Delivery is free up to 8&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out.</li>
+          <li>Delivery times are estimates; actual delivery may vary with traffic, weather or order volume.</li>
+          <li>Cancellations are accepted only before we start preparing your order; once preparation begins, the order can&#39;t be cancelled or refunded.</li>
+          <li>If there&#39;s a genuine issue with your order (wrong item, quality concern, etc.), message us on WhatsApp within 2 hours of delivery so we can make it right.</li>
+          <li>All food is freshly prepared under FSSAI License No. 20823005002649. Please tell us about any allergies before ordering.</li>
+          <li>We reserve the right to refuse or cancel an order at our discretion, for example if an item is out of stock or delivery isn&#39;t possible.</li>
+        </ul>
+        <p>These terms are governed by the laws of India. This is a general summary, not a substitute for formal legal advice &mdash; message us on WhatsApp with any questions.</p>
+      </div>
+    </div>
+
+    <div class="install-note">
+      <svg class="icon" viewBox="0 0 20 20"><rect x="4" y="2.5" width="12" height="15" rx="2"/><path d="M9 15.2h2"/></svg>
+      <span>Tip: open this page in your phone's browser and choose <b>Add to Home Screen</b> to get a Summi's Kitchen app icon, no app store needed.</span>
+    </div>
+  </section>
+
+  <footer>
+    Summi&#39;s Kitchen &middot; Simple. Wholesome. Honest.<br>
+    Operated by VB Techspace Private Limited<br>
+    GSTIN 06XXXXXXXXXX1ZP &middot; FSSAI Lic No. 20823005002649
+  </footer>
+</main>
+
+<button class="cart-bar" id="cartBar" hidden>
+  <div class="left">
+    <span class="count" id="cartCount">0 items</span>
+    <span class="amount-row">
+      <span class="amount-orig" id="cartAmountOrig"></span>
+      <span class="amount" id="cartAmount">&#8377;0</span>
+    </span>
+  </div>
+  <span class="view">
+    View cart
+    <svg class="icon" viewBox="0 0 20 20"><path d="M6 4l6 6-6 6"/></svg>
+  </span>
+</button>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer" role="dialog" aria-label="Your cart">
+  <div class="drawer-head">
+    <h2>Your order</h2>
+    <button class="drawer-close" id="drawerClose" aria-label="Close cart">
+      <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <div id="cartLines"></div>
+    <div id="cartEmpty" class="cart-empty" hidden>Your cart is empty. Add a dish to get started.</div>
+
+    <div id="cartExtras" hidden>
+      <div class="field">
+        <label for="addr">Delivery address</label>
+        <textarea id="addr" placeholder="Flat / house no., street, landmark, Sector 81, Gurgaon" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <label for="km">Distance from our kitchen (km)</label>
+        <div class="km-row">
+          <input type="number" id="km" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 5">
+          <button type="button" class="locate-btn" id="locateBtn">
+            <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="2.5"/><path d="M10 1.5v3M10 15.5v3M1.5 10h3M15.5 10h3"/></svg>
+            Use my location
+          </button>
+        </div>
+        <span class="km-hint" id="kmHint">Free up to 8&nbsp;km, then &#8377;15/km beyond that</span>
+      </div>
+      <div class="field">
+        <label for="note">Any notes (spice level, timing, etc.)</label>
+        <textarea id="note" placeholder="Optional" rows="2"></textarea>
+      </div>
+      <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
+      <div class="discount-hint" id="discountHint" hidden></div>
+      <div class="summary-row" id="discountRow" hidden><span>Discount (20% OFF)</span><span id="sumDiscount">&minus;&#8377;0</span></div>
+      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">Enter distance</span></div>
+      <div class="summary-row total"><span>Total (pay via UPI)</span><span id="sumTotal">&#8377;0</span></div>
+      <p class="pay-note">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp when you send your order.</p>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <a href="#" id="checkoutBtn" class="checkout-btn" target="_blank" rel="noopener" aria-disabled="true">
+      <svg class="icon" viewBox="0 0 20 20" style="stroke:currentColor;"><path d="M3 6l7 5 7-5"/><rect x="2.5" y="4" width="15" height="12" rx="2"/></svg>
+      Checkout on WhatsApp
+    </a>
+    <p class="checkout-hint">Opens WhatsApp with your order filled in &mdash; review and hit send.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var WA_NUMBER = "918095450378";
+  var UPI_ID = "vbtechspace1@kotak";
+  var DISCOUNT_PERCENT = 20;
+  var DISCOUNT_THRESHOLD = 499; // flat 20% off applies only when the items subtotal exceeds this
+
+  function computeDiscount(subtotal){
+    if (subtotal > DISCOUNT_THRESHOLD) return Math.round(subtotal * DISCOUNT_PERCENT / 100);
+    return 0;
+  }
+
+  var CATEGORIES = [
+    {
+      id: "love-chicken", name: "Love for Chicken", total: 4,
+      items: [
+        {
+          id: "chicken-chawal-combo",
+          name: "Chawal Chicken Combo",
+          sub: "with salad & gulab jamun",
+          desc: "Home-style chicken curry, steamed basmati rice, fresh salad and a gulab jamun &mdash; balanced spices, minimal oil.",
+          spicy: true,
+          badges: [{ label: "Bestseller", cls: "gold" }],
+          img: "chicken_combo.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pieces", price: 239 },
+            { id: "4pc", label: "4 Pieces", price: 299 }
+          ]
+        },
+        {
+          id: "chicken-special-curry",
+          name: "Special Chicken Curry",
+          desc: "Juicy, tender chicken pieces cooked to perfection in a classic flavourful onion and tomato gravy, spiced with traditional herbs.",
+          img: "special_chicken_curry.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pieces", price: 229 },
+            { id: "4pc", label: "4 Pieces", price: 289 },
+            { id: "6pc", label: "6 Pieces", price: 389 },
+            { id: "8pc", label: "8 Pieces", price: 489 },
+            { id: "10pc", label: "10 Pieces", price: 589 }
+          ]
+        },
+        {
+          id: "chicken-rumali-roti-combo",
+          name: "Rumali Roti Chicken Curry Combo",
+          sub: "4 rumali roti, chicken curry & gulab jamun",
+          desc: "4 pcs rumali roti, home-style chicken curry, fresh salad and 1 pc gulab jamun.",
+          img: "rumali_roti_combo.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pieces", price: 249 },
+            { id: "3pc", label: "3 Pieces", price: 299 }
+          ]
+        },
+        {
+          id: "chicken-budget-thali",
+          name: "Classic Budget Non-Veg Thali",
+          sub: "Healthy, home-style, low oil",
+          desc: "4 rumali roti, home-style chicken curry, steamed basmati rice, fresh salad and a gulab jamun &mdash; a balanced, protein-rich meal with minimal oil. Chicken curry slow-cooked in aromatic Indian spices. Perfect for office lunches or a comforting, health-conscious meal.",
+          badges: [{ label: "Bestseller", cls: "gold" }],
+          img: "chicken_budget_thali.jpg",
+          variants: [
+            { id: "2pc-rumali", label: "2 Pcs Chicken (4 Rumali Roti)", price: 289 },
+            { id: "4pc-rumali", label: "4 Pcs Chicken (4 Rumali Roti)", price: 349 }
+          ]
+        }
+      ]
+    },
+    {
+      id: "love-fish", name: "Love for Fish", total: 4,
+      items: [
+        {
+          id: "fish-chawal-combo",
+          name: "Chawal Fish Curry (Rohu) Combo",
+          sub: "with salad & gulab jamun",
+          desc: "Rohu fish curry simmered home-style, steamed basmati rice, fresh salad and a gulab jamun, packed in a leak-proof container.",
+          spicy: true,
+          badges: [{ label: "Highly reordered", cls: "olive" }],
+          img: "fish_combo.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pieces", price: 239 },
+            { id: "3pc", label: "3 Pieces", price: 289 }
+          ]
+        },
+        {
+          id: "fish-curry-rohu",
+          name: "Fish Curry (Fresh Rohu)",
+          desc: "A traditional-style fish curry delivered fresh &mdash; light, golden-hued, delicately spiced with cumin, turmeric and mustard oil, letting the natural flavour of the premium fish shine through.",
+          spicy: false,
+          img: "fish_curry_rohu.jpg",
+          variants: [
+            { id: "2pc-head", label: "2 Pcs (with head, if available)", price: 229 },
+            { id: "2pc-nohead", label: "2 Pcs (no head)", price: 229 },
+            { id: "3pc-head", label: "3 Pcs (with head, if available)", price: 279 },
+            { id: "3pc-nohead", label: "3 Pcs (no head)", price: 279 },
+            { id: "5pc-head", label: "5 Pcs (with head, if available)", price: 379 },
+            { id: "5pc-nohead", label: "5 Pcs (no head)", price: 379 },
+            { id: "7pc-head", label: "7 Pcs (with head, if available)", price: 479 },
+            { id: "7pc-nohead", label: "7 Pcs (no head)", price: 479 },
+            { id: "9pc-head", label: "9 Pcs (with head, if available)", price: 579 },
+            { id: "9pc-nohead", label: "9 Pcs (no head)", price: 579 },
+            { id: "11pc-head", label: "11 Pcs (with head, if available)", price: 679 },
+            { id: "11pc-nohead", label: "11 Pcs (no head)", price: 679 }
+          ]
+        },
+        {
+          id: "fish-fry-rohu",
+          name: "Home like Fish Fry (Fresh Rohu)",
+          sub: "Home like Spicy Fish Fry",
+          desc: "Home-style spicy fish fry, made with fresh Rohu.",
+          spicy: true,
+          img: "fish_fry_rohu.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pieces", price: 229 },
+            { id: "3pc", label: "3 Pieces", price: 279 },
+            { id: "5pc", label: "5 Pieces", price: 379 },
+            { id: "7pc", label: "7 Pieces", price: 479 },
+            { id: "9pc", label: "9 Pieces", price: 579 },
+            { id: "11pc", label: "11 Pieces", price: 679 }
+          ]
+        },
+        {
+          id: "fish-curry-thali-rumali",
+          name: "Classic Fish Curry Thali",
+          sub: "with rumali roti, rice & gulab jamun",
+          desc: "Home-style fish curry thali &mdash; 2 juicy fish pieces simmered in a rich curry gravy, paired with soft rumali roti, fragrant steamed rice, fresh salad and a sweet gulab jamun. Packed neatly in a 5-compartment meal tray.",
+          spicy: true,
+          img: "fish_curry_thali_rumali.jpg",
+          variants: [
+            { id: "2pc-rumali", label: "2 Pieces (Rumali Roti)", price: 289 },
+            { id: "3pc-rumali", label: "3 Pieces (Rumali Roti)", price: 339 }
+          ]
+        }
+      ]
+    },
+    {
+      id: "roti-rice", name: "Roti & Rice", total: 2,
+      items: [
+        {
+          id: "rumali-roti",
+          name: "Rumali Roti",
+          desc: "Paper-thin, silky-smooth flatbread stretched by hand and baked fresh on a traditional inverted tawa. Soft, light, and perfect for soaking up rich, savory chicken and mutton gravies.",
+          img: "rumali_roti.jpg",
+          price: 15
+        },
+        {
+          id: "plain-rice",
+          name: "Plain Rice",
+          desc: "Elevate your everyday meals with our Premium Basmati Rice. Cultivated in the fertile foothills, each grain is aged to perfection to deliver a fluffy, non-sticky texture and an inviting aroma right to your dining table.",
+          img: "plain_rice.jpg",
+          variants: [
+            { id: "half", label: "Half", price: 149 },
+            { id: "full", label: "Full", price: 199 }
+          ]
+        }
+      ]
+    },
+    {
+      id: "accompaniments", name: "Accompaniments", total: 4,
+      items: [
+        {
+          id: "boondi-raita",
+          name: "Boondi Raita",
+          desc: "The perfect cooling companion to complete your meal.",
+          img: "boondi_raita.jpg",
+          price: 50
+        },
+        {
+          id: "gulab-jamun",
+          name: "Gulab Jamun (1 Piece)",
+          desc: "Delicious Gulab Jamun.",
+          img: "gulab_jamun.jpg",
+          price: 25
+        },
+        {
+          id: "salad",
+          name: "Salad",
+          desc: "Dive into vibrant health with our fresh seasonal harvest salad, crafted from the finest produce straight from local farms. Each bowl bursts with crispy greens, juicy tomatoes and cucumbers, and seasonal gems for a pop of natural sweetness.",
+          img: "salad.jpg",
+          price: 70
+        },
+        {
+          id: "plain-curd",
+          name: "Plain Curd/Dahi",
+          desc: "Plain Curd/Dahi.",
+          img: "plain_curd.jpg",
+          price: 70
+        }
+      ]
+    },
+    {
+      id: "drinks", name: "Beverages", total: 3,
+      items: [
+        {
+          id: "coca-cola",
+          name: "Coca-Cola 250 ml Bottle",
+          desc: "Coca-Cola 250 ml bottle.",
+          img: "coca_cola.jpg",
+          price: 20
+        },
+        {
+          id: "lahori-zeera",
+          name: "Lahori Jeera Masala Soda (160 ml)",
+          desc: "Soothing desi drink.",
+          img: "lahori_zeera.jpg",
+          price: 10
+        }
+      ]
+    }
+  ];
+
+  var chiliIcon = '<svg class="icon" viewBox="0 0 20 20" style="width:0.9em;height:0.9em;"><path d="M6 4c3-1 8 0 9 3 1 3-2 9-7 10-4 1-7-2-6-5 .6-2 2-3 4-4"/><path d="M7 3.5c.8-1 2-1.5 3-1"/></svg>';
+  var plusIcon = '<svg class="icon" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>';
+  var minusIcon = '<svg class="icon" viewBox="0 0 20 20"><path d="M4 10h12"/></svg>';
+  var plateIcon = '<svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><circle cx="10" cy="10" r="3.5"/></svg>';
+
+  // ---------- cart state (must exist before the catalog renders qty controls) ----------
+  var cart = {};
+  try {
+    var saved = localStorage.getItem("summis_cart_v1");
+    if (saved) cart = JSON.parse(saved) || {};
+  } catch (e) { cart = {}; }
+
+  var allItems = {};
+  CATEGORIES.forEach(function(cat){
+    cat.items.forEach(function(item){
+      if (item.variants) {
+        item.variants.forEach(function(v){
+          allItems[item.id + "__" + v.id] = {
+            id: item.id + "__" + v.id,
+            name: item.name + " (" + v.label + ")",
+            price: v.price
+          };
+        });
+      } else {
+        allItems[item.id] = item;
+      }
+    });
+  });
+
+  function saveCart(){
+    try { localStorage.setItem("summis_cart_v1", JSON.stringify(cart)); } catch (e) {}
+  }
+
+  function setQty(id, qty){
+    if (qty <= 0) delete cart[id];
+    else cart[id] = qty;
+    saveCart();
+    updateAllQtyControls();
+    updateCartBar();
+    renderDrawer();
+  }
+
+  function paintQtyControl(slot, item){
+    var qty = cart[item.id] || 0;
+    if (qty === 0){
+      slot.innerHTML = "<button class=\"add-btn\" type=\"button\">Add</button>";
+      slot.querySelector(".add-btn").addEventListener("click", function(){ setQty(item.id, 1); });
+    } else {
+      slot.innerHTML =
+        "<div class=\"stepper\">" +
+          "<button type=\"button\" data-act=\"dec\">" + minusIcon + "</button>" +
+          "<span>" + qty + "</span>" +
+          "<button type=\"button\" data-act=\"inc\">" + plusIcon + "</button>" +
+        "</div>";
+      slot.querySelector("[data-act=dec]").addEventListener("click", function(){ setQty(item.id, qty - 1); });
+      slot.querySelector("[data-act=inc]").addEventListener("click", function(){ setQty(item.id, qty + 1); });
+    }
+  }
+
+  function updateAllQtyControls(){
+    document.querySelectorAll(".qty-slot").forEach(function(slot){
+      var item = allItems[slot.dataset.itemId];
+      if (item) paintQtyControl(slot, item);
+    });
+  }
+
+  function cartTotals(){
+    var count = 0, total = 0;
+    Object.keys(cart).forEach(function(id){
+      var item = allItems[id];
+      if (!item) return;
+      count += cart[id];
+      total += cart[id] * item.price;
+    });
+    return { count: count, total: total };
+  }
+
+  // ---------- render category nav + catalog ----------
+  var catNav = document.getElementById("catNav");
+  var catalog = document.getElementById("catalog");
+
+  CATEGORIES.forEach(function(cat){
+    var btn = document.createElement("button");
+    btn.textContent = cat.name;
+    btn.dataset.target = cat.id;
+    btn.addEventListener("click", function(){
+      var el = document.getElementById("sec-" + cat.id);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    catNav.appendChild(btn);
+
+    var section = document.createElement("section");
+    section.className = "cat";
+    section.id = "sec-" + cat.id;
+
+    var head = document.createElement("div");
+    head.className = "cat-head";
+    head.innerHTML = "<h2>" + cat.name + "</h2><span class=\"cat-count\">" + cat.total + " item" + (cat.total === 1 ? "" : "s") + "</span>";
+    section.appendChild(head);
+
+    var list = document.createElement("div");
+    list.className = "item-list";
+
+    cat.items.forEach(function(item){
+      list.appendChild(renderItemCard(item));
+    });
+
+    var missing = cat.total - cat.items.length;
+    if (missing > 0) {
+      var ph = document.createElement("div");
+      ph.className = "placeholder-card";
+      ph.innerHTML = plateIcon + "<div><b>" + missing + " more item" + (missing === 1 ? "" : "s") + " in " + cat.name + "</b><br>Menu details coming soon &mdash; message us on WhatsApp for today's options.</div>";
+      list.appendChild(ph);
+    }
+
+    section.appendChild(list);
+    catalog.appendChild(section);
+  });
+
+  // ---------- tap-to-expand item descriptions ----------
+  function setUpDescToggles(){
+    document.querySelectorAll(".item-desc").forEach(function(descEl){
+      if (descEl.dataset.toggleReady) return;
+      if (descEl.scrollHeight <= descEl.clientHeight + 1) return; // not actually truncated
+      descEl.dataset.toggleReady = "1";
+      descEl.addEventListener("click", function(){
+        descEl.classList.toggle("expanded");
+      });
+    });
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setUpDescToggles);
+  }
+  setUpDescToggles();
+  window.addEventListener("load", setUpDescToggles);
+
+  function renderItemCard(item){
+    var card = document.createElement("div");
+    card.className = "item-card";
+    card.id = "item-" + item.id;
+
+    var badgesHtml = (item.badges || []).map(function(b){
+      return "<span class=\"badge " + b.cls + "\">" + b.label + "</span>";
+    }).join("");
+    if (item.spicy) badgesHtml += "<span class=\"badge spice\">" + chiliIcon + " Spicy</span>";
+
+    var subHtml = item.sub ? "<div class=\"item-sub\">" + item.sub + "</div>" : "";
+
+    var footHtml;
+    if (item.variants) {
+      var visibleVariants = item.variants.slice(0, 2);
+      var extraVariants = item.variants.slice(2);
+
+      var rowsHtml = visibleVariants.map(function(v){
+        return "<div class=\"variant-row\">" +
+          "<span class=\"v-label\">" + v.label + "</span>" +
+          "<span class=\"v-price\">&#8377;" + v.price + "</span>" +
+          "<div class=\"qty-slot\" data-variant=\"" + v.id + "\"></div>" +
+        "</div>";
+      }).join("");
+
+      var moreHtml = "";
+      if (extraVariants.length > 0) {
+        var optionsHtml = extraVariants.map(function(v){
+          return "<option value=\"" + v.id + "\">" + v.label + " — ₹" + v.price + "</option>";
+        }).join("");
+        moreHtml =
+          "<div class=\"variant-more\">" +
+            "<select class=\"variant-select\" aria-label=\"More sizes for " + item.name + "\">" + optionsHtml + "</select>" +
+            "<div class=\"qty-slot more-qty-slot\"></div>" +
+          "</div>";
+      }
+
+      footHtml = "<div class=\"variant-list\">" + rowsHtml + moreHtml + "</div>";
+    } else {
+      footHtml =
+        "<div class=\"item-foot\">" +
+          "<span class=\"price\">&#8377;" + item.price + "</span>" +
+          "<div class=\"qty-slot\"></div>" +
+        "</div>";
+    }
+
+    card.innerHTML =
+      "<div class=\"item-thumb\"><img src=\"" + item.img + "\" alt=\"" + item.name + "\" loading=\"lazy\"></div>" +
+      "<div class=\"item-body\">" +
+        "<div class=\"badge-row\">" + badgesHtml + "</div>" +
+        "<h3>" + item.name + "</h3>" +
+        subHtml +
+        "<div class=\"item-desc\">" + item.desc + "</div>" +
+        footHtml +
+      "</div>";
+
+    if (item.variants) {
+      visibleVariants.forEach(function(v){
+        var slot = card.querySelector('.qty-slot[data-variant="' + v.id + '"]');
+        renderQtyControl(slot, { id: item.id + "__" + v.id });
+      });
+      if (extraVariants.length > 0) {
+        var select = card.querySelector(".variant-select");
+        var moreSlot = card.querySelector(".more-qty-slot");
+        var syncMoreSlot = function(){
+          renderQtyControl(moreSlot, { id: item.id + "__" + select.value });
+        };
+        select.addEventListener("change", syncMoreSlot);
+        syncMoreSlot();
+      }
+    } else {
+      renderQtyControl(card.querySelector(".qty-slot"), item);
+    }
+    return card;
+  }
+
+  function renderQtyControl(slot, item){
+    slot.dataset.itemId = item.id;
+    paintQtyControl(slot, item);
+  }
+
+  var cartBar = document.getElementById("cartBar");
+  var cartCount = document.getElementById("cartCount");
+  var cartAmount = document.getElementById("cartAmount");
+  var cartAmountOrig = document.getElementById("cartAmountOrig");
+
+  function updateCartBar(){
+    var t = cartTotals();
+    if (t.count === 0){
+      cartBar.hidden = true;
+      return;
+    }
+    cartBar.hidden = false;
+    var discount = computeDiscount(t.total);
+    cartCount.textContent = t.count + " item" + (t.count === 1 ? "" : "s");
+    if (discount > 0) {
+      cartAmountOrig.hidden = false;
+      cartAmountOrig.textContent = "₹" + t.total;
+      cartAmount.textContent = "₹" + (t.total - discount);
+    } else {
+      cartAmountOrig.hidden = true;
+      cartAmountOrig.textContent = "";
+      cartAmount.textContent = "₹" + t.total;
+    }
+  }
+
+  // ---------- drawer ----------
+  var scrim = document.getElementById("scrim");
+  var drawer = document.getElementById("drawer");
+  var cartLines = document.getElementById("cartLines");
+  var cartEmpty = document.getElementById("cartEmpty");
+  var cartExtras = document.getElementById("cartExtras");
+  var sumCount = document.getElementById("sumCount");
+  var sumSubtotal = document.getElementById("sumSubtotal");
+  var discountRow = document.getElementById("discountRow");
+  var sumDiscount = document.getElementById("sumDiscount");
+  var discountHint = document.getElementById("discountHint");
+  var sumDelivery = document.getElementById("sumDelivery");
+  var sumTotal = document.getElementById("sumTotal");
+  var checkoutBtn = document.getElementById("checkoutBtn");
+  var addrField = document.getElementById("addr");
+  var kmField = document.getElementById("km");
+  var kmHint = document.getElementById("kmHint");
+  var noteField = document.getElementById("note");
+
+  var FREE_KM = 8;
+  var RATE_PER_KM = 15;
+  var KITCHEN_LAT = 28.391826;
+  var KITCHEN_LNG = 76.952597;
+  var ROAD_FACTOR = 1.3; // straight-line distance underestimates actual road distance; pad by ~30%
+
+  function haversineKm(lat1, lon1, lat2, lon2){
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLon = (lon2 - lon1) * Math.PI / 180;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function deliveryInfo(){
+    var v = parseFloat(kmField.value);
+    if (!isFinite(v) || v < 0) return { known: false, charge: 0, km: null };
+    var charge = v <= FREE_KM ? 0 : Math.round((v - FREE_KM) * RATE_PER_KM);
+    return { known: true, charge: charge, km: v };
+  }
+
+  function updateDeliverySummary(){
+    var t = cartTotals();
+    var d = deliveryInfo();
+    var discount = computeDiscount(t.total);
+    var discountedSubtotal = t.total - discount;
+    sumSubtotal.textContent = "₹" + t.total;
+    if (discount > 0) {
+      discountRow.hidden = false;
+      sumDiscount.textContent = "−₹" + discount;
+      discountHint.hidden = true;
+    } else {
+      discountRow.hidden = true;
+      var remaining = DISCOUNT_THRESHOLD + 1 - t.total;
+      if (remaining > 0) {
+        discountHint.hidden = false;
+        discountHint.textContent = "Add ₹" + remaining + " more to unlock 20% OFF (orders above ₹" + DISCOUNT_THRESHOLD + ")";
+      } else {
+        discountHint.hidden = true;
+      }
+    }
+    if (!d.known){
+      sumDelivery.textContent = "Enter distance";
+      kmHint.textContent = "Free up to " + FREE_KM + " km, then ₹" + RATE_PER_KM + "/km beyond that";
+      kmHint.classList.remove("charge");
+    } else if (d.charge === 0){
+      sumDelivery.textContent = "Free";
+      kmHint.textContent = "Within the free " + FREE_KM + " km zone";
+      kmHint.classList.remove("charge");
+    } else {
+      sumDelivery.textContent = "₹" + d.charge;
+      kmHint.textContent = (d.km - FREE_KM).toFixed(1) + " km beyond the free zone × ₹" + RATE_PER_KM + "/km = ₹" + d.charge;
+      kmHint.classList.add("charge");
+    }
+    sumTotal.textContent = "₹" + (discountedSubtotal + (d.known ? d.charge : 0));
+  }
+
+  try {
+    var savedAddr = localStorage.getItem("summis_addr_v1");
+    if (savedAddr) addrField.value = savedAddr;
+  } catch (e) {}
+  addrField.addEventListener("input", function(){
+    try { localStorage.setItem("summis_addr_v1", addrField.value); } catch (e) {}
+    updateCheckoutLink();
+  });
+
+  try {
+    var savedKm = localStorage.getItem("summis_km_v1");
+    if (savedKm) kmField.value = savedKm;
+  } catch (e) {}
+  kmField.addEventListener("input", function(){
+    try { localStorage.setItem("summis_km_v1", kmField.value); } catch (e) {}
+    updateDeliverySummary();
+    updateCheckoutLink();
+  });
+
+  noteField.addEventListener("input", updateCheckoutLink);
+
+  var locateBtn = document.getElementById("locateBtn");
+  if (locateBtn) {
+    var locateBtnDefault = locateBtn.innerHTML;
+    locateBtn.addEventListener("click", function(){
+      if (!("geolocation" in navigator)) {
+        kmHint.classList.remove("charge");
+        kmHint.textContent = "Location isn't available in this browser — please enter your distance manually.";
+        return;
+      }
+      locateBtn.disabled = true;
+      locateBtn.textContent = "Locating…";
+      navigator.geolocation.getCurrentPosition(function(pos){
+        var straight = haversineKm(KITCHEN_LAT, KITCHEN_LNG, pos.coords.latitude, pos.coords.longitude);
+        var approx = Math.round(straight * ROAD_FACTOR * 10) / 10;
+        kmField.value = approx;
+        try { localStorage.setItem("summis_km_v1", kmField.value); } catch (e) {}
+        updateDeliverySummary();
+        kmHint.textContent += " (auto-detected estimate — adjust if it looks off)";
+        updateCheckoutLink();
+        locateBtn.disabled = false;
+        locateBtn.innerHTML = locateBtnDefault;
+      }, function(){
+        locateBtn.disabled = false;
+        locateBtn.innerHTML = locateBtnDefault;
+        kmHint.classList.remove("charge");
+        kmHint.textContent = "Couldn't get your location — please enter your distance manually.";
+      }, { enableHighAccuracy: true, timeout: 8000 });
+    });
+  }
+
+  function openDrawer(){
+    scrim.classList.add("open");
+    drawer.classList.add("open");
+  }
+  function closeDrawer(){
+    scrim.classList.remove("open");
+    drawer.classList.remove("open");
+  }
+  cartBar.addEventListener("click", openDrawer);
+  scrim.addEventListener("click", closeDrawer);
+  document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+
+  function renderDrawer(){
+    var t = cartTotals();
+    cartLines.innerHTML = "";
+    var ids = Object.keys(cart);
+
+    if (ids.length === 0){
+      cartEmpty.hidden = false;
+      cartExtras.hidden = true;
+    } else {
+      cartEmpty.hidden = true;
+      cartExtras.hidden = false;
+      ids.forEach(function(id){
+        var item = allItems[id];
+        if (!item) return;
+        var qty = cart[id];
+        var line = document.createElement("div");
+        line.className = "cart-line";
+        line.innerHTML =
+          "<div class=\"name\"><b>" + item.name + "</b><span>" + qty + " &times; ₹" + item.price + "</span></div>" +
+          "<div class=\"line-total\">₹" + (qty * item.price) + "</div>" +
+          "<button class=\"remove-btn\" type=\"button\" aria-label=\"Remove\">" +
+            "<svg class=\"icon\" viewBox=\"0 0 20 20\"><path d=\"M5 5l10 10M15 5L5 15\"/></svg>" +
+          "</button>";
+        line.querySelector(".remove-btn").addEventListener("click", function(){ setQty(id, 0); });
+        cartLines.appendChild(line);
+      });
+      sumCount.textContent = t.count;
+      updateDeliverySummary();
+    }
+    updateCheckoutLink();
+  }
+
+  function updateCheckoutLink(){
+    var t = cartTotals();
+    if (t.count === 0){
+      checkoutBtn.setAttribute("aria-disabled", "true");
+      checkoutBtn.removeAttribute("href");
+      return;
+    }
+    var d = deliveryInfo();
+    var discount = computeDiscount(t.total);
+    var discountedSubtotal = t.total - discount;
+    var lines = Object.keys(cart).map(function(id){
+      var item = allItems[id];
+      return "• " + cart[id] + "x " + item.name + " — ₹" + (cart[id] * item.price);
+    });
+    var deliveryLine = !d.known
+      ? "\nDelivery charge: please share your distance from the kitchen so we can confirm this"
+      : (d.charge === 0
+          ? "\nDelivery: Free (within " + FREE_KM + " km)"
+          : "\nDelivery charge (" + d.km + " km, ₹" + RATE_PER_KM + "/km beyond " + FREE_KM + " km free zone): ₹" + d.charge);
+    var grand = discountedSubtotal + (d.known ? d.charge : 0);
+    var discountLines = discount > 0
+      ? ("\n20% OFF discount (orders above ₹" + DISCOUNT_THRESHOLD + "): −₹" + discount +
+         "\nSubtotal after discount: ₹" + discountedSubtotal)
+      : "";
+    var msg = "Hi Summi's Kitchen! I'd like to order:\n" + lines.join("\n") +
+      "\n\nItems total: ₹" + t.total +
+      discountLines +
+      deliveryLine +
+      "\n\nGrand total: ₹" + grand +
+      "\n\nDeliver to: " + (addrField.value.trim() || "[please share address]") +
+      (d.known ? ("\nDistance from kitchen: " + d.km + " km") : "") +
+      (noteField.value.trim() ? ("\nNote: " + noteField.value.trim()) : "") +
+      "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + ").";
+    var url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+    checkoutBtn.href = url;
+    checkoutBtn.setAttribute("aria-disabled", "false");
+    checkoutBtn.removeAttribute("aria-disabled");
+  }
+
+  // ---------- copy buttons ----------
+  document.querySelectorAll(".copy-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var text = btn.dataset.copy;
+      var original = btn.innerHTML;
+      function done(ok){
+        btn.textContent = ok ? "Copied" : "Select & copy";
+        setTimeout(function(){ btn.innerHTML = original; }, 1500);
+      }
+      try {
+        navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); });
+      } catch (e) { done(false); }
+    });
+  });
+
+  // ---------- promo banner dismiss (reappears each new day) ----------
+  var promoBanner = document.getElementById("promoBanner");
+  var promoClose = document.getElementById("promoClose");
+  if (promoBanner && promoClose) {
+    var promoKey = "summis_promo_dismissed_" + new Date().toISOString().slice(0, 10);
+    try {
+      if (localStorage.getItem(promoKey)) promoBanner.hidden = true;
+    } catch (e) {}
+    promoClose.addEventListener("click", function(){
+      promoBanner.hidden = true;
+      try { localStorage.setItem(promoKey, "1"); } catch (e) {}
+    });
+  }
+
+  // ---------- terms of service toggle ----------
+  var termsToggle = document.getElementById("termsToggle");
+  var termsBody = document.getElementById("termsBody");
+  var termsBlock = document.getElementById("termsBlock");
+  if (termsToggle && termsBody && termsBlock) {
+    termsToggle.addEventListener("click", function(){
+      var isOpen = termsBlock.classList.toggle("open");
+      termsBody.hidden = !isOpen;
+      termsToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+  }
+
+  // ---------- scroll-spy for category nav ----------
+  var navButtons = Array.prototype.slice.call(catNav.querySelectorAll("button"));
+  var sections = CATEGORIES.map(function(c){ return document.getElementById("sec-" + c.id); });
+
+  function setActive(id){
+    navButtons.forEach(function(b){
+      b.classList.toggle("active", b.dataset.target === id);
+    });
+  }
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) setActive(entry.target.id.replace("sec-", ""));
+      });
+    }, { rootMargin: "-160px 0px -70% 0px", threshold: 0 });
+    sections.forEach(function(s){ if (s) io.observe(s); });
+  }
+  if (navButtons[0]) navButtons[0].classList.add("active");
+
+  // ---------- init ----------
+  updateCartBar();
+  renderDrawer();
+})();
+</script>
