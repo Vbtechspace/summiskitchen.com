@@ -106,6 +106,7 @@
     color:var(--header-ink);
     padding:14px 16px 14px;
     box-shadow:var(--shadow);
+    border-radius:0 0 20px 20px;
   }
   .brand-row{
     display:flex;
@@ -598,6 +599,7 @@
     color:var(--ink-muted);
   }
   .km-hint.charge{color:var(--brand);font-weight:700;}
+  .km-hint.error{color:var(--spice);font-weight:700;}
 
   .summary-row{
     display:flex;justify-content:space-between;
@@ -686,7 +688,7 @@
 <main>
   <div class="install-note">
     <svg class="icon" viewBox="0 0 20 20"><rect x="4" y="2.5" width="12" height="15" rx="2"/><path d="M9 15.2h2"/></svg>
-    <span>Tip: open this page in your phone's browser and choose <b>Add to Home Screen</b> to get a Summi's Kitchen app icon, no app store needed.</span>
+    <span>Android: Tap &#8942; &rarr; <b>Install app</b>.<br>iPhone: Tap Share &rarr; <b>Add to Home Screen</b>.<br>Get the Summi&#39;s Kitchen app&mdash;no app store needed!</span>
   </div>
   <div class="promo-banner" id="promoBanner">
     <div class="promo-banner-text">
@@ -728,7 +730,7 @@
         <svg class="icon" viewBox="0 0 20 20"><path d="M3 6.5l7-3.5 7 3.5-7 3.5-7-3.5z"/><path d="M3 6.5v7l7 3.5 7-3.5v-7"/><path d="M10 10v7"/></svg>
         <div>
           <h4>Delivery T&amp;C</h4>
-          <p>Minimum order value: <b>&#8377;229</b> (excluding delivery charges). Free delivery up to 8&nbsp;km from our kitchen &middot; &#8377;15/km beyond that.</p>
+          <p>Minimum order value: <b>&#8377;229</b> (excluding delivery charges). Free delivery up to 8&nbsp;km from our kitchen &middot; &#8377;15/km beyond that &middot; we currently deliver up to 20&nbsp;km.</p>
         </div>
       </div>
       <div class="about-card">
@@ -773,7 +775,7 @@
         <ul>
           <li>Orders are confirmed only once payment is received via UPI and the screenshot is shared with us on WhatsApp.</li>
           <li>Prices shown are current at the time of ordering and may change without prior notice.</li>
-          <li>Delivery is free up to 8&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out.</li>
+          <li>Delivery is free up to 8&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out. We currently deliver up to 20&nbsp;km from our kitchen &mdash; message us on WhatsApp if you're further away and want to check for an exception.</li>
           <li>Delivery times are estimates; actual delivery may vary with traffic, weather or order volume.</li>
           <li>Cancellations are accepted only before we start preparing your order; once preparation begins, the order can&#39;t be cancelled or refunded.</li>
           <li>If there&#39;s a genuine issue with your order (wrong item, quality concern, etc.), message us on WhatsApp within 2 hours of delivery so we can make it right.</li>
@@ -833,7 +835,7 @@
             Use my location
           </button>
         </div>
-        <span class="km-hint" id="kmHint">Free up to 8&nbsp;km, then &#8377;15/km beyond that</span>
+        <span class="km-hint" id="kmHint">Free up to 8&nbsp;km, then &#8377;15/km beyond that (we deliver up to 20&nbsp;km)</span>
       </div>
       <div class="field">
         <label for="note">Any notes (spice level, timing, etc.)</label>
@@ -1342,6 +1344,7 @@
 
   var FREE_KM = 8;
   var RATE_PER_KM = 15;
+  var MAX_KM = 20; // we don't deliver beyond this distance
   var KITCHEN_LAT = 28.391826;
   var KITCHEN_LNG = 76.952597;
   var ROAD_FACTOR = 1.3; // straight-line distance underestimates actual road distance; pad by ~30%
@@ -1359,9 +1362,10 @@
 
   function deliveryInfo(){
     var v = parseFloat(kmField.value);
-    if (!isFinite(v) || v < 0) return { known: false, charge: 0, km: null };
-    var charge = v <= FREE_KM ? 0 : Math.round((v - FREE_KM) * RATE_PER_KM);
-    return { known: true, charge: charge, km: v };
+    if (!isFinite(v) || v < 0) return { known: false, charge: 0, km: null, outOfRange: false };
+    var outOfRange = v > MAX_KM;
+    var charge = outOfRange ? 0 : (v <= FREE_KM ? 0 : Math.round((v - FREE_KM) * RATE_PER_KM));
+    return { known: true, charge: charge, km: v, outOfRange: outOfRange };
   }
 
   function updateDeliverySummary(){
@@ -1386,18 +1390,24 @@
     }
     if (!d.known){
       sumDelivery.textContent = "Enter distance";
-      kmHint.textContent = "Free up to " + FREE_KM + " km, then ₹" + RATE_PER_KM + "/km beyond that";
+      kmHint.textContent = "Free up to " + FREE_KM + " km, then ₹" + RATE_PER_KM + "/km beyond that (we deliver up to " + MAX_KM + " km)";
+      kmHint.classList.remove("charge", "error");
+    } else if (d.outOfRange){
+      sumDelivery.textContent = "Out of range";
+      kmHint.textContent = "Sorry, we only deliver within " + MAX_KM + " km of our kitchen — please message us on WhatsApp to check if an exception is possible.";
       kmHint.classList.remove("charge");
+      kmHint.classList.add("error");
     } else if (d.charge === 0){
       sumDelivery.textContent = "Free";
       kmHint.textContent = "Within the free " + FREE_KM + " km zone";
-      kmHint.classList.remove("charge");
+      kmHint.classList.remove("charge", "error");
     } else {
       sumDelivery.textContent = "₹" + d.charge;
       kmHint.textContent = (d.km - FREE_KM).toFixed(1) + " km beyond the free zone × ₹" + RATE_PER_KM + "/km = ₹" + d.charge;
+      kmHint.classList.remove("error");
       kmHint.classList.add("charge");
     }
-    sumTotal.textContent = "₹" + (discountedSubtotal + (d.known ? d.charge : 0));
+    sumTotal.textContent = d.outOfRange ? "—" : "₹" + (discountedSubtotal + (d.known ? d.charge : 0));
   }
 
   try {
@@ -1510,6 +1520,12 @@
       return;
     }
     var d = deliveryInfo();
+    if (d.known && d.outOfRange){
+      checkoutBtn.setAttribute("aria-disabled", "true");
+      checkoutBtn.removeAttribute("href");
+      checkoutHint.textContent = "We're sorry, we only deliver within " + MAX_KM + " km of our kitchen. Message us on WhatsApp to check for exceptions.";
+      return;
+    }
     var discount = computeDiscount(t.total);
     var discountedSubtotal = t.total - discount;
     var lines = Object.keys(cart).map(function(id){
