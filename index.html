@@ -563,10 +563,8 @@
     min-height:52px;
   }
   .field textarea:focus{outline:2px solid var(--brand);outline-offset:1px;}
-  .km-row{display:flex;gap:8px;align-items:stretch;}
-  .km-row input[type="number"]{
-    flex:1;
-    min-width:0;
+  .field input[type="text"]{
+    width:100%;
     border:1px solid var(--line);
     background:var(--surface);
     color:var(--ink);
@@ -575,7 +573,23 @@
     font-family:inherit;
     font-size:0.86rem;
   }
-  .km-row input[type="number"]:focus{outline:2px solid var(--brand);outline-offset:1px;}
+  .field input[type="text"]:focus{outline:2px solid var(--brand);outline-offset:1px;}
+  .order-no-line{margin:0 0 14px;}
+  .loc-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .loc-status{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:0.76rem;font-weight:700;color:var(--olive);
+    background:var(--olive-soft);
+    padding:5px 10px 5px 9px;
+    border-radius:999px;
+  }
+  .loc-status[hidden]{display:none!important;}
+  .loc-status .icon{width:0.95em;height:0.95em;}
+  .loc-status button{
+    background:none;border:none;color:inherit;
+    font-size:1rem;line-height:1;font-weight:700;
+    cursor:pointer;padding:0 0 0 2px;
+  }
   .locate-btn{
     flex:none;
     border:1px solid var(--line);
@@ -591,6 +605,7 @@
     font-family:inherit;
   }
   .locate-btn:disabled{opacity:0.6;cursor:default;}
+  .locate-btn[hidden]{display:none!important;}
   .locate-btn .icon{width:14px;height:14px;flex:none;}
   .km-hint{
     display:block;
@@ -598,8 +613,6 @@
     font-size:0.76rem;
     color:var(--ink-muted);
   }
-  .km-hint.charge{color:var(--brand);font-weight:700;}
-  .km-hint.error{color:var(--spice);font-weight:700;}
 
   .summary-row{
     display:flex;justify-content:space-between;
@@ -607,6 +620,8 @@
     padding:4px 0;
   }
   .summary-row#discountRow{color:var(--olive);font-weight:600;}
+  #sumDelivery.charge{color:var(--brand);font-weight:700;}
+  #sumDelivery.error{color:var(--spice);font-weight:700;}
   .discount-hint{
     font-size:0.76rem;
     color:var(--ink-muted);
@@ -822,20 +837,27 @@
     <div id="cartEmpty" class="cart-empty" hidden>Your cart is empty. Add a dish to get started.</div>
 
     <div id="cartExtras" hidden>
+      <p class="order-no-line"><span class="badge gold">Order #<span id="orderNoText"></span></span></p>
+      <div class="field">
+        <label for="custName">Your name</label>
+        <input type="text" id="custName" placeholder="Your full name" autocomplete="name">
+      </div>
+      <div class="field">
+        <div class="loc-row">
+          <button type="button" class="locate-btn" id="attachLocBtn">
+            <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
+            Use my current location
+          </button>
+          <span class="loc-status" id="locStatus" hidden>
+            <svg class="icon" viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg>
+            Location used
+            <button type="button" id="locClear" aria-label="Remove used location">&times;</button>
+          </span>
+        </div>
+      </div>
       <div class="field">
         <label for="addr">Delivery address</label>
         <textarea id="addr" placeholder="Flat / house no., street, landmark, Sector 81, Gurgaon" rows="2"></textarea>
-      </div>
-      <div class="field">
-        <label for="km">Distance from our kitchen (km)</label>
-        <div class="km-row">
-          <input type="number" id="km" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 5">
-          <button type="button" class="locate-btn" id="locateBtn">
-            <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="2.5"/><path d="M10 1.5v3M10 15.5v3M1.5 10h3M15.5 10h3"/></svg>
-            Use my location
-          </button>
-        </div>
-        <span class="km-hint" id="kmHint">Free up to 8&nbsp;km, then &#8377;15/km beyond that (we deliver up to 20&nbsp;km)</span>
       </div>
       <div class="field">
         <label for="note">Any notes (spice level, timing, etc.)</label>
@@ -845,7 +867,7 @@
       <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
       <div class="discount-hint" id="discountHint" hidden></div>
       <div class="summary-row" id="discountRow" hidden><span>Discount (20% OFF)</span><span id="sumDiscount">&minus;&#8377;0</span></div>
-      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">Enter distance</span></div>
+      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">Use location above</span></div>
       <div class="summary-row total"><span>Total (pay via UPI)</span><span id="sumTotal">&#8377;0</span></div>
       <p class="pay-note">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp when you send your order.</p>
     </div>
@@ -1338,9 +1360,21 @@
   var checkoutHint = document.getElementById("checkoutHint");
   var checkoutHintDefault = "Opens WhatsApp with your order filled in — review and hit send.";
   var addrField = document.getElementById("addr");
-  var kmField = document.getElementById("km");
-  var kmHint = document.getElementById("kmHint");
   var noteField = document.getElementById("note");
+  var nameField = document.getElementById("custName");
+  var orderNoText = document.getElementById("orderNoText");
+
+  var customerLocation = null; // {lat, lng} attached via the "Attach my current location" button, sent as a maps link in the WhatsApp order
+
+  var currentOrderNo = null; // generated fresh each time the cart goes from empty -> has items; cleared when cart empties again
+  function generateOrderNo(){
+    var d = new Date();
+    var pad = function(n){ return (n < 10 ? "0" : "") + n; };
+    var datePart = String(d.getFullYear()).slice(2) + pad(d.getMonth() + 1) + pad(d.getDate());
+    var timePart = pad(d.getHours()) + pad(d.getMinutes());
+    var rand = Math.random().toString(36).slice(2, 5).toUpperCase();
+    return "SK" + datePart + "-" + timePart + rand;
+  }
 
   var FREE_KM = 8;
   var RATE_PER_KM = 15;
@@ -1360,9 +1394,12 @@
     return R * c;
   }
 
+  // Distance/charge is computed silently from the attached location — never shown to the
+  // customer as an editable input, only as the final "Delivery" line/breakup below.
   function deliveryInfo(){
-    var v = parseFloat(kmField.value);
-    if (!isFinite(v) || v < 0) return { known: false, charge: 0, km: null, outOfRange: false };
+    if (!customerLocation) return { known: false, charge: 0, km: null, outOfRange: false };
+    var straight = haversineKm(KITCHEN_LAT, KITCHEN_LNG, customerLocation.lat, customerLocation.lng);
+    var v = Math.round(straight * ROAD_FACTOR * 10) / 10;
     var outOfRange = v > MAX_KM;
     var charge = outOfRange ? 0 : (v <= FREE_KM ? 0 : Math.round((v - FREE_KM) * RATE_PER_KM));
     return { known: true, charge: charge, km: v, outOfRange: outOfRange };
@@ -1388,27 +1425,29 @@
         discountHint.hidden = true;
       }
     }
+    sumDelivery.classList.remove("charge", "error");
     if (!d.known){
-      sumDelivery.textContent = "Enter distance";
-      kmHint.textContent = "Free up to " + FREE_KM + " km, then ₹" + RATE_PER_KM + "/km beyond that (we deliver up to " + MAX_KM + " km)";
-      kmHint.classList.remove("charge", "error");
+      sumDelivery.textContent = "Use location above";
     } else if (d.outOfRange){
-      sumDelivery.textContent = "Out of range";
-      kmHint.textContent = "Sorry, we only deliver within " + MAX_KM + " km of our kitchen — please message us on WhatsApp to check if an exception is possible.";
-      kmHint.classList.remove("charge");
-      kmHint.classList.add("error");
+      sumDelivery.textContent = "Out of range (" + d.km + " km)";
+      sumDelivery.classList.add("error");
     } else if (d.charge === 0){
-      sumDelivery.textContent = "Free";
-      kmHint.textContent = "Within the free " + FREE_KM + " km zone";
-      kmHint.classList.remove("charge", "error");
+      sumDelivery.textContent = "Free (" + d.km + " km)";
     } else {
-      sumDelivery.textContent = "₹" + d.charge;
-      kmHint.textContent = (d.km - FREE_KM).toFixed(1) + " km beyond the free zone × ₹" + RATE_PER_KM + "/km = ₹" + d.charge;
-      kmHint.classList.remove("error");
-      kmHint.classList.add("charge");
+      sumDelivery.textContent = "₹" + d.charge + " (" + d.km + " km)";
+      sumDelivery.classList.add("charge");
     }
     sumTotal.textContent = d.outOfRange ? "—" : "₹" + (discountedSubtotal + (d.known ? d.charge : 0));
   }
+
+  try {
+    var savedName = localStorage.getItem("summis_name_v1");
+    if (savedName) nameField.value = savedName;
+  } catch (e) {}
+  nameField.addEventListener("input", function(){
+    try { localStorage.setItem("summis_name_v1", nameField.value); } catch (e) {}
+    updateCheckoutLink();
+  });
 
   try {
     var savedAddr = localStorage.getItem("summis_addr_v1");
@@ -1419,45 +1458,50 @@
     updateCheckoutLink();
   });
 
-  try {
-    var savedKm = localStorage.getItem("summis_km_v1");
-    if (savedKm) kmField.value = savedKm;
-  } catch (e) {}
-  kmField.addEventListener("input", function(){
-    try { localStorage.setItem("summis_km_v1", kmField.value); } catch (e) {}
-    updateDeliverySummary();
-    updateCheckoutLink();
-  });
-
   noteField.addEventListener("input", updateCheckoutLink);
 
-  var locateBtn = document.getElementById("locateBtn");
-  if (locateBtn) {
-    var locateBtnDefault = locateBtn.innerHTML;
-    locateBtn.addEventListener("click", function(){
+  // ---------- attach current location: sole source of the delivery distance/charge calc,
+  // and sent as a maps link in the WhatsApp order. Required to check out. ----------
+  var attachLocBtn = document.getElementById("attachLocBtn");
+  var locStatus = document.getElementById("locStatus");
+  var locClear = document.getElementById("locClear");
+
+  function paintLocStatus(){
+    if (!attachLocBtn || !locStatus) return;
+    attachLocBtn.hidden = !!customerLocation;
+    locStatus.hidden = !customerLocation;
+  }
+
+  if (attachLocBtn) {
+    var attachLocBtnDefault = attachLocBtn.innerHTML;
+    attachLocBtn.addEventListener("click", function(){
       if (!("geolocation" in navigator)) {
-        kmHint.classList.remove("charge");
-        kmHint.textContent = "Location isn't available in this browser — please enter your distance manually.";
+        attachLocBtn.textContent = "Location isn't available in this browser";
+        setTimeout(function(){ attachLocBtn.innerHTML = attachLocBtnDefault; }, 3000);
         return;
       }
-      locateBtn.disabled = true;
-      locateBtn.textContent = "Locating…";
+      attachLocBtn.disabled = true;
+      attachLocBtn.textContent = "Getting your location…";
       navigator.geolocation.getCurrentPosition(function(pos){
-        var straight = haversineKm(KITCHEN_LAT, KITCHEN_LNG, pos.coords.latitude, pos.coords.longitude);
-        var approx = Math.round(straight * ROAD_FACTOR * 10) / 10;
-        kmField.value = approx;
-        try { localStorage.setItem("summis_km_v1", kmField.value); } catch (e) {}
+        customerLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        attachLocBtn.disabled = false;
+        attachLocBtn.innerHTML = attachLocBtnDefault;
+        paintLocStatus();
         updateDeliverySummary();
-        kmHint.textContent += " (auto-detected estimate — adjust if it looks off)";
         updateCheckoutLink();
-        locateBtn.disabled = false;
-        locateBtn.innerHTML = locateBtnDefault;
       }, function(){
-        locateBtn.disabled = false;
-        locateBtn.innerHTML = locateBtnDefault;
-        kmHint.classList.remove("charge");
-        kmHint.textContent = "Couldn't get your location — please enter your distance manually.";
+        attachLocBtn.disabled = false;
+        attachLocBtn.textContent = "Couldn't get location — tap to retry";
+        setTimeout(function(){ attachLocBtn.innerHTML = attachLocBtnDefault; }, 3000);
       }, { enableHighAccuracy: true, timeout: 8000 });
+    });
+  }
+  if (locClear) {
+    locClear.addEventListener("click", function(){
+      customerLocation = null;
+      paintLocStatus();
+      updateDeliverySummary();
+      updateCheckoutLink();
     });
   }
 
@@ -1481,9 +1525,12 @@
     if (ids.length === 0){
       cartEmpty.hidden = false;
       cartExtras.hidden = true;
+      currentOrderNo = null;
     } else {
       cartEmpty.hidden = true;
       cartExtras.hidden = false;
+      if (!currentOrderNo) currentOrderNo = generateOrderNo();
+      orderNoText.textContent = currentOrderNo;
       ids.forEach(function(id){
         var item = allItems[id];
         if (!item) return;
@@ -1519,8 +1566,20 @@
       checkoutHint.textContent = "Add ₹" + (MIN_ORDER_VALUE - t.total) + " more to reach our ₹" + MIN_ORDER_VALUE + " minimum order value.";
       return;
     }
+    if (!nameField.value.trim()){
+      checkoutBtn.setAttribute("aria-disabled", "true");
+      checkoutBtn.removeAttribute("href");
+      checkoutHint.textContent = "Please add your name above so we know who's ordering.";
+      return;
+    }
+    if (!customerLocation){
+      checkoutBtn.setAttribute("aria-disabled", "true");
+      checkoutBtn.removeAttribute("href");
+      checkoutHint.textContent = "Please use your current location above — we use it to work out your delivery charge and find you.";
+      return;
+    }
     var d = deliveryInfo();
-    if (d.known && d.outOfRange){
+    if (d.outOfRange){
       checkoutBtn.setAttribute("aria-disabled", "true");
       checkoutBtn.removeAttribute("href");
       checkoutHint.textContent = "We're sorry, we only deliver within " + MAX_KM + " km of our kitchen. Message us on WhatsApp to check for exceptions.";
@@ -1532,23 +1591,25 @@
       var item = allItems[id];
       return "• " + cart[id] + "x " + item.name + " — ₹" + (cart[id] * item.price);
     });
-    var deliveryLine = !d.known
-      ? "\nDelivery charge: please share your distance from the kitchen so we can confirm this"
-      : (d.charge === 0
-          ? "\nDelivery: Free (within " + FREE_KM + " km)"
-          : "\nDelivery charge (" + d.km + " km, ₹" + RATE_PER_KM + "/km beyond " + FREE_KM + " km free zone): ₹" + d.charge);
-    var grand = discountedSubtotal + (d.known ? d.charge : 0);
+    // The customer never sees or enters a raw distance — it's derived silently from the
+    // attached location, and only the final delivery-charge breakup is shown/sent.
+    var deliveryLine = d.charge === 0
+      ? ("\nDelivery: Free (" + d.km + " km, within " + FREE_KM + " km zone)")
+      : ("\nDelivery charge (" + d.km + " km, ₹" + RATE_PER_KM + "/km beyond " + FREE_KM + " km free zone): ₹" + d.charge);
+    var grand = discountedSubtotal + d.charge;
     var discountLines = discount > 0
       ? ("\n20% OFF discount (orders above ₹" + DISCOUNT_THRESHOLD + "): −₹" + discount +
          "\nSubtotal after discount: ₹" + discountedSubtotal)
       : "";
-    var msg = "Hi Summi's Kitchen! I'd like to order:\n" + lines.join("\n") +
+    if (!currentOrderNo) currentOrderNo = generateOrderNo();
+    var msg = "Hi Summi's Kitchen! I'd like to order (Order #" + currentOrderNo + "):\n" + lines.join("\n") +
       "\n\nItems total: ₹" + t.total +
       discountLines +
       deliveryLine +
       "\n\nGrand total: ₹" + grand +
-      "\n\nDeliver to: " + (addrField.value.trim() || "[please share address]") +
-      (d.known ? ("\nDistance from kitchen: " + d.km + " km") : "") +
+      "\n\nCustomer name: " + nameField.value.trim() +
+      "\nDeliver to: " + (addrField.value.trim() || "[please share address]") +
+      "\nLocation pin: https://maps.google.com/?q=" + customerLocation.lat.toFixed(6) + "," + customerLocation.lng.toFixed(6) +
       (noteField.value.trim() ? ("\nNote: " + noteField.value.trim()) : "") +
       "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + ").";
     var url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
@@ -1619,6 +1680,7 @@
   if (navButtons[0]) navButtons[0].classList.add("active");
 
   // ---------- init ----------
+  paintLocStatus();
   updateCartBar();
   renderDrawer();
 })();
