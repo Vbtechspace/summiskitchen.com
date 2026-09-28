@@ -575,7 +575,7 @@
   }
   .field input[type="text"]:focus{outline:2px solid var(--brand);outline-offset:1px;}
   .order-no-line{margin:0 0 14px;}
-  .loc-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .loc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
   .loc-status{
     display:inline-flex;align-items:center;gap:6px;
     font-size:0.76rem;font-weight:700;color:var(--olive);
@@ -843,6 +843,7 @@
         <input type="text" id="custName" placeholder="Your full name" autocomplete="name">
       </div>
       <div class="field">
+        <label for="addr">Delivery address</label>
         <div class="loc-row">
           <button type="button" class="locate-btn" id="attachLocBtn">
             <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
@@ -854,20 +855,18 @@
             <button type="button" id="locClear" aria-label="Remove used location">&times;</button>
           </span>
         </div>
-      </div>
-      <div class="field">
-        <label for="addr">Delivery address</label>
         <textarea id="addr" placeholder="Flat / house no., street, landmark, Sector 81, Gurgaon" rows="2"></textarea>
       </div>
       <div class="field">
         <label for="note">Any notes (spice level, timing, etc.)</label>
         <textarea id="note" placeholder="Optional" rows="2"></textarea>
       </div>
-      <p class="pay-note">Minimum order value: <b>&#8377;229</b> (excluding delivery charges).</p>
+      <p class="pay-note">Minimum order value: <b>&#8377;229</b> (excluding delivery charges and GST).</p>
       <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
       <div class="discount-hint" id="discountHint" hidden></div>
       <div class="summary-row" id="discountRow" hidden><span>Discount (20% OFF)</span><span id="sumDiscount">&minus;&#8377;0</span></div>
-      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">Use location above</span></div>
+      <div class="summary-row"><span>GST (Govt taxes)</span><span id="sumGst">&#8377;0</span></div>
+      <div class="summary-row"><span>Delivery</span><span id="sumDelivery">To be confirmed</span></div>
       <div class="summary-row total"><span>Total (pay via UPI)</span><span id="sumTotal">&#8377;0</span></div>
       <p class="pay-note">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp when you send your order.</p>
     </div>
@@ -897,10 +896,15 @@
   var DISCOUNT_PERCENT = 20;
   var DISCOUNT_THRESHOLD = 499; // flat 20% off applies only when the items subtotal exceeds this
   var MIN_ORDER_VALUE = 229; // items subtotal must reach this before checkout is allowed
+  var GST_PERCENT = 5; // flat govt tax applied to the items subtotal after discount, on every order
 
   function computeDiscount(subtotal){
     if (subtotal > DISCOUNT_THRESHOLD) return Math.round(subtotal * DISCOUNT_PERCENT / 100);
     return 0;
+  }
+
+  function computeGst(discountedSubtotal){
+    return Math.round(discountedSubtotal * GST_PERCENT / 100);
   }
 
   var CATEGORIES = [
@@ -1354,6 +1358,7 @@
   var discountRow = document.getElementById("discountRow");
   var sumDiscount = document.getElementById("sumDiscount");
   var discountHint = document.getElementById("discountHint");
+  var sumGst = document.getElementById("sumGst");
   var sumDelivery = document.getElementById("sumDelivery");
   var sumTotal = document.getElementById("sumTotal");
   var checkoutBtn = document.getElementById("checkoutBtn");
@@ -1425,9 +1430,11 @@
         discountHint.hidden = true;
       }
     }
+    var gst = computeGst(discountedSubtotal);
+    sumGst.textContent = "₹" + gst;
     sumDelivery.classList.remove("charge", "error");
     if (!d.known){
-      sumDelivery.textContent = "Use location above";
+      sumDelivery.textContent = "To be confirmed";
     } else if (d.outOfRange){
       sumDelivery.textContent = "Out of range (" + d.km + " km)";
       sumDelivery.classList.add("error");
@@ -1437,7 +1444,7 @@
       sumDelivery.textContent = "₹" + d.charge + " (" + d.km + " km)";
       sumDelivery.classList.add("charge");
     }
-    sumTotal.textContent = d.outOfRange ? "—" : "₹" + (discountedSubtotal + (d.known ? d.charge : 0));
+    sumTotal.textContent = (d.known && d.outOfRange) ? "—" : "₹" + (discountedSubtotal + gst + (d.known ? d.charge : 0));
   }
 
   try {
@@ -1572,14 +1579,8 @@
       checkoutHint.textContent = "Please add your name above so we know who's ordering.";
       return;
     }
-    if (!customerLocation){
-      checkoutBtn.setAttribute("aria-disabled", "true");
-      checkoutBtn.removeAttribute("href");
-      checkoutHint.textContent = "Please use your current location above — we use it to work out your delivery charge and find you.";
-      return;
-    }
     var d = deliveryInfo();
-    if (d.outOfRange){
+    if (d.known && d.outOfRange){
       checkoutBtn.setAttribute("aria-disabled", "true");
       checkoutBtn.removeAttribute("href");
       checkoutHint.textContent = "We're sorry, we only deliver within " + MAX_KM + " km of our kitchen. Message us on WhatsApp to check for exceptions.";
@@ -1587,16 +1588,20 @@
     }
     var discount = computeDiscount(t.total);
     var discountedSubtotal = t.total - discount;
+    var gst = computeGst(discountedSubtotal);
     var lines = Object.keys(cart).map(function(id){
       var item = allItems[id];
       return "• " + cart[id] + "x " + item.name + " — ₹" + (cart[id] * item.price);
     });
-    // The customer never sees or enters a raw distance — it's derived silently from the
-    // attached location, and only the final delivery-charge breakup is shown/sent.
-    var deliveryLine = d.charge === 0
-      ? ("\nDelivery: Free (" + d.km + " km, within " + FREE_KM + " km zone)")
-      : ("\nDelivery charge (" + d.km + " km, ₹" + RATE_PER_KM + "/km beyond " + FREE_KM + " km free zone): ₹" + d.charge);
-    var grand = discountedSubtotal + d.charge;
+    // Using location is optional — when granted, the distance is derived silently from it
+    // (never a raw editable field) and only the final delivery-charge breakup is shown/sent.
+    var deliveryLine = !d.known
+      ? "\nDelivery charge: to be confirmed by us based on your address"
+      : (d.charge === 0
+          ? ("\nDelivery: Free (" + d.km + " km, within " + FREE_KM + " km zone)")
+          : ("\nDelivery charge (" + d.km + " km, ₹" + RATE_PER_KM + "/km beyond " + FREE_KM + " km free zone): ₹" + d.charge));
+    var gstLine = "\nGST (Govt taxes, " + GST_PERCENT + "%): ₹" + gst;
+    var grand = discountedSubtotal + gst + (d.known ? d.charge : 0);
     var discountLines = discount > 0
       ? ("\n20% OFF discount (orders above ₹" + DISCOUNT_THRESHOLD + "): −₹" + discount +
          "\nSubtotal after discount: ₹" + discountedSubtotal)
@@ -1605,11 +1610,12 @@
     var msg = "Hi Summi's Kitchen! I'd like to order (Order #" + currentOrderNo + "):\n" + lines.join("\n") +
       "\n\nItems total: ₹" + t.total +
       discountLines +
+      gstLine +
       deliveryLine +
       "\n\nGrand total: ₹" + grand +
       "\n\nCustomer name: " + nameField.value.trim() +
       "\nDeliver to: " + (addrField.value.trim() || "[please share address]") +
-      "\nLocation pin: https://maps.google.com/?q=" + customerLocation.lat.toFixed(6) + "," + customerLocation.lng.toFixed(6) +
+      (customerLocation ? ("\nLocation pin: https://maps.google.com/?q=" + customerLocation.lat.toFixed(6) + "," + customerLocation.lng.toFixed(6)) : "") +
       (noteField.value.trim() ? ("\nNote: " + noteField.value.trim()) : "") +
       "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + ").";
     var url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
