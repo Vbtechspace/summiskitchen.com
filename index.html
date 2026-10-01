@@ -113,11 +113,18 @@
     align-items:center;
     gap:12px;
   }
-  .brand-row img{
+  .logo-frame{
     width:52px;height:52px;border-radius:50%;
-    object-fit:cover;
+    overflow:hidden;
     box-shadow:0 0 0 2px rgba(255,255,255,0.18);
     flex:none;
+    background:var(--header-bg);
+  }
+  .logo-frame img{
+    width:124%;height:124%;
+    margin:-12%;
+    object-fit:cover;
+    display:block;
   }
   .brand-copy h1{font-size:1.3rem;font-weight:700;color:var(--header-ink);line-height:1.1;}
   .brand-copy p{margin:2px 0 0;font-size:0.78rem;letter-spacing:0.04em;text-transform:uppercase;color:#E7C9A3;}
@@ -573,7 +580,31 @@
     font-family:inherit;
     font-size:0.86rem;
   }
-  .field input[type="text"]:focus{outline:2px solid var(--brand);outline-offset:1px;}
+  .field input[type="text"]:focus, .field input[type="tel"]:focus{outline:2px solid var(--brand);outline-offset:1px;}
+  .field input[type="tel"]{
+    width:100%;
+    border:1px solid var(--line);
+    background:var(--surface);
+    color:var(--ink);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:0.86rem;
+  }
+  .pay-method-row{display:flex;flex-direction:column;gap:8px;}
+  .pay-option{
+    display:flex;align-items:center;gap:9px;
+    border:1px solid var(--line);
+    background:var(--surface);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:0.84rem;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .pay-option input{accent-color:var(--brand);width:16px;height:16px;flex:none;margin:0;}
+  .pay-option.active{border-color:var(--brand);background:var(--gold-soft);}
   .order-no-line{margin:0 0 14px;}
   .loc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
   .loc-status{
@@ -676,7 +707,7 @@
 
 <header class="top">
   <div class="brand-row">
-    <img src="logo-192.png" alt="Summi's Kitchen logo">
+    <div class="logo-frame"><img src="logo-192.png" alt="Summi's Kitchen logo"></div>
     <div class="brand-copy">
       <h1>Summi's Kitchen</h1>
       <p>Simple. Wholesome. Honest.</p>
@@ -843,6 +874,10 @@
         <input type="text" id="custName" placeholder="Your full name" autocomplete="name">
       </div>
       <div class="field">
+        <label for="custPhone">Mobile number</label>
+        <input type="tel" id="custPhone" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric">
+      </div>
+      <div class="field">
         <label for="addr">Delivery address</label>
         <div class="loc-row">
           <button type="button" class="locate-btn" id="attachLocBtn">
@@ -861,14 +896,28 @@
         <label for="note">Any notes (spice level, timing, etc.)</label>
         <textarea id="note" placeholder="Optional" rows="2"></textarea>
       </div>
+      <div class="field">
+        <label>Payment method</label>
+        <div class="pay-method-row" id="payMethodRow">
+          <label class="pay-option" data-val="upi">
+            <input type="radio" name="payMethod" value="upi" checked>
+            <span>Pay via UPI &mdash; send screenshot on WhatsApp</span>
+          </label>
+          <label class="pay-option" data-val="online">
+            <input type="radio" name="payMethod" value="online">
+            <span>Pay online &mdash; card / UPI / netbanking</span>
+          </label>
+        </div>
+      </div>
       <p class="pay-note">Minimum order value: <b>&#8377;229</b> (excluding delivery charges and GST).</p>
       <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
       <div class="discount-hint" id="discountHint" hidden></div>
       <div class="summary-row" id="discountRow" hidden><span>Discount (20% OFF)</span><span id="sumDiscount">&minus;&#8377;0</span></div>
       <div class="summary-row"><span>GST (Govt taxes)</span><span id="sumGst">&#8377;0</span></div>
       <div class="summary-row"><span>Delivery</span><span id="sumDelivery">To be confirmed</span></div>
-      <div class="summary-row total"><span>Total (pay via UPI)</span><span id="sumTotal">&#8377;0</span></div>
-      <p class="pay-note">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp when you send your order.</p>
+      <div class="summary-row total"><span>Total payable</span><span id="sumTotal">&#8377;0</span></div>
+      <p class="pay-note" id="payNoteUpi">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp when you send your order.</p>
+      <p class="pay-note" id="payNoteOnline" hidden>We'll send a secure Razorpay payment link on WhatsApp for the exact amount &mdash; pay by card, UPI or netbanking, no screenshot needed.</p>
     </div>
   </div>
   <div class="drawer-foot">
@@ -1367,7 +1416,47 @@
   var addrField = document.getElementById("addr");
   var noteField = document.getElementById("note");
   var nameField = document.getElementById("custName");
+  var phoneField = document.getElementById("custPhone");
   var orderNoText = document.getElementById("orderNoText");
+  var payMethodRow = document.getElementById("payMethodRow");
+  var payNoteUpi = document.getElementById("payNoteUpi");
+  var payNoteOnline = document.getElementById("payNoteOnline");
+
+  // ---------- mobile number: required, kept simple (10-digit Indian mobile, optional +91) ----------
+  function phoneDigits(v){
+    return (v || "").replace(/[^\d]/g, "");
+  }
+  function isValidPhone(v){
+    var d = phoneDigits(v);
+    if (d.length === 12 && d.slice(0, 2) === "91") d = d.slice(2);
+    return d.length === 10 && /^[6-9]/.test(d);
+  }
+  function formattedPhone(v){
+    var d = phoneDigits(v);
+    if (d.length === 12 && d.slice(0, 2) === "91") d = d.slice(2);
+    return "+91 " + d;
+  }
+
+  // ---------- payment method: UPI screenshot (default) or online via Razorpay ----------
+  var paymentMethod = "upi";
+  function updatePaymentMethodUI(){
+    if (!payMethodRow) return;
+    Array.prototype.forEach.call(payMethodRow.querySelectorAll(".pay-option"), function(opt){
+      opt.classList.toggle("active", opt.dataset.val === paymentMethod);
+    });
+    if (payNoteUpi) payNoteUpi.hidden = paymentMethod !== "upi";
+    if (payNoteOnline) payNoteOnline.hidden = paymentMethod !== "online";
+  }
+  if (payMethodRow) {
+    Array.prototype.forEach.call(payMethodRow.querySelectorAll('input[name="payMethod"]'), function(radio){
+      radio.addEventListener("change", function(){
+        if (radio.checked) paymentMethod = radio.value;
+        updatePaymentMethodUI();
+        updateCheckoutLink();
+      });
+    });
+  }
+  updatePaymentMethodUI();
 
   var customerLocation = null; // {lat, lng} attached via the "Attach my current location" button, sent as a maps link in the WhatsApp order
 
@@ -1453,6 +1542,15 @@
   } catch (e) {}
   nameField.addEventListener("input", function(){
     try { localStorage.setItem("summis_name_v1", nameField.value); } catch (e) {}
+    updateCheckoutLink();
+  });
+
+  try {
+    var savedPhone = localStorage.getItem("summis_phone_v1");
+    if (savedPhone) phoneField.value = savedPhone;
+  } catch (e) {}
+  phoneField.addEventListener("input", function(){
+    try { localStorage.setItem("summis_phone_v1", phoneField.value); } catch (e) {}
     updateCheckoutLink();
   });
 
@@ -1545,11 +1643,18 @@
         var line = document.createElement("div");
         line.className = "cart-line";
         line.innerHTML =
-          "<div class=\"name\"><b>" + item.name + "</b><span>" + qty + " &times; ₹" + item.price + "</span></div>" +
+          "<div class=\"name\"><b>" + item.name + "</b><span>₹" + item.price + " each</span></div>" +
+          "<div class=\"stepper\">" +
+            "<button type=\"button\" data-act=\"dec\" aria-label=\"Decrease quantity\">" + minusIcon + "</button>" +
+            "<span>" + qty + "</span>" +
+            "<button type=\"button\" data-act=\"inc\" aria-label=\"Increase quantity\">" + plusIcon + "</button>" +
+          "</div>" +
           "<div class=\"line-total\">₹" + (qty * item.price) + "</div>" +
           "<button class=\"remove-btn\" type=\"button\" aria-label=\"Remove\">" +
             "<svg class=\"icon\" viewBox=\"0 0 20 20\"><path d=\"M5 5l10 10M15 5L5 15\"/></svg>" +
           "</button>";
+        line.querySelector("[data-act=dec]").addEventListener("click", function(){ setQty(id, qty - 1); });
+        line.querySelector("[data-act=inc]").addEventListener("click", function(){ setQty(id, qty + 1); });
         line.querySelector(".remove-btn").addEventListener("click", function(){ setQty(id, 0); });
         cartLines.appendChild(line);
       });
@@ -1577,6 +1682,12 @@
       checkoutBtn.setAttribute("aria-disabled", "true");
       checkoutBtn.removeAttribute("href");
       checkoutHint.textContent = "Please add your name above so we know who's ordering.";
+      return;
+    }
+    if (!isValidPhone(phoneField.value)){
+      checkoutBtn.setAttribute("aria-disabled", "true");
+      checkoutBtn.removeAttribute("href");
+      checkoutHint.textContent = "Please enter a valid 10-digit mobile number above.";
       return;
     }
     var d = deliveryInfo();
@@ -1607,17 +1718,22 @@
          "\nSubtotal after discount: ₹" + discountedSubtotal)
       : "";
     if (!currentOrderNo) currentOrderNo = generateOrderNo();
+    var closingLine = paymentMethod === "online"
+      ? "\n\nI'd like to pay online — please send me a secure Razorpay payment link for this amount."
+      : "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + ").";
     var msg = "Hi Summi's Kitchen! I'd like to order (Order #" + currentOrderNo + "):\n" + lines.join("\n") +
       "\n\nItems total: ₹" + t.total +
       discountLines +
       gstLine +
       deliveryLine +
       "\n\nGrand total: ₹" + grand +
+      "\nPayment method: " + (paymentMethod === "online" ? "Online (Razorpay link requested)" : "UPI (screenshot on WhatsApp)") +
       "\n\nCustomer name: " + nameField.value.trim() +
+      "\nMobile number: " + formattedPhone(phoneField.value) +
       "\nDeliver to: " + (addrField.value.trim() || "[please share address]") +
       (customerLocation ? ("\nLocation pin: https://maps.google.com/?q=" + customerLocation.lat.toFixed(6) + "," + customerLocation.lng.toFixed(6)) : "") +
       (noteField.value.trim() ? ("\nNote: " + noteField.value.trim()) : "") +
-      "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + ").";
+      closingLine;
     var url = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
     checkoutBtn.href = url;
     checkoutBtn.setAttribute("aria-disabled", "false");
