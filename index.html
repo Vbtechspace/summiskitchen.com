@@ -738,7 +738,7 @@
   <div class="promo-banner" id="promoBanner">
     <div class="promo-banner-text">
       <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
-      <span><strong>&#8377;50 OFF</strong> on orders of &#8377;299+ &middot; <strong>&#8377;100 OFF</strong> on orders of &#8377;499+ &mdash; applied automatically at checkout.</span>
+      <span><strong>&#8377;50 OFF</strong> on &#8377;299+ &middot; <strong>&#8377;100 OFF</strong> on &#8377;499+ &middot; <strong>&#8377;150 OFF</strong> on &#8377;699+ &middot; <strong>&#8377;250 OFF</strong> on &#8377;999+ &mdash; applied automatically at checkout.</span>
     </div>
     <button type="button" class="promo-close" id="promoClose" aria-label="Dismiss offer">
       <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
@@ -934,6 +934,8 @@
   var UPI_ID = "vbtechspace1@kotak";
   // Flat-amount offer tiers on the items subtotal (highest qualifying tier applies)
   var DISCOUNT_TIERS = [
+    { min: 999, off: 250 },
+    { min: 699, off: 150 },
     { min: 499, off: 100 },
     { min: 299, off: 50 }
   ];
