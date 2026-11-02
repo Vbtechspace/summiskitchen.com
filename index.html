@@ -651,6 +651,16 @@
     padding-top:8px;margin-top:4px;border-top:1px solid var(--line);
     font-variant-numeric:tabular-nums;
   }
+  .optin{display:flex;align-items:flex-start;gap:10px;margin:2px 0 14px;font-size:13.5px;line-height:1.4;cursor:pointer;}
+  .optin input{width:20px;height:20px;margin:1px 0 0;flex:none;accent-color:var(--brand);cursor:pointer;}
+  .optin small{display:block;color:#777;font-size:12px;margin-top:2px;}
+  .privacy-note{margin:-6px 0 14px;font-size:11.5px;line-height:1.4;color:#888;}
+  .consent{position:fixed;left:12px;right:12px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:60;max-width:520px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:12px 14px;font-size:12.5px;line-height:1.45;color:#444;}
+  .consent[hidden]{display:none;}
+  .consent-actions{display:flex;gap:8px;margin-top:10px;}
+  .consent-actions button{flex:1;border-radius:10px;padding:9px 10px;font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--brand);}
+  .consent-actions .yes{background:var(--brand);color:#fff;}
+  .consent-actions .no{background:#fff;color:var(--brand);}
   .pay-note{
     background:var(--surface-2);
     border-radius:10px;
@@ -728,7 +738,7 @@
   <div class="promo-banner" id="promoBanner">
     <div class="promo-banner-text">
       <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
-      <span><strong>Flat 20% OFF</strong> on orders above &#8377;499 &mdash; applied automatically at checkout.</span>
+      <span><strong>&#8377;50 OFF</strong> on orders of &#8377;299+ &middot; <strong>&#8377;100 OFF</strong> on orders of &#8377;499+ &mdash; applied automatically at checkout.</span>
     </div>
     <button type="button" class="promo-close" id="promoClose" aria-label="Dismiss offer">
       <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
@@ -885,10 +895,15 @@
         <label for="note">Any notes (spice level, timing, etc.)</label>
         <textarea id="note" placeholder="Optional" rows="2"></textarea>
       </div>
+      <label class="optin" for="optInOffers">
+        <input type="checkbox" id="optInOffers">
+        <span>Send me offers on WhatsApp<small>Optional. If unticked, you'll only get messages about your order. You can say STOP anytime.</small></span>
+      </label>
+      <p class="privacy-note">We save your name, mobile number and this choice only to handle your order and, if you ticked the box, to send you offers. We never sell or share them.</p>
       <p class="pay-note">Minimum order value: <b>&#8377;229</b> (excluding delivery charges and GST).</p>
       <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
       <div class="discount-hint" id="discountHint" hidden></div>
-      <div class="summary-row" id="discountRow" hidden><span>Discount (20% OFF)</span><span id="sumDiscount">&minus;&#8377;0</span></div>
+      <div class="summary-row" id="discountRow" hidden><span id="discountLabel">Discount</span><span id="sumDiscount">&minus;&#8377;0</span></div>
       <div class="summary-row"><span>GST (Govt taxes)</span><span id="sumGst">&#8377;0</span></div>
       <div class="summary-row"><span>Delivery</span><span id="sumDelivery">To be confirmed</span></div>
       <div class="summary-row total"><span>Total (pay via UPI)</span><span id="sumTotal">&#8377;0</span></div>
@@ -917,13 +932,18 @@
 
   var WA_NUMBER = "918095450378";
   var UPI_ID = "vbtechspace1@kotak";
-  var DISCOUNT_PERCENT = 20;
-  var DISCOUNT_THRESHOLD = 499; // flat 20% off applies only when the items subtotal exceeds this
+  // Flat-amount offer tiers on the items subtotal (highest qualifying tier applies)
+  var DISCOUNT_TIERS = [
+    { min: 499, off: 100 },
+    { min: 299, off: 50 }
+  ];
   var MIN_ORDER_VALUE = 229; // items subtotal must reach this before checkout is allowed
   var GST_PERCENT = 5; // flat govt tax applied to the items subtotal after discount, on every order
 
   function computeDiscount(subtotal){
-    if (subtotal > DISCOUNT_THRESHOLD) return Math.round(subtotal * DISCOUNT_PERCENT / 100);
+    for (var i = 0; i < DISCOUNT_TIERS.length; i++) {
+      if (subtotal >= DISCOUNT_TIERS[i].min) return DISCOUNT_TIERS[i].off;
+    }
     return 0;
   }
 
@@ -1461,16 +1481,20 @@
     if (discount > 0) {
       discountRow.hidden = false;
       sumDiscount.textContent = "−₹" + discount;
-      discountHint.hidden = true;
+      document.getElementById("discountLabel").textContent = "Discount (₹" + discount + " OFF)";
     } else {
       discountRow.hidden = true;
-      var remaining = DISCOUNT_THRESHOLD + 1 - t.total;
-      if (remaining > 0) {
-        discountHint.hidden = false;
-        discountHint.textContent = "Add ₹" + remaining + " more to unlock 20% OFF (orders above ₹" + DISCOUNT_THRESHOLD + ")";
-      } else {
-        discountHint.hidden = true;
-      }
+    }
+    // Nudge towards the next tier, if there is one above the current subtotal
+    var nextTier = null;
+    for (var j = DISCOUNT_TIERS.length - 1; j >= 0; j--) {
+      if (t.total < DISCOUNT_TIERS[j].min) { nextTier = DISCOUNT_TIERS[j]; break; }
+    }
+    if (nextTier) {
+      discountHint.hidden = false;
+      discountHint.textContent = "Add ₹" + (nextTier.min - t.total) + " more to get ₹" + nextTier.off + " OFF (orders of ₹" + nextTier.min + "+)";
+    } else {
+      discountHint.hidden = true;
     }
     var gst = computeGst(discountedSubtotal);
     sumGst.textContent = "₹" + gst;
@@ -1517,6 +1541,36 @@
   });
 
   noteField.addEventListener("input", updateCheckoutLink);
+
+  // Customer list: on checkout, name + mobile + offers choice are saved to our Google Sheet
+  // (used only for order follow-up and, if ticked, WhatsApp offers). Empty URL = feature off.
+  var CUSTOMER_LOG_URL = "https://script.google.com/macros/s/AKfycbzkJq14hj9cOl7Luv_61GrWsHIEIP7LAOgVvlWm-ImSH8Ojii6dasx3vK6UXwgneMaX4A/exec";
+  function logCustomer(){
+    if (!CUSTOMER_LOG_URL) return;
+    try {
+      var items = Object.keys(cart).map(function(id){ return cart[id] + "x " + allItems[id].name; }).join(", ");
+      var t = cartTotals();
+      fetch(CUSTOMER_LOG_URL, {
+        method: "POST", mode: "no-cors", keepalive: true,
+        headers: {"Content-Type": "text/plain;charset=utf-8"},
+        body: JSON.stringify({
+          order: currentOrderNo, name: nameField.value.trim(), phone: formattedPhone(phoneField.value),
+          optin: !!optInField.checked, total: t.total, items: items
+        })
+      });
+    } catch (e) {}
+  }
+  checkoutBtn.addEventListener("click", function(){
+    if (checkoutBtn.getAttribute("aria-disabled") === "true") return;
+    logCustomer();
+  });
+
+  var optInField = document.getElementById("optInOffers");
+  try { optInField.checked = localStorage.getItem("summis_optin_v1") === "1"; } catch (e) {}
+  optInField.addEventListener("change", function(){
+    try { localStorage.setItem("summis_optin_v1", optInField.checked ? "1" : "0"); } catch (e) {}
+    updateCheckoutLink();
+  });
 
   // ---------- attach current location: sole source of the delivery distance/charge calc,
   // and sent as a maps link in the WhatsApp order. Required to check out. ----------
@@ -1667,7 +1721,7 @@
     var gstLine = "\nGST (Govt taxes, " + GST_PERCENT + "%): ₹" + gst;
     var grand = discountedSubtotal + gst + (d.known ? d.charge : 0);
     var discountLines = discount > 0
-      ? ("\n20% OFF discount (orders above ₹" + DISCOUNT_THRESHOLD + "): −₹" + discount +
+      ? ("\nOffer discount (₹" + discount + " OFF): −₹" + discount +
          "\nSubtotal after discount: ₹" + discountedSubtotal)
       : "";
     if (!currentOrderNo) currentOrderNo = generateOrderNo();
@@ -1679,6 +1733,7 @@
       "\n\nGrand total: ₹" + grand +
       "\n\nCustomer name: " + nameField.value.trim() +
       "\nMobile number: " + formattedPhone(phoneField.value) +
+      "\nOffers on WhatsApp: " + (optInField.checked ? "YES - customer opted in" : "NO - order messages only") +
       "\nDeliver to: " + (addrField.value.trim() || "[please share address]") +
       (customerLocation ? ("\nLocation pin: https://maps.google.com/?q=" + customerLocation.lat.toFixed(6) + "," + customerLocation.lng.toFixed(6)) : "") +
       (noteField.value.trim() ? ("\nNote: " + noteField.value.trim()) : "") +
@@ -1754,6 +1809,41 @@
   paintLocStatus();
   updateCartBar();
   renderDrawer();
+})();
+</script>
+<div class="consent" id="consentBar" role="dialog" aria-label="Cookie choice" hidden>
+  We use a cookie (Meta Pixel) to measure visits and show you relevant Summi's Kitchen ads. Allow it?
+  <div class="consent-actions"><button type="button" class="no" id="consentNo">No thanks</button><button type="button" class="yes" id="consentYes">Allow</button></div>
+</div>
+<script>
+(function(){
+  var PIXEL_ID = "1130883693267010", KEY = "summis_consent_v1";
+  function loadPixel(){
+    if (window.fbq) return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', PIXEL_ID); fbq('track', 'PageView');
+  }
+  var choice = null;
+  try { choice = localStorage.getItem(KEY); } catch (e) {}
+  var bar = document.getElementById("consentBar");
+  function decide(v){
+    try { localStorage.setItem(KEY, v); } catch (e) {}
+    bar.hidden = true;
+    if (v === "yes") loadPixel();
+  }
+  if (choice === "yes") loadPixel();
+  else if (choice !== "no") bar.hidden = false;
+  document.getElementById("consentYes").addEventListener("click", function(){ decide("yes"); });
+  document.getElementById("consentNo").addEventListener("click", function(){ decide("no"); });
+  // events carry no personal data (no name/phone/address)
+  document.addEventListener("click", function(ev){
+    if (!window.fbq) return;
+    if (ev.target.closest && ev.target.closest(".add-btn")) fbq('track', 'AddToCart');
+    var c = ev.target.closest && ev.target.closest("#checkoutBtn");
+    if (c && c.getAttribute("aria-disabled") !== "true") fbq('track', 'InitiateCheckout');
+  });
 })();
 </script>
 </body>
