@@ -410,6 +410,7 @@
     display:inline-flex;align-items:center;gap:4px;
   }
 
+  .install-note[hidden]{display:none !important;}
   .install-note{
     margin-top:18px;
     background:var(--surface-2);
@@ -731,14 +732,35 @@
 <nav class="cats" id="catNav"></nav>
 
 <main>
-  <div class="install-note">
+  <div class="install-note" id="installNote">
     <svg class="icon" viewBox="0 0 20 20"><rect x="4" y="2.5" width="12" height="15" rx="2"/><path d="M9 15.2h2"/></svg>
     <span>Tip: Get the Summi&#39;s Kitchen app&mdash;no app store needed!<br>Android &ndash; Tap 3 dots &#8942; &rarr; <b>Install app</b>.<br>iPhone &ndash; Tap Share &rarr; <b>Add to Home Screen</b>.</span>
   </div>
+  <script>
+  // Show the "install the app" tip only to people who have not installed the app.
+  (function(){
+    var KEY = "summis_installed_v1", note = document.getElementById("installNote");
+    function markInstalled(){ try { localStorage.setItem(KEY, "1"); } catch (e) {} if (note) note.hidden = true; }
+    var installed = false;
+    try { installed = localStorage.getItem(KEY) === "1"; } catch (e) {}
+    try {
+      if (window.navigator.standalone === true) installed = true; // iPhone home-screen app
+      if (window.matchMedia && ["standalone", "fullscreen", "minimal-ui"].some(function(m){ return matchMedia("(display-mode: " + m + ")").matches; })) installed = true;
+    } catch (e) {}
+    if (installed) markInstalled();
+    window.addEventListener("appinstalled", markInstalled);
+    // Android Chrome can tell a normal browser tab that the app is already installed
+    try {
+      if (!installed && navigator.getInstalledRelatedApps) {
+        navigator.getInstalledRelatedApps().then(function(apps){ if (apps && apps.length) markInstalled(); }).catch(function(){});
+      }
+    } catch (e) {}
+  })();
+  </script>
   <div class="promo-banner" id="promoBanner">
     <div class="promo-banner-text">
       <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
-      <span><strong>&#8377;50 OFF</strong> on &#8377;299+ &middot; <strong>&#8377;100 OFF</strong> on &#8377;499+ &middot; <strong>&#8377;150 OFF</strong> on &#8377;699+ &middot; <strong>&#8377;250 OFF</strong> on &#8377;999+ &mdash; applied automatically at checkout.</span>
+      <span id="offerBannerText"><strong>&#8377;50 OFF</strong> on &#8377;199+ (up to 3 times) &middot; <strong>&#8377;100 OFF</strong> on &#8377;499+ &middot; <strong>&#8377;150 OFF</strong> on &#8377;699+ &middot; <strong>&#8377;250 OFF</strong> on &#8377;999+ &mdash; applied automatically at checkout.</span>
     </div>
     <button type="button" class="promo-close" id="promoClose" aria-label="Dismiss offer">
       <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
@@ -820,6 +842,7 @@
         <ul>
           <li>Orders are confirmed only once payment is received via UPI and the screenshot is shared with us on WhatsApp.</li>
           <li>Prices shown are current at the time of ordering and may change without prior notice.</li>
+          <li id="termsOffers">Offers: discounts are applied automatically at checkout.</li>
           <li>Delivery is free up to 8&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out. We currently deliver up to 20&nbsp;km from our kitchen &mdash; message us on WhatsApp if you're further away and want to check for an exception.</li>
           <li>Delivery times are estimates; actual delivery may vary with traffic, weather or order volume.</li>
           <li>Cancellations are accepted only before we start preparing your order; once preparation begins, the order can&#39;t be cancelled or refunded.</li>
@@ -899,7 +922,7 @@
         <input type="checkbox" id="optInOffers">
         <span>Send me offers on WhatsApp<small>Optional. If unticked, you'll only get messages about your order. You can say STOP anytime.</small></span>
       </label>
-      <p class="privacy-note">We save your name, mobile number and this choice only to handle your order and, if you ticked the box, to send you offers. We never sell or share them.</p>
+      <p class="privacy-note">We save your name, mobile number and this choice only to handle your order, to apply offer limits and, if you ticked the box, to send you offers. We never sell or share them.</p>
       <p class="pay-note">Minimum order value: <b>&#8377;229</b> (excluding delivery charges and GST).</p>
       <div class="summary-row"><span>Items (<span id="sumCount">0</span>)</span><span id="sumSubtotal">&#8377;0</span></div>
       <div class="discount-hint" id="discountHint" hidden></div>
@@ -937,16 +960,51 @@
     { min: 999, off: 250 },
     { min: 699, off: 150 },
     { min: 499, off: 100 },
-    { min: 299, off: 50 }
+    { min: 199, off: 50, maxUses: 3 } // limited: each mobile number can use this tier 3 times only
   ];
+  var offerUses = null; // how many times the entered mobile already used the limited tier (null = unknown)
+  function tierAvailable(tier){ return !tier.maxUses || offerUses === null || offerUses < tier.maxUses; }
+  function limitedTierUsedUp(){
+    for (var i = 0; i < DISCOUNT_TIERS.length; i++) if (DISCOUNT_TIERS[i].maxUses && offerUses !== null && offerUses >= DISCOUNT_TIERS[i].maxUses) return DISCOUNT_TIERS[i];
+    return null;
+  }
   var MIN_ORDER_VALUE = 229; // items subtotal must reach this before checkout is allowed
   var GST_PERCENT = 5; // flat govt tax applied to the items subtotal after discount, on every order
 
-  function computeDiscount(subtotal){
+  function currentTier(subtotal){
     for (var i = 0; i < DISCOUNT_TIERS.length; i++) {
-      if (subtotal >= DISCOUNT_TIERS[i].min) return DISCOUNT_TIERS[i].off;
+      if (subtotal >= DISCOUNT_TIERS[i].min && tierAvailable(DISCOUNT_TIERS[i])) return DISCOUNT_TIERS[i];
     }
-    return 0;
+    return null;
+  }
+  function limitedTierNote(subtotal){
+    var tier = currentTier(subtotal);
+    if (!tier || !tier.maxUses) return "";
+    return offerUses === null ? (", limited to " + tier.maxUses + " uses") : (", use " + (offerUses + 1) + " of " + tier.maxUses);
+  }
+  // The banner and the Terms of Service offer clause are generated from DISCOUNT_TIERS,
+  // so changing the offer in that one list updates the banner, the cart and the terms together.
+  function renderOfferTexts(){
+    var asc = DISCOUNT_TIERS.slice().sort(function(a, b){ return a.min - b.min; });
+    var banner = asc.map(function(t){
+      return "<strong>₹" + t.off + " OFF</strong> on ₹" + t.min + "+" + (t.maxUses ? " (up to " + t.maxUses + " times)" : "");
+    }).join(" · ") + " — applied automatically at checkout.";
+    var bannerEl = document.getElementById("offerBannerText");
+    if (bannerEl) bannerEl.innerHTML = banner;
+    var parts = asc.map(function(t){
+      return "₹" + t.off + " off on orders of ₹" + t.min + " or more" +
+        (t.maxUses ? " (each customer can use this offer only " + t.maxUses + " times, counted by mobile number)" : "");
+    });
+    var termsEl = document.getElementById("termsOffers");
+    if (termsEl) termsEl.textContent =
+      "Offers: a discount is applied automatically at checkout on your items total (before GST and delivery), based on the highest offer your order qualifies for: " +
+      parts.join("; ") + ". Offers cannot be combined, exchanged for cash or applied to delivery charges, and are valid only on orders placed through this website. " +
+      "We may change or withdraw an offer at any time; orders already confirmed are not affected. We may decline an offer where we reasonably believe it is being misused (for example, using several mobile numbers to get past a usage limit).";
+  }
+  renderOfferTexts();
+  function computeDiscount(subtotal){
+    var tier = currentTier(subtotal);
+    return tier ? tier.off : 0;
   }
 
   function computeGst(discountedSubtotal){
@@ -1190,6 +1248,7 @@
     saveCart();
     updateAllQtyControls();
     updateCartBar();
+  refreshOfferUses();
     renderDrawer();
   }
 
@@ -1490,11 +1549,13 @@
     // Nudge towards the next tier, if there is one above the current subtotal
     var nextTier = null;
     for (var j = DISCOUNT_TIERS.length - 1; j >= 0; j--) {
-      if (t.total < DISCOUNT_TIERS[j].min) { nextTier = DISCOUNT_TIERS[j]; break; }
+      if (t.total < DISCOUNT_TIERS[j].min && tierAvailable(DISCOUNT_TIERS[j])) { nextTier = DISCOUNT_TIERS[j]; break; }
     }
+    var usedUp = limitedTierUsedUp();
+    var usedUpMsg = (usedUp && t.total < 499) ? ("You have used your ₹" + usedUp.off + " offer " + usedUp.maxUses + " times. ") : "";
     if (nextTier) {
       discountHint.hidden = false;
-      discountHint.textContent = "Add ₹" + (nextTier.min - t.total) + " more to get ₹" + nextTier.off + " OFF (orders of ₹" + nextTier.min + "+)";
+      discountHint.textContent = usedUpMsg + "Add ₹" + (nextTier.min - t.total) + " more to get ₹" + nextTier.off + " OFF (orders of ₹" + nextTier.min + "+)";
     } else {
       discountHint.hidden = true;
     }
@@ -1531,6 +1592,7 @@
   phoneField.addEventListener("input", function(){
     try { localStorage.setItem("summis_phone_v1", phoneField.value); } catch (e) {}
     updateCheckoutLink();
+    refreshOfferUses();
   });
 
   try {
@@ -1557,7 +1619,7 @@
         headers: {"Content-Type": "text/plain;charset=utf-8"},
         body: JSON.stringify({
           order: currentOrderNo, name: nameField.value.trim(), phone: formattedPhone(phoneField.value),
-          optin: !!optInField.checked, total: t.total, items: items
+          optin: !!optInField.checked, total: t.total, items: items, discount: computeDiscount(t.total)
         })
       });
     } catch (e) {}
@@ -1566,6 +1628,33 @@
     if (checkoutBtn.getAttribute("aria-disabled") === "true") return;
     logCustomer();
   });
+
+  // Limited offer: ask our sheet how many times this mobile number already used the limited tier.
+  var usesPhone = null, usesReq = 0;
+  function repaintOffers(){ updateCartBar(); updateDeliverySummary(); updateCheckoutLink(); }
+  function refreshOfferUses(){
+    if (!CUSTOMER_LOG_URL) return;
+    if (!isValidPhone(phoneField.value)) {
+      usesPhone = null; usesReq++;
+      if (offerUses !== null) { offerUses = null; repaintOffers(); }
+      return;
+    }
+    var ph = formattedPhone(phoneField.value).replace(/\D/g, "").slice(-10);
+    if (ph === usesPhone) return;
+    usesPhone = ph;
+    var req = ++usesReq;
+    if (offerUses !== null) { offerUses = null; repaintOffers(); }
+    try {
+      fetch(CUSTOMER_LOG_URL + "?action=uses&phone=" + ph + "&order=" + encodeURIComponent(currentOrderNo || ""))
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if (req !== usesReq) return;
+          offerUses = (j && typeof j.uses === "number") ? j.uses : null;
+          repaintOffers();
+        })
+        .catch(function(){});
+    } catch (e) {}
+  }
 
   var optInField = document.getElementById("optInOffers");
   try { optInField.checked = localStorage.getItem("summis_optin_v1") === "1"; } catch (e) {}
@@ -1723,7 +1812,7 @@
     var gstLine = "\nGST (Govt taxes, " + GST_PERCENT + "%): ₹" + gst;
     var grand = discountedSubtotal + gst + (d.known ? d.charge : 0);
     var discountLines = discount > 0
-      ? ("\nOffer discount (₹" + discount + " OFF): −₹" + discount +
+      ? ("\nOffer discount (₹" + discount + " OFF" + (limitedTierNote(t.total)) + "): −₹" + discount +
          "\nSubtotal after discount: ₹" + discountedSubtotal)
       : "";
     if (!currentOrderNo) currentOrderNo = generateOrderNo();
@@ -1810,6 +1899,7 @@
   // ---------- init ----------
   paintLocStatus();
   updateCartBar();
+  refreshOfferUses();
   renderDrawer();
 })();
 </script>
