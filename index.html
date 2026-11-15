@@ -662,6 +662,19 @@
   .consent-actions button{flex:1;border-radius:10px;padding:9px 10px;font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--brand);}
   .consent-actions .yes{background:var(--brand);color:#fff;}
   .consent-actions .no{background:#fff;color:var(--brand);}
+  .plan-entry{display:block;width:100%;text-align:left;margin:0 0 14px;padding:14px 16px;border-radius:16px;border:1.5px solid var(--gold);background:var(--gold-soft);color:var(--ink);font-family:inherit;cursor:pointer;}
+  .plan-entry b{display:block;font-size:1rem;color:var(--brand-strong);margin-bottom:2px;}
+  .plan-entry span{display:block;font-size:0.82rem;line-height:1.4;}
+  .plan-entry .plan-cta{margin-top:6px;font-weight:700;color:var(--brand);}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chips button{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:0.84rem;font-weight:600;cursor:pointer;}
+  .chips button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .field input[type="date"], .field select{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:0.86rem;}
+  .plan-help{font-size:0.76rem;color:var(--ink-muted);margin:6px 0 0;line-height:1.4;}
+  .plan-menu{font-size:0.78rem;line-height:1.5;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 6px;}
+  .plan-radius{font-size:0.8rem;font-weight:700;margin:6px 0 0;}
+  .plan-radius.ok{color:var(--olive);}
+  .plan-radius.bad{color:#B3261E;}
   .pay-note{
     background:var(--surface-2);
     border-radius:10px;
@@ -757,6 +770,11 @@
     } catch (e) {}
   })();
   </script>
+  <button type="button" class="plan-entry" id="planEntry">
+    <b>Summi's Daily &middot; Lunch &amp; dinner plans</b>
+    <span id="planEntryText">Home-style non-veg thali every day, delivered free within 1 km of our kitchen.</span>
+    <span class="plan-cta">See plans &rarr;</span>
+  </button>
   <div class="promo-banner" id="promoBanner">
     <div class="promo-banner-text">
       <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
@@ -842,6 +860,7 @@
         <ul>
           <li>Orders are confirmed only once payment is received via UPI and the screenshot is shared with us on WhatsApp.</li>
           <li>Prices shown are current at the time of ordering and may change without prior notice.</li>
+          <li id="termsPlans">Meal plans: available only within 1 km of our kitchen.</li>
           <li id="termsOffers">Offers: discounts are applied automatically at checkout.</li>
           <li>Delivery is free up to 8&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out. We currently deliver up to 20&nbsp;km from our kitchen &mdash; message us on WhatsApp if you're further away and want to check for an exception.</li>
           <li>Delivery times are estimates; actual delivery may vary with traffic, weather or order volume.</li>
@@ -939,6 +958,92 @@
       Checkout on WhatsApp
     </a>
     <p class="checkout-hint" id="checkoutHint">Opens WhatsApp with your order filled in &mdash; review and hit send.</p>
+  </div>
+</div>
+
+<div class="scrim" id="planScrim"></div>
+<div class="drawer" id="planDrawer" role="dialog" aria-label="Summi's Daily meal plans">
+  <div class="drawer-head">
+    <h2>Summi's Daily</h2>
+    <button class="drawer-close" id="planClose" aria-label="Close meal plans">
+      <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body">
+    <p class="plan-help" style="margin-top:12px">A home-style non-veg thali delivered to you Monday to Saturday, free of delivery charge, for homes and offices within <b id="planRadiusText">1 km</b> of our kitchen (Shop 7, Tilawa Market, Sector 81).</p>
+    <div class="field">
+      <label>Veg or non-veg?</label>
+      <div class="chips" id="planDiet">
+        <button type="button" data-v="Non-veg" aria-pressed="true">Non-veg</button>
+        <button type="button" data-v="Veg" aria-pressed="false">Veg</button>
+      </div>
+      <p class="plan-help">Please note: veg and non-veg food are cooked in the same kitchen, so we cannot offer a strictly separate veg kitchen. Veg meals are prepared in separate utensils.</p>
+    </div>
+    <div class="field">
+      <label>Which meals?</label>
+      <div class="chips" id="planMeals">
+        <button type="button" data-v="Lunch" aria-pressed="true">Lunch</button>
+        <button type="button" data-v="Dinner" aria-pressed="false">Dinner</button>
+        <button type="button" data-v="Both" aria-pressed="false">Lunch &amp; Dinner</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Which days? <span style="font-weight:400;color:var(--ink-muted)">(pick at least 3)</span></label>
+      <div class="chips" id="planDays"></div>
+    </div>
+    <div class="field">
+      <label for="planDur">Plan length</label>
+      <select id="planDur"></select>
+    </div>
+    <div class="field">
+      <label for="planStart">Start date</label>
+      <input type="date" id="planStart">
+      <p class="plan-help" id="planFirst"></p>
+    </div>
+    <div class="field">
+      <label>Weekly menu (sample)</label>
+      <div class="plan-menu" id="planMenu"></div>
+      <p class="plan-help">Each meal is a thali: rumali roti, curry, rice, salad and a sweet. The dish rotates through the week; we share the exact menu on WhatsApp every Sunday.</p>
+    </div>
+    <div class="field">
+      <label for="planName">Your name</label>
+      <input type="text" id="planName" placeholder="Your full name" autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="planPhone">Mobile number</label>
+      <input type="tel" id="planPhone" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label for="planAddr">Delivery address</label>
+      <div class="loc-row">
+        <button type="button" class="locate-btn" id="planLocBtn">
+          <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
+          Check my location (1 km)
+        </button>
+      </div>
+      <p class="plan-radius" id="planRadius" hidden></p>
+      <textarea id="planAddr" placeholder="Flat / tower, society or office name, Sector 81, Gurgaon" rows="2"></textarea>
+      <p class="plan-help">Stand at your delivery address when you tap the location button, so we can confirm you are within range.</p>
+    </div>
+    <div class="field">
+      <label for="planNote">Any notes (spice level, timing, etc.)</label>
+      <textarea id="planNote" placeholder="Optional" rows="2"></textarea>
+    </div>
+    <p class="privacy-note">We save your name, mobile number and address only to run your meal plan. We never sell or share them.</p>
+    <div class="summary-row"><span id="planSumLabel">Plan</span><span id="planSumMeals">&mdash;</span></div>
+    <div class="summary-row"><span>Rate per meal</span><span id="planSumRate">&mdash;</span></div>
+    <div class="summary-row"><span>Plan amount</span><span id="planSumAmount">&#8377;0</span></div>
+    <div class="summary-row"><span>GST (Govt taxes)</span><span id="planSumGst">&#8377;0</span></div>
+    <div class="summary-row"><span>Delivery</span><span>Free (within 1 km)</span></div>
+    <div class="summary-row total"><span>Total (pay via UPI)</span><span id="planSumTotal">&#8377;0</span></div>
+    <p class="pay-note">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp. Your plan starts once we confirm your payment. Cart offers and discounts do not apply to meal plans.</p>
+  </div>
+  <div class="drawer-foot">
+    <a href="#" id="planSubmit" class="checkout-btn" target="_blank" rel="noopener" aria-disabled="true">
+      <svg class="icon" viewBox="0 0 20 20" style="stroke:currentColor;"><path d="M3 6l7 5 7-5"/><rect x="2.5" y="4" width="15" height="12" rx="2"/></svg>
+      Subscribe on WhatsApp
+    </a>
+    <p class="checkout-hint" id="planHint">Opens WhatsApp with your plan filled in &mdash; review and hit send.</p>
   </div>
 </div>
 
@@ -1901,6 +2006,229 @@
   updateCartBar();
   refreshOfferUses();
   renderDrawer();
+
+  // ================= Meal plans (lunch / dinner subscriptions within PLAN.radiusKm) =================
+  (function(){
+    var PLAN = {
+      radiusKm: 1,                 // hard limit, straight-line distance from the kitchen
+      perMeal: { trial: 279, w1: 259, w2: 249, w4: 239 },   // Rs per meal, before GST
+      trialMeals: 3,
+      minDays: 3,
+      maxSkipsPerMonth: 4,
+      skipCutoff: "8 PM the evening before",
+      days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      durations: [
+        { id: "trial", label: "Trial", weeks: 0 },
+        { id: "w1", label: "1 week", weeks: 1 },
+        { id: "w2", label: "2 weeks", weeks: 2 },
+        { id: "w4", label: "4 weeks", weeks: 4 }
+      ],
+      menu: [   // sample rotation shown to customers
+        ["Mon", "Chicken curry thali"], ["Tue", "Egg curry thali"], ["Wed", "Fish curry (Rohu) thali"],
+        ["Thu", "Chicken curry thali"], ["Fri", "Chicken combo thali"], ["Sat", "Weekend special"]
+      ]
+    };
+    var DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    var st = { diet: "Non-veg", meals: "Lunch", days: {}, dur: "w1", loc: null, km: null, planNo: null };
+    PLAN.days.forEach(function(d, i){ st.days[d] = i < 5; }); // Mon-Fri ticked by default
+
+    var $ = function(id){ return document.getElementById(id); };
+    var drawerEl = $("planDrawer"), scrimEl = $("planScrim");
+    var nameEl = $("planName"), phoneEl = $("planPhone"), addrEl = $("planAddr"), noteEl = $("planNote");
+    var startEl = $("planStart"), durEl = $("planDur"), submitEl = $("planSubmit"), hintEl = $("planHint");
+    var radiusEl = $("planRadius"), locBtn = $("planLocBtn");
+    var hintDefault = hintEl.textContent;
+
+    function money(n){ return "₹" + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+    function pad2(n){ return (n < 10 ? "0" : "") + n; }
+    function iso(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+    function fmt(d){ return DOW[d.getDay()] + " " + d.getDate() + " " + MONTHS[d.getMonth()]; }
+    function parseISO(v){ var p = v.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+    function selectedDays(){ return PLAN.days.filter(function(d){ return st.days[d]; }); }
+    function dur(){ return PLAN.durations.filter(function(x){ return x.id === st.dur; })[0]; }
+    function mealsPerDay(){ return st.meals === "Both" ? 2 : 1; }
+    function totalMeals(){
+      var d = dur();
+      return d.weeks === 0 ? PLAN.trialMeals : selectedDays().length * mealsPerDay() * d.weeks;
+    }
+    function deliveryDaysNeeded(){
+      var d = dur();
+      return d.weeks === 0 ? Math.ceil(PLAN.trialMeals / mealsPerDay()) : selectedDays().length * d.weeks;
+    }
+    function schedule(){   // {first, last} delivery dates, or null
+      var sel = selectedDays();
+      if (!startEl.value || sel.length === 0) return null;
+      var d = parseISO(startEl.value), needed = deliveryDaysNeeded(), first = null, last = null, guard = 0;
+      while (needed > 0 && guard++ < 400) {
+        if (sel.indexOf(DOW[d.getDay()]) !== -1) { if (!first) first = new Date(d); last = new Date(d); needed--; }
+        d.setDate(d.getDate() + 1);
+      }
+      return first ? { first: first, last: last } : null;
+    }
+    function amounts(){
+      var sub = totalMeals() * PLAN.perMeal[st.dur];
+      var gst = computeGst(sub);
+      return { sub: sub, gst: gst, total: sub + gst };
+    }
+
+    // ----- static texts generated from PLAN
+    var rates = Object.keys(PLAN.perMeal).map(function(k){ return PLAN.perMeal[k]; });
+    $("planEntryText").textContent = "Home-style thali, veg or non-veg, every day, delivered free within " + PLAN.radiusKm + " km of our kitchen. From " + money(Math.min.apply(null, rates)) + " per meal.";
+    $("planRadiusText").textContent = PLAN.radiusKm + " km";
+    $("planMenu").innerHTML = PLAN.menu.map(function(m){ return "<b>" + m[0] + "</b> " + m[1]; }).join("<br>");
+    $("termsPlans").textContent = "Summi's Daily meal plans: available only for homes and offices within " + PLAN.radiusKm + " km of our kitchen, Monday to Saturday, and paid in advance by UPI. A plan starts once we confirm your payment. " +
+      "To skip a day, message us on WhatsApp by " + PLAN.skipCutoff + " (up to " + PLAN.maxSkipsPerMonth + " skips a month); skipped meals are added to the end of your plan. " +
+      "Unused meals are not refunded in cash; we extend the plan instead. Cart offers and discounts do not apply to meal plans. Veg and non-veg food are prepared in the same kitchen. The dish rotates through the week, and we may change the menu or pause delivery on public holidays or in bad weather, with notice on WhatsApp.";
+
+    // ----- build controls
+    $("planDays").innerHTML = PLAN.days.map(function(d){ return '<button type="button" data-d="' + d + '" aria-pressed="' + !!st.days[d] + '">' + d + '</button>'; }).join("");
+    durEl.innerHTML = PLAN.durations.map(function(x){
+      return '<option value="' + x.id + '">' + (x.weeks === 0 ? "Trial · " + PLAN.trialMeals + " meals" : x.label) + " · " + money(PLAN.perMeal[x.id]) + " per meal</option>";
+    }).join("");
+    durEl.value = st.dur;
+
+    var tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); tomorrow.setHours(0, 0, 0, 0);
+    startEl.min = iso(tomorrow);
+    var def = new Date(tomorrow); if (def.getDay() === 0) def.setDate(def.getDate() + 1);
+    startEl.value = iso(def);
+
+    try {
+      nameEl.value = localStorage.getItem("summis_name_v1") || "";
+      phoneEl.value = localStorage.getItem("summis_phone_v1") || "";
+      addrEl.value = localStorage.getItem("summis_addr_v1") || "";
+    } catch (e) {}
+
+    // ----- open / close
+    function openPlans(){ scrimEl.classList.add("open"); drawerEl.classList.add("open"); render(); }
+    function closePlans(){ scrimEl.classList.remove("open"); drawerEl.classList.remove("open"); }
+    $("planEntry").addEventListener("click", openPlans);
+    $("planClose").addEventListener("click", closePlans);
+    scrimEl.addEventListener("click", closePlans);
+
+    // ----- events
+    $("planDiet").addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (!b) return;
+      st.diet = b.getAttribute("data-v");
+      Array.prototype.forEach.call($("planDiet").children, function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      render();
+    });
+    $("planMeals").addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (!b) return;
+      st.meals = b.getAttribute("data-v");
+      Array.prototype.forEach.call($("planMeals").children, function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      render();
+    });
+    $("planDays").addEventListener("click", function(e){
+      var b = e.target.closest("button"); if (!b) return;
+      var d = b.getAttribute("data-d"); st.days[d] = !st.days[d];
+      b.setAttribute("aria-pressed", st.days[d] ? "true" : "false");
+      render();
+    });
+    durEl.addEventListener("change", function(){ st.dur = durEl.value; render(); });
+    startEl.addEventListener("change", render);
+    [nameEl, phoneEl, addrEl, noteEl].forEach(function(el){ el.addEventListener("input", render); });
+
+    var locDefault = locBtn.innerHTML;
+    locBtn.addEventListener("click", function(){
+      if (!("geolocation" in navigator)) { locBtn.textContent = "Location isn't available in this browser"; return; }
+      locBtn.disabled = true; locBtn.textContent = "Getting your location…";
+      navigator.geolocation.getCurrentPosition(function(pos){
+        st.loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        st.km = haversineKm(KITCHEN_LAT, KITCHEN_LNG, st.loc.lat, st.loc.lng);
+        locBtn.disabled = false; locBtn.innerHTML = locDefault; render();
+      }, function(){
+        st.loc = null; st.km = null;
+        locBtn.disabled = false; locBtn.textContent = "Couldn't get location — tap to retry";
+        render();
+      }, { enableHighAccuracy: true, timeout: 10000 });
+    });
+
+    function withinRange(){ return st.km !== null && st.km <= PLAN.radiusKm; }
+
+    function problem(){   // first thing missing, or "" when ready
+      if (!nameEl.value.trim()) return "Please add your name.";
+      if (!isValidPhone(phoneEl.value)) return "Please enter a valid 10-digit mobile number.";
+      if (selectedDays().length < PLAN.minDays) return "Please pick at least " + PLAN.minDays + " days.";
+      if (!startEl.value || parseISO(startEl.value) < tomorrow) return "Please choose a start date from tomorrow onwards.";
+      if (parseISO(startEl.value).getDay() === 0) return "We don't deliver on Sundays — please choose another start date.";
+      if (st.km === null) return "Please tap 'Check my location' at your delivery address.";
+      if (!withinRange()) return "Meal plans are only for addresses within " + PLAN.radiusKm + " km of our kitchen.";
+      if (!addrEl.value.trim()) return "Please add your delivery address.";
+      return "";
+    }
+
+    function render(){
+      try {
+        localStorage.setItem("summis_name_v1", nameEl.value);
+        localStorage.setItem("summis_phone_v1", phoneEl.value);
+        localStorage.setItem("summis_addr_v1", addrEl.value);
+      } catch (e) {}
+      var a = amounts(), sch = schedule(), d = dur();
+      $("planSumLabel").textContent = st.diet + " · " + (st.meals === "Both" ? "Lunch & dinner" : st.meals) + " · " + (d.weeks === 0 ? "Trial" : d.label);
+      $("planSumMeals").textContent = totalMeals() + " meals";
+      $("planSumRate").textContent = money(PLAN.perMeal[st.dur]);
+      $("planSumAmount").textContent = money(a.sub);
+      $("planSumGst").textContent = money(a.gst);
+      $("planSumTotal").textContent = money(a.total);
+      $("planFirst").textContent = sch ? ("First delivery: " + fmt(sch.first) + ". Plan runs until about " + fmt(sch.last) + " (skipped days are added at the end).") : "";
+      if (st.km === null) { radiusEl.hidden = true; }
+      else {
+        radiusEl.hidden = false;
+        var ok = withinRange();
+        radiusEl.className = "plan-radius " + (ok ? "ok" : "bad");
+        radiusEl.textContent = ok ? ("✓ " + st.km.toFixed(2) + " km from our kitchen — you're in range")
+                                  : ("✗ " + st.km.toFixed(2) + " km from our kitchen — meal plans are only within " + PLAN.radiusKm + " km");
+      }
+      var pr = problem();
+      if (pr) {
+        submitEl.setAttribute("aria-disabled", "true"); submitEl.removeAttribute("href"); hintEl.textContent = pr; return;
+      }
+      if (!st.planNo) st.planNo = "SP" + generateOrderNo().slice(2);
+      var sel = selectedDays();
+      var msg = "Hi Summi's Kitchen! I'd like to start a Summi's Daily meal plan (Plan #" + st.planNo + "):" +
+        "\nType: " + st.diet + "\nMeals: " + (st.meals === "Both" ? "Lunch & Dinner" : st.meals) +
+        "\nDays: " + sel.join(", ") +
+        "\nPlan: " + (d.weeks === 0 ? "Trial" : d.label) + " — " + totalMeals() + " meals" +
+        "\nRate: " + money(PLAN.perMeal[st.dur]) + " per meal" +
+        "\nPlan amount: " + money(a.sub) +
+        "\nGST (" + GST_PERCENT + "%): " + money(a.gst) +
+        "\nGrand total: " + money(a.total) +
+        "\nDelivery: Free (" + st.km.toFixed(2) + " km, within " + PLAN.radiusKm + " km)" +
+        "\nFirst delivery: " + fmt(sch.first) + " (until about " + fmt(sch.last) + ")" +
+        "\n\nCustomer name: " + nameEl.value.trim() +
+        "\nMobile number: " + formattedPhone(phoneEl.value) +
+        "\nDeliver to: " + addrEl.value.trim() +
+        "\nLocation pin: https://maps.google.com/?q=" + st.loc.lat.toFixed(6) + "," + st.loc.lng.toFixed(6) +
+        (noteEl.value.trim() ? ("\nNote: " + noteEl.value.trim()) : "") +
+        "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + "). Please confirm my plan after payment.";
+      submitEl.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+      submitEl.removeAttribute("aria-disabled");
+      hintEl.textContent = hintDefault;
+    }
+
+    // ----- save the sign-up to the customer sheet (same web app as orders)
+    submitEl.addEventListener("click", function(){
+      if (submitEl.getAttribute("aria-disabled") === "true" || !CUSTOMER_LOG_URL) return;
+      try {
+        var a = amounts(), sch = schedule(), d = dur();
+        fetch(CUSTOMER_LOG_URL, {
+          method: "POST", mode: "no-cors", keepalive: true,
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            kind: "subscription", plan: st.planNo, name: nameEl.value.trim(), phone: formattedPhone(phoneEl.value),
+            address: addrEl.value.trim(), km: Math.round(st.km * 100) / 100, meals: st.meals, days: selectedDays().join(","),
+            duration: (d.weeks === 0 ? "Trial" : d.label) + " · " + st.diet, totalMeals: totalMeals(), amount: a.sub, total: a.total,
+            start: iso(sch.first)
+          })
+        });
+      } catch (e) {}
+    });
+
+    render();
+  })();
+
 })();
 </script>
 <div class="consent" id="consentBar" role="dialog" aria-label="Cookie choice" hidden>
