@@ -10,11 +10,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Summi's Kitchen">
-<meta name="theme-color" content="#472210" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#40200E" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#17100A" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Bebas+Neue&display=swap">
 
 <style>
   :root{
@@ -190,41 +190,38 @@
     margin:0 auto;
     padding:18px 16px 8px;
   }
-  .intro-note{
-    background:var(--surface-2);
-    border-radius:14px;
-    padding:12px 14px;
-    font-size:0.86rem;
-    color:var(--ink);
-    margin-bottom:22px;
-    line-height:1.5;
-  }
-  .intro-note strong{color:var(--brand-strong);}
-
   .promo-banner{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
+    position:relative;
     background:linear-gradient(135deg, var(--spice), var(--brand-strong));
     color:#FFF7EE;
-    border-radius:14px;
-    padding:12px 14px;
-    margin-bottom:14px;
+    border-radius:18px;
+    padding:14px 14px 12px;
+    margin-bottom:18px;
     box-shadow:var(--shadow);
   }
   .promo-banner[hidden]{display:none!important;}
-  .promo-banner-text{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:0.86rem;
-    line-height:1.4;
+  .promo-title{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    font-size:1.12rem;font-weight:800;letter-spacing:0.02em;text-transform:uppercase;
+    margin:0 28px 10px;
   }
-  .promo-banner-text .icon{flex:none;width:1.3em;height:1.3em;color:var(--gold-soft);}
-  .promo-banner-text strong{font-family:'Fraunces', Georgia, serif;font-size:1.05rem;}
+  .promo-title .icon{width:1.05em;height:1.05em;fill:#F6B93B;stroke:none;flex:none;}
+  .offer-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .offer-tile{
+    background:#FFF7EE;color:#2B1508;
+    border-radius:10px;
+    padding:9px 6px;
+    text-align:center;
+    line-height:1.15;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    -webkit-mask:radial-gradient(circle 5px at 0 50%, #0000 98%, #000) left/51% 100% no-repeat, radial-gradient(circle 5px at 100% 50%, #0000 98%, #000) right/51% 100% no-repeat;
+            mask:radial-gradient(circle 5px at 0 50%, #0000 98%, #000) left/51% 100% no-repeat, radial-gradient(circle 5px at 100% 50%, #0000 98%, #000) right/51% 100% no-repeat;
+  }
+  .offer-tile b{font-size:1.05rem;font-weight:800;}
+  .offer-tile small{font-size:0.72rem;color:#5A3A25;}
+  .promo-note{margin:9px 0 0;text-align:center;font-size:0.76rem;color:#FFE9D2;}
   .promo-close{
-    flex:none;
+    position:absolute;top:10px;right:10px;
     background:rgba(255,255,255,0.18);
     border:none;
     color:#FFF7EE;
@@ -458,6 +455,7 @@
   .terms-body p{margin:10px 0 0;}
   .terms-body ul{margin:8px 0 0;padding-left:18px;}
   .terms-body li{margin-bottom:6px;}
+  .terms-sub{margin:16px 0 0;font-size:0.92rem;font-weight:700;color:var(--ink);}
 
   footer{
     text-align:center;
@@ -662,10 +660,27 @@
   .consent-actions button{flex:1;border-radius:10px;padding:9px 10px;font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--brand);}
   .consent-actions .yes{background:var(--brand);color:#fff;}
   .consent-actions .no{background:#fff;color:var(--brand);}
-  .plan-entry{display:block;width:100%;text-align:left;margin:0 0 14px;padding:14px 16px;border-radius:16px;border:1.5px solid var(--gold);background:var(--gold-soft);color:var(--ink);font-family:inherit;cursor:pointer;}
-  .plan-entry b{display:block;font-size:1rem;color:var(--brand-strong);margin-bottom:2px;}
-  .plan-entry span{display:block;font-size:0.82rem;line-height:1.4;}
-  .plan-entry .plan-cta{margin-top:6px;font-weight:700;color:var(--brand);}
+  .plan-entry{
+    display:block;width:100%;text-align:left;margin:0 0 14px;padding:12px;border-radius:18px;border:none;cursor:pointer;
+    font-family:inherit;color:#2B1508;
+    background:linear-gradient(90deg, rgba(118,80,53,0) 38%, rgb(118,80,53) 72%), url(summis_daily_thali.jpg) left center/auto 100% no-repeat, rgb(118,80,53);
+    box-shadow:var(--shadow);
+    min-height:176px;
+    display:flex;justify-content:flex-end;align-items:stretch;
+  }
+  .pe-card{
+    width:60%;
+    background:rgba(255,248,238,0.88);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border-radius:14px;padding:10px 12px;
+    box-shadow:0 2px 10px rgba(60,30,10,0.18);
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .pe-title{font-family:'Bebas Neue','Fraunces',Impact,sans-serif;font-size:1.6rem;line-height:1;letter-spacing:0.01em;color:#2B1508;white-space:nowrap;}
+  .pe-sub{font-size:0.98rem;font-weight:500;line-height:1.15;}
+  .pe-desc{font-size:0.72rem;line-height:1.3;color:#3A2414;margin-top:2px;}
+  .pe-price{font-size:1rem;font-weight:800;color:#A9381C;margin-top:3px;}
+  .plan-entry .plan-cta{font-size:0.88rem;font-weight:700;color:#8A3A18;}
   .chips{display:flex;flex-wrap:wrap;gap:8px;}
   .chips button{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:inherit;font-size:0.84rem;font-weight:600;cursor:pointer;}
   .chips button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;}
@@ -770,21 +785,23 @@
     } catch (e) {}
   })();
   </script>
-  <button type="button" class="plan-entry" id="planEntry">
-    <b>Summi's Daily &middot; Lunch &amp; dinner plans</b>
-    <span id="planEntryText">Home-style non-veg thali every day, delivered free within 1 km of our kitchen.</span>
-    <span class="plan-cta">See plans &rarr;</span>
+  <button type="button" class="plan-entry" id="planEntry" aria-label="Summi's Daily lunch and dinner plans">
+    <span class="pe-card">
+      <span class="pe-title">Summi&rsquo;s Daily</span>
+      <span class="pe-sub">Lunch &amp; Dinner Plans</span>
+      <span class="pe-desc" id="planEntryText">Delicious home-style thali (veg &amp; non-veg) delivered free within 1 km.</span>
+      <span class="pe-price" id="planEntryPrice">From &#8377;239 per meal</span>
+      <span class="plan-cta">See plans &rarr;</span>
+    </span>
   </button>
   <div class="promo-banner" id="promoBanner">
-    <div class="promo-banner-text">
-      <svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
-      <span id="offerBannerText"><strong>&#8377;50 OFF</strong> on &#8377;199+ (up to 3 times) &middot; <strong>&#8377;100 OFF</strong> on &#8377;499+ &middot; <strong>&#8377;150 OFF</strong> on &#8377;699+ &middot; <strong>&#8377;250 OFF</strong> on &#8377;999+ &mdash; applied automatically at checkout.</span>
-    </div>
+    <div class="promo-title"><svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>Savings for you<svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg></div>
+    <div class="offer-grid" id="offerGrid"></div>
+    <p class="promo-note" id="offerBannerText">*Applied automatically at checkout.</p>
     <button type="button" class="promo-close" id="promoClose" aria-label="Dismiss offer">
       <svg class="icon" viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg>
     </button>
   </div>
-  <p class="intro-note"><strong>Order direct, skip the platform fee</strong> &mdash; same home-style food, straight from our kitchen to your door. Pay by UPI, confirm on WhatsApp.</p>
   <div id="catalog"></div>
 
   <section class="about">
@@ -794,7 +811,7 @@
         <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>
         <div>
           <h4>Hours</h4>
-          <p>10:00 AM &ndash; 3:00 PM &nbsp;&amp;&nbsp; 6:00 PM &ndash; 9:45 PM, daily</p>
+          <p>9:00 AM &ndash; 3:00 PM &nbsp;&amp;&nbsp; 5:30 PM &ndash; 9:00 PM, daily</p>
         </div>
       </div>
       <div class="about-card">
@@ -812,13 +829,6 @@
         </div>
       </div>
       <div class="about-card">
-        <svg class="icon" viewBox="0 0 20 20"><path d="M3 6.5l7-3.5 7 3.5-7 3.5-7-3.5z"/><path d="M3 6.5v7l7 3.5 7-3.5v-7"/><path d="M10 10v7"/></svg>
-        <div>
-          <h4>Delivery T&amp;C</h4>
-          <p>Minimum order value: <b>&#8377;229</b> (excluding delivery charges). Free delivery up to 8&nbsp;km from our kitchen &middot; &#8377;15/km beyond that &middot; we currently deliver up to 20&nbsp;km.</p>
-        </div>
-      </div>
-      <div class="about-card">
         <svg class="icon" viewBox="0 0 20 20"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="M2.5 8h15"/></svg>
         <div>
           <h4>Pay by UPI</h4>
@@ -830,22 +840,6 @@
               Copy
             </button>
           </div>
-        </div>
-      </div>
-      <div class="about-card">
-        <svg class="icon" viewBox="0 0 20 20"><rect x="3" y="2.5" width="14" height="15" rx="2"/><path d="M6.5 6.5h7M6.5 9.5h7M6.5 12.5h4"/></svg>
-        <div>
-          <h4>Legal &amp; registration</h4>
-          <p>Legal name: VB Techspace Private Limited<br>
-          GSTIN: 06XXXXXXXXXX1ZP<br>
-          FSSAI Lic No: 20823005002649</p>
-        </div>
-      </div>
-      <div class="about-card">
-        <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
-        <div>
-          <h4>Kitchen address</h4>
-          <p>Shop Number 7, Tilawa Market, Sector 81, Gurgaon, Haryana</p>
         </div>
       </div>
     </div>
@@ -870,6 +864,14 @@
           <li>We reserve the right to refuse or cancel an order at our discretion, for example if an item is out of stock or delivery isn&#39;t possible.</li>
         </ul>
         <p>These terms are governed by the laws of India. This is a general summary, not a substitute for formal legal advice &mdash; message us on WhatsApp with any questions.</p>
+        <h4 class="terms-sub">Delivery T&amp;C</h4>
+        <p>Minimum order value: <b>&#8377;229</b> (excluding delivery charges). Free delivery up to 8&nbsp;km from our kitchen &middot; &#8377;15/km beyond that &middot; we currently deliver up to 20&nbsp;km.</p>
+        <h4 class="terms-sub">Legal &amp; registration</h4>
+        <p>Legal name: VB Techspace Private Limited<br>
+        GSTIN: 06XXXXXXXXXX1ZP<br>
+        FSSAI Lic No: 20823005002649</p>
+        <h4 class="terms-sub">Kitchen address</h4>
+        <p>Shop Number 7, Tilawa Market, Sector 81, Gurgaon, Haryana</p>
       </div>
     </div>
 
@@ -1091,11 +1093,15 @@
   // so changing the offer in that one list updates the banner, the cart and the terms together.
   function renderOfferTexts(){
     var asc = DISCOUNT_TIERS.slice().sort(function(a, b){ return a.min - b.min; });
-    var banner = asc.map(function(t){
-      return "<strong>₹" + t.off + " OFF</strong> on ₹" + t.min + "+" + (t.maxUses ? " (up to " + t.maxUses + " times)" : "");
-    }).join(" · ") + " — applied automatically at checkout.";
+    var gridEl = document.getElementById("offerGrid");
+    if (gridEl) gridEl.innerHTML = asc.map(function(t){
+      return "<div class=\"offer-tile\"><b>₹" + t.off + " OFF</b><small>on orders ₹" + t.min + "+</small></div>";
+    }).join("");
+    var limited = asc.filter(function(t){ return t.maxUses; });
     var bannerEl = document.getElementById("offerBannerText");
-    if (bannerEl) bannerEl.innerHTML = banner;
+    if (bannerEl) bannerEl.textContent = "*Applied automatically at checkout." + limited.map(function(t){
+      return " ₹" + t.off + " offer: up to " + t.maxUses + " times per customer.";
+    }).join("");
     var parts = asc.map(function(t){
       return "₹" + t.off + " off on orders of ₹" + t.min + " or more" +
         (t.maxUses ? " (each customer can use this offer only " + t.maxUses + " times, counted by mobile number)" : "");
@@ -1118,7 +1124,7 @@
 
   var CATEGORIES = [
     {
-      id: "love-chicken", name: "Love for Chicken", total: 4,
+      id: "love-chicken", name: "Love for Chicken", total: 5,
       items: [
         {
           id: "chicken-chawal-combo",
@@ -1167,6 +1173,21 @@
           variants: [
             { id: "2pc-rumali", label: "2 Pcs Chicken (4 Rumali Roti)", price: 289 },
             { id: "4pc-rumali", label: "4 Pcs Chicken (4 Rumali Roti)", price: 349 }
+          ]
+        },
+        {
+          id: "bihari-litti-chicken-combo",
+          name: "Bihari Litti (Sattu Stuffed) Chicken Combo",
+          sub: "with salad, mirch & gulab jamun",
+          desc: "Authentic Bihari flavours: crispy, golden-fried sattu-stuffed litti served with home-style chicken curry, fresh salad, green chilli (mirch) and a gulab jamun.",
+          spicy: true,
+          badges: [{ label: "New", cls: "gold" }],
+          img: "bihari_litti_combo.jpg",
+          variants: [
+            { id: "2l-2c", label: "2 Litti + 2 Chicken", price: 249 },
+            { id: "4l-2c", label: "4 Litti + 2 Chicken", price: 279 },
+            { id: "2l-4c", label: "2 Litti + 4 Chicken", price: 299 },
+            { id: "4l-4c", label: "4 Litti + 4 Chicken", price: 349 }
           ]
         }
       ]
@@ -2075,7 +2096,8 @@
 
     // ----- static texts generated from PLAN
     var rates = Object.keys(PLAN.perMeal).map(function(k){ return PLAN.perMeal[k]; });
-    $("planEntryText").textContent = "Home-style thali, veg or non-veg, every day, delivered free within " + PLAN.radiusKm + " km of our kitchen. From " + money(Math.min.apply(null, rates)) + " per meal.";
+    $("planEntryText").textContent = "Delicious home-style thali (veg & non-veg) delivered free within " + PLAN.radiusKm + " km.";
+    $("planEntryPrice").textContent = "From " + money(Math.min.apply(null, rates)) + " per meal";
     $("planRadiusText").textContent = PLAN.radiusKm + " km";
     $("planMenu").innerHTML = PLAN.menu.map(function(m){ return "<b>" + m[0] + "</b> " + m[1]; }).join("<br>");
     $("termsPlans").textContent = "Summi's Daily meal plans: available only for homes and offices within " + PLAN.radiusKm + " km of our kitchen, Monday to Saturday, and paid in advance by UPI. A plan starts once we confirm your payment. " +
