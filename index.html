@@ -698,7 +698,7 @@
     display:flex;gap:6px;padding:6px;
     background:#2E170A;border-radius:22px;box-shadow:0 12px 28px -8px rgba(0,0,0,0.5);
   }
-  .tabbar button{
+  .tabbar button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;
     flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
     background:transparent;border:none;color:#E9D7C3;font-family:inherit;font-size:0.76rem;font-weight:600;
     padding:8px 6px;border-radius:16px;cursor:pointer;
@@ -1107,6 +1107,28 @@
     <span>Daily meal plans</span>
   </button>
 </nav>
+<script>
+// Tab switching lives in its own tiny script so it keeps working even if something later on the page fails.
+(function(){
+  function go(name){
+    var plans = name === "plans";
+    document.body.classList.toggle("tab-plans", plans);
+    var pg = document.getElementById("plansPage"); if (pg) pg.hidden = !plans;
+    var a = document.getElementById("tabAla"), p = document.getElementById("tabPlans");
+    if (a) a.setAttribute("aria-pressed", plans ? "false" : "true");
+    if (p) p.setAttribute("aria-pressed", plans ? "true" : "false");
+    window.scrollTo(0, 0);
+    if (plans && typeof window.__planRender === "function") { try { window.__planRender(); } catch (e) {} }
+  }
+  var bar = document.getElementById("tabBar");
+  if (!bar) return;
+  bar.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if (!b) return;
+    if (b.id === "tabPlans") go("plans"); else if (b.id === "tabAla") go("ala");
+  });
+})();
+</script>
 
 <button class="cart-bar" id="cartBar" hidden>
   <div class="left">
