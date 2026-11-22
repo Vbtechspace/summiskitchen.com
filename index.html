@@ -1931,7 +1931,7 @@
   noteField.addEventListener("input", updateCheckoutLink);
 
   // ---------- online payment (Razorpay, via our Google Apps Script) ----------
-  var CUSTOMER_LOG_URL_EARLY = "https://script.google.com/macros/s/AKfycbzkJq14hj9cOl7Luv_61GrWsHIEIP7LAOgVvlWm-ImSH8Ojii6dasx3vK6UXwgneMaX4A/exec";
+  var CUSTOMER_LOG_URL_EARLY = "https://script.google.com/macros/s/AKfycbySCmRqknFQpb-cYp2lhTiDqRRg9BUH36LMj84nkyzsZ_o-d2MvY3jOrqag70HzKqA0AQ/exec";
   var checkoutLabel = document.getElementById("checkoutLabel");
   var payMethodField = document.getElementById("payMethodField");
   var onlineAvailable = false, payMode = "online", lastMsgCore = "", lastGrand = 0, paying = false;
@@ -2022,7 +2022,7 @@
 
   // Customer list: on checkout, name + mobile + offers choice are saved to our Google Sheet
   // (used only for order follow-up and, if ticked, WhatsApp offers). Empty URL = feature off.
-  var CUSTOMER_LOG_URL = "https://script.google.com/macros/s/AKfycbzkJq14hj9cOl7Luv_61GrWsHIEIP7LAOgVvlWm-ImSH8Ojii6dasx3vK6UXwgneMaX4A/exec";
+  var CUSTOMER_LOG_URL = "https://script.google.com/macros/s/AKfycbySCmRqknFQpb-cYp2lhTiDqRRg9BUH36LMj84nkyzsZ_o-d2MvY3jOrqag70HzKqA0AQ/exec";
   function logCustomer(paid){
     if (!CUSTOMER_LOG_URL) return;
     try {
