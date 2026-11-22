@@ -1565,6 +1565,16 @@
   function saveCart(){
     try { localStorage.setItem("summis_cart_v1", JSON.stringify(cart)); } catch (e) {}
   }
+  // Drop anything in a saved cart that is no longer on the menu (old items, bad quantities).
+  (function(){
+    var changed = false;
+    Object.keys(cart).forEach(function(id){
+      var q = Number(cart[id]);
+      if (!allItems[id] || !isFinite(q) || q <= 0) { delete cart[id]; changed = true; }
+      else if (q !== cart[id]) { cart[id] = q; changed = true; }
+    });
+    if (changed) saveCart();
+  })();
 
   function setQty(id, qty){
     if (qty <= 0) delete cart[id];
