@@ -636,6 +636,25 @@
   @keyframes locPulse{0%,100%{box-shadow:0 0 0 0 rgba(138,62,32,0.45);}50%{box-shadow:0 0 0 8px rgba(138,62,32,0);}}
   .loc-need{outline:3px solid #d9822b;outline-offset:3px;border-radius:12px;}
   .checkout-hint.need-loc{color:#a8321c;font-weight:700;}
+  .place-search{margin-top:2px;}
+  .place-search .ps-or{font-size:0.78rem;color:var(--muted,#7a6a60);margin:2px 0 6px;font-weight:600;}
+  .place-search .ps-row{display:flex;gap:8px;}
+  .place-search input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:0.9rem;background:#fff;color:inherit;}
+  .place-search button.ps-go{flex:none;border:0;border-radius:10px;padding:0 16px;font:inherit;font-weight:700;font-size:0.85rem;background:var(--brand);color:#fff;cursor:pointer;}
+  .place-search .ps-list{margin-top:6px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden;}
+  .place-search .ps-list:empty{display:none;}
+  .place-search .ps-item{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 12px;font:inherit;font-size:0.85rem;color:inherit;cursor:pointer;}
+  .place-search .ps-item:last-child{border-bottom:0;}
+  .place-search .ps-item b{display:block;font-weight:700;}
+  .place-search .ps-item span{color:var(--muted,#7a6a60);font-size:0.78rem;}
+  .place-search .ps-msg{padding:10px 12px;font-size:0.82rem;color:var(--muted,#7a6a60);}
+  .oor-box{margin:10px 0 0;padding:12px 14px;border:1px solid #e3b9a8;background:#fbece5;border-radius:12px;font-size:0.86rem;}
+  .oor-box[hidden]{display:none!important;}
+  .oor-box p{margin:0 0 6px;}
+  .oor-box .oor-t{font-weight:700;color:#8a2f17;}
+  .oor-box .oor-go{width:100%;border:0;border-radius:10px;padding:11px 12px;font:inherit;font-weight:700;font-size:0.88rem;background:var(--brand);color:#fff;cursor:pointer;margin-top:4px;}
+  .oor-box .oor-go[hidden]{display:none;}
+  .oor-box .oor-m{margin:8px 0 0;font-weight:600;}
   .km-hint{
     display:block;
     margin-top:6px;
@@ -1200,11 +1219,11 @@
         <div class="loc-row">
           <button type="button" class="locate-btn" id="attachLocBtn">
             <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
-            <span>Step 1: Tap here to share your location<small>Needed to work out your delivery charge. Then add your flat / house no. below.</small></span>
+            <span>Tap here to use your current location<small>Fastest way to work out your delivery charge. Delivering elsewhere? Search that address below.</small></span>
           </button>
           <span class="loc-status" id="locStatus" hidden>
             <svg class="icon" viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg>
-            Location used
+            <span id="locStatusText">Location used</span>
             <button type="button" id="locClear" aria-label="Remove used location">&times;</button>
           </span>
         </div>
@@ -2118,10 +2137,133 @@
   var locStatus = document.getElementById("locStatus");
   var locClear = document.getElementById("locClear");
 
+  // Address search (free OpenStreetMap data): lets a customer choose a delivery place other than
+  // where they are standing. Returns the wrapper element. onPick receives {lat, lng, label}.
+  function addPlaceSearch(afterEl, onPick, intro){
+    var wrap = document.createElement("div");
+    wrap.className = "place-search";
+    wrap.innerHTML =
+      '<div class="ps-or"></div>' +
+      '<div class="ps-row"><input type="search" placeholder="Society, sector or landmark" autocomplete="off" enterkeyhint="search" aria-label="Search delivery address">' +
+      '<button type="button" class="ps-go">Search</button></div><div class="ps-list"></div>';
+    wrap.querySelector(".ps-or").textContent = intro;
+    afterEl.parentNode.insertBefore(wrap, afterEl.nextSibling);
+    var input = wrap.querySelector("input"), go = wrap.querySelector(".ps-go"), list = wrap.querySelector(".ps-list");
+    var busy = false;
+    function say(t){ list.innerHTML = ""; var d = document.createElement("div"); d.className = "ps-msg"; d.textContent = t; list.appendChild(d); }
+    function near(lat, lng){ return haversineKm(KITCHEN_LAT, KITCHEN_LNG, lat, lng) <= 30; }
+    function viaPhoton(q){
+      return fetch("https://photon.komoot.io/api/?limit=8&lang=en&lat=" + KITCHEN_LAT + "&lon=" + KITCHEN_LNG + "&q=" + encodeURIComponent(q))
+        .then(function(r){ if (!r.ok) throw new Error("photon"); return r.json(); })
+        .then(function(j){
+          return ((j && j.features) || []).map(function(f){
+            var p = f.properties || {}, c = (f.geometry && f.geometry.coordinates) || [];
+            var parts = [p.street, p.district || p.suburb, p.city || p.county, p.postcode].filter(Boolean);
+            return { lat: c[1], lng: c[0], title: p.name || p.street || "Selected place", sub: parts.join(", ") };
+          });
+        });
+    }
+    function viaNominatim(q){
+      return fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=8&countrycodes=in&viewbox=76.75,28.55,77.25,28.25&q=" + encodeURIComponent(q))
+        .then(function(r){ if (!r.ok) throw new Error("nominatim"); return r.json(); })
+        .then(function(a){
+          return (a || []).map(function(x){
+            var bits = String(x.display_name || "").split(", ");
+            return { lat: parseFloat(x.lat), lng: parseFloat(x.lon), title: bits[0] || "Selected place", sub: bits.slice(1, 4).join(", ") };
+          });
+        });
+    }
+    function show(items){
+      items = items.filter(function(x){ return isFinite(x.lat) && isFinite(x.lng) && near(x.lat, x.lng); }).slice(0, 5);
+      if (!items.length) { say("We couldn't find that near Gurgaon. Try adding the sector or society name, or tap the location button above."); return false; }
+      list.innerHTML = "";
+      items.forEach(function(x){
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "ps-item";
+        var t = document.createElement("b"); t.textContent = x.title;
+        var u = document.createElement("span"); u.textContent = x.sub;
+        b.appendChild(t); b.appendChild(u);
+        b.addEventListener("click", function(){
+          list.innerHTML = "";
+          input.value = x.title;
+          onPick({ lat: x.lat, lng: x.lng, label: x.title + (x.sub ? ", " + x.sub : "") });
+        });
+        list.appendChild(b);
+      });
+      return true;
+    }
+    function run(){
+      var q = input.value.trim();
+      if (q.length < 3) { say("Type at least 3 letters, for example your society or sector name."); return; }
+      if (busy) return;
+      busy = true; go.disabled = true; say("Searching…");
+      var full = /gurgaon|gurugram/i.test(q) ? q : (q + ", Gurgaon");
+      viaPhoton(full).catch(function(){ return []; })
+        .then(function(items){
+          var ok = items.filter(function(x){ return isFinite(x.lat) && isFinite(x.lng) && near(x.lat, x.lng); }).length > 0;
+          if (ok) return items;
+          return viaNominatim(full).catch(function(){ return items; });
+        })
+        .then(function(items){ show(items); })
+        .catch(function(){ say("Search isn't available right now. Please tap the location button above."); })
+        .then(function(){ busy = false; go.disabled = false; });
+    }
+    go.addEventListener("click", run);
+    input.addEventListener("keydown", function(e){ if (e.key === "Enter") { e.preventDefault(); run(); } });
+    return wrap;
+  }
+
+  // ---------- out-of-range customers: the area is noted anonymously (no name, no number);
+  // contact details are saved only if the customer taps "message me when you deliver there". ----------
+  var oorLogged = {};
+  function oorPost(o){
+    if (!CUSTOMER_LOG_URL) return;
+    try {
+      o.kind = "outofrange";
+      fetch(CUSTOMER_LOG_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(o) });
+    } catch (e) {}
+  }
+  function makeOorBox(afterEl, source, getName, getPhone, extra){
+    var box = document.createElement("div");
+    box.className = "oor-box"; box.hidden = true;
+    box.innerHTML = '<p class="oor-t"></p><p class="oor-s"></p><button type="button" class="oor-go">Yes, message me if you start delivering to my area</button><p class="oor-m" aria-live="polite"></p>';
+    afterEl.parentNode.insertBefore(box, afterEl.nextSibling);
+    var t = box.querySelector(".oor-t"), sm = box.querySelector(".oor-s"), go = box.querySelector(".oor-go"), msg = box.querySelector(".oor-m");
+    var cur = null, curLoc = null, curKm = 0;
+    function sync(out, km, loc, limit){
+      if (!out || !loc || km === null) { box.hidden = true; cur = null; return; }
+      box.hidden = false;
+      var key = loc.lat.toFixed(3) + "," + loc.lng.toFixed(3) + "|" + source;
+      if (!oorLogged[key]) {
+        oorLogged[key] = { ref: "OR" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), done: false };
+        oorPost({ ref: oorLogged[key].ref, source: source, km: Math.round(km * 10) / 10, area: loc.label || "", lat: loc.lat, lng: loc.lng, wants: false });
+      }
+      cur = oorLogged[key]; curLoc = loc; curKm = km;
+      t.textContent = "Sorry, we don't deliver to this address yet (" + km.toFixed(1) + " km away; we deliver up to " + limit + " km).";
+      sm.textContent = (extra ? extra + " " : "") + "Want us to message you once if we start delivering to your area? We only note the area, not your name, to decide where to expand.";
+      go.hidden = cur.done;
+      msg.textContent = cur.done ? "Thank you! We'll message you once if we start delivering there. You can reply STOP anytime." : "";
+    }
+    go.addEventListener("click", function(){
+      if (!cur || !curLoc) return;
+      var nm = String(getName() || "").trim(), ph = String(getPhone() || "").replace(/\D/g, "").slice(-10);
+      if (!nm || !/^[6-9]\d{9}$/.test(ph)) { msg.textContent = "Please fill in your name and 10-digit mobile number in the form above first."; return; }
+      oorPost({ ref: cur.ref, source: source, km: Math.round(curKm * 10) / 10, area: curLoc.label || "", lat: curLoc.lat, lng: curLoc.lng, wants: true, name: nm, phone: ph });
+      cur.done = true; go.hidden = true;
+      msg.textContent = "Thank you! We'll message you once if we start delivering there. You can reply STOP anytime.";
+    });
+    return { sync: sync };
+  }
+  var oorAla = null;
+
+  var placeSearchEl = null;
   function paintLocStatus(){
     if (!attachLocBtn || !locStatus) return;
     attachLocBtn.hidden = !!customerLocation;
     locStatus.hidden = !customerLocation;
+    if (placeSearchEl) placeSearchEl.hidden = !!customerLocation;
+    var tx = document.getElementById("locStatusText");
+    if (tx) tx.textContent = (customerLocation && customerLocation.label) ? ("Delivering near " + customerLocation.label) : "Location used";
   }
 
   if (attachLocBtn) {
@@ -2147,6 +2289,15 @@
         setTimeout(function(){ attachLocBtn.innerHTML = attachLocBtnDefault; }, 3000);
       }, { enableHighAccuracy: true, timeout: 8000 });
     });
+  }
+  if (attachLocBtn) {
+    placeSearchEl = addPlaceSearch(attachLocBtn, function(loc){
+      customerLocation = loc;
+      paintLocStatus();
+      updateDeliverySummary();
+      updateCheckoutLink();
+    }, "Or search a different delivery address:");
+    oorAla = makeOorBox(checkoutHint, "A la carte", function(){ return nameField.value; }, function(){ return phoneField.value; }, "");
   }
   if (locClear) {
     locClear.addEventListener("click", function(){
@@ -2213,6 +2364,7 @@
 
   function updateCheckoutLink(){
     checkoutHint.classList.remove("need-loc");
+    if (oorAla) { var _od = deliveryInfo(); oorAla.sync(_od.known && _od.outOfRange, _od.km, customerLocation, MAX_KM); }
     checkoutLabel.textContent = payOnline() ? "Pay online securely" : "Checkout on WhatsApp";
     var t = cartTotals();
     if (t.count === 0){
@@ -2286,7 +2438,7 @@
       if (!d.known) {
         checkoutBtn.setAttribute("aria-disabled", "true");
         checkoutBtn.removeAttribute("href");
-        checkoutHint.textContent = "First tap the brown \u201cShare your location\u201d button above so we can work out delivery. Or choose UPI + screenshot.";
+        checkoutHint.textContent = "First tap the brown location button above, or search the delivery address, so we can work out delivery. Or choose UPI + screenshot.";
         checkoutHint.classList.add("need-loc");
         return;
       }
@@ -2600,6 +2752,10 @@
         st.loc = null; st.km = null; locBtn.disabled = false; locBtn.textContent = "Couldn't get location — tap to retry"; render();
       }, { enableHighAccuracy: true, timeout: 10000 });
     });
+    var oorPlan = makeOorBox($("planHint"), "Meal plan", function(){ return nameEl.value; }, function(){ return phoneEl.value; }, "You can still order \u00e0 la carte up to " + MAX_KM + " km.");
+    addPlaceSearch(locBtn, function(loc){
+      st.loc = { lat: loc.lat, lng: loc.lng, label: loc.label }; st.km = haversineKm(KITCHEN_LAT, KITCHEN_LNG, loc.lat, loc.lng); render();
+    }, "Delivering somewhere else? Search that address:");
     function withinRange(){ return st.km !== null && st.km <= PLAN.radiusKm; }
 
     var submitEl = $("planSubmit"), hintEl = $("planHint"), hintDefault = hintEl.textContent;
@@ -2648,6 +2804,7 @@
         radiusEl.className = "plan-radius " + (ok ? "ok" : "bad");
         radiusEl.textContent = ok ? ("✓ " + st.km.toFixed(2) + " km from our kitchen — you're in range") : ("✗ " + st.km.toFixed(2) + " km from our kitchen — meal plans are only within " + PLAN.radiusKm + " km");
       }
+      if (oorPlan) oorPlan.sync(st.km !== null && !withinRange(), st.km, st.loc, PLAN.radiusKm);
       $("planPayNote").innerHTML = onlineAvailable
         ? "Pay securely online with UPI, card or netbanking. Your plan is confirmed straight after payment. Cart offers and discounts do not apply to meal plans."
         : "Online payment is being set up. Meal plans will open for booking shortly.";
