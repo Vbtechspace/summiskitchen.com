@@ -623,6 +623,19 @@
   .locate-btn:disabled{opacity:0.6;cursor:default;}
   .locate-btn[hidden]{display:none!important;}
   .locate-btn .icon{width:14px;height:14px;flex:none;}
+  .loc-row{flex-direction:column;align-items:stretch;}
+  .locate-btn{
+    width:100%;justify-content:center;white-space:normal;text-align:center;
+    background:var(--brand);color:#fff;border-color:var(--brand);
+    font-size:0.95rem;padding:13px 14px;border-radius:12px;gap:8px;
+    animation:locPulse 1.8s ease-in-out infinite;
+  }
+  .locate-btn .icon{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;}
+  .locate-btn small{display:block;font-weight:500;font-size:0.74rem;opacity:0.92;margin-top:2px;}
+  .locate-btn:disabled{animation:none;}
+  @keyframes locPulse{0%,100%{box-shadow:0 0 0 0 rgba(138,62,32,0.45);}50%{box-shadow:0 0 0 8px rgba(138,62,32,0);}}
+  .loc-need{outline:3px solid #d9822b;outline-offset:3px;border-radius:12px;}
+  .checkout-hint.need-loc{color:#a8321c;font-weight:700;}
   .km-hint{
     display:block;
     margin-top:6px;
@@ -1187,7 +1200,7 @@
         <div class="loc-row">
           <button type="button" class="locate-btn" id="attachLocBtn">
             <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
-            Use my current location
+            <span>Step 1: Tap here to share your location<small>Needed to work out your delivery charge. Then add your flat / house no. below.</small></span>
           </button>
           <span class="loc-status" id="locStatus" hidden>
             <svg class="icon" viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg>
@@ -2052,7 +2065,15 @@
     } catch (e) {}
   }
   checkoutBtn.addEventListener("click", function(ev){
-    if (checkoutBtn.getAttribute("aria-disabled") === "true") { ev.preventDefault(); return; }
+    if (checkoutBtn.getAttribute("aria-disabled") === "true") {
+      ev.preventDefault();
+      if (!customerLocation && attachLocBtn && !attachLocBtn.hidden) {
+        try { attachLocBtn.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { attachLocBtn.scrollIntoView(); }
+        attachLocBtn.classList.add("loc-need");
+        setTimeout(function(){ attachLocBtn.classList.remove("loc-need"); }, 2500);
+      }
+      return;
+    }
     if (payOnline()) { ev.preventDefault(); startOnlinePayment(); return; }
     logCustomer();
   });
@@ -2191,6 +2212,7 @@
   }
 
   function updateCheckoutLink(){
+    checkoutHint.classList.remove("need-loc");
     checkoutLabel.textContent = payOnline() ? "Pay online securely" : "Checkout on WhatsApp";
     var t = cartTotals();
     if (t.count === 0){
@@ -2264,7 +2286,8 @@
       if (!d.known) {
         checkoutBtn.setAttribute("aria-disabled", "true");
         checkoutBtn.removeAttribute("href");
-        checkoutHint.textContent = "To pay online, tap the location button above so we can work out delivery, or choose UPI + screenshot.";
+        checkoutHint.textContent = "First tap the brown \u201cShare your location\u201d button above so we can work out delivery. Or choose UPI + screenshot.";
+        checkoutHint.classList.add("need-loc");
         return;
       }
       if (!addrField.value.trim()) {
