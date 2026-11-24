@@ -308,7 +308,8 @@
   }
   .variant-row:first-child{border-top:none;padding-top:2px;}
   .variant-row .v-label{flex:1;min-width:0;font-size:0.85rem;color:var(--ink);font-weight:500;}
-  .zp{display:block;font-weight:500;font-size:0.68rem;line-height:1.1;color:#8a7d72;text-decoration:line-through;text-align:right;}
+  .zp{display:block;margin-top:2px;font-weight:600;font-size:0.72rem;line-height:1.25;color:#1f7a3a;text-decoration:none;text-align:left;}
+  .direct-note{margin:0 0 8px;font-size:0.82rem;line-height:1.35;text-align:center;opacity:0.92;}
   .zp-note{font-size:0.78rem;color:var(--olive);font-weight:600;margin:4px 0 0;}
   .variant-row .v-price{font-weight:700;font-size:0.85rem;font-variant-numeric:tabular-nums;color:var(--ink);}
 
@@ -625,6 +626,38 @@
   .locate-btn:disabled{opacity:0.6;cursor:default;}
   .locate-btn[hidden]{display:none!important;}
   .locate-btn .icon{width:14px;height:14px;flex:none;}
+  .loc-row{flex-direction:column;align-items:stretch;}
+  .locate-btn{
+    width:100%;justify-content:center;white-space:normal;text-align:center;
+    background:var(--brand);color:#fff;border-color:var(--brand);
+    font-size:0.95rem;padding:13px 14px;border-radius:12px;gap:8px;
+    animation:locPulse 1.8s ease-in-out infinite;
+  }
+  .locate-btn .icon{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;}
+  .locate-btn small{display:block;font-weight:500;font-size:0.74rem;opacity:0.92;margin-top:2px;}
+  .locate-btn:disabled{animation:none;}
+  @keyframes locPulse{0%,100%{box-shadow:0 0 0 0 rgba(138,62,32,0.45);}50%{box-shadow:0 0 0 8px rgba(138,62,32,0);}}
+  .loc-need{outline:3px solid #d9822b;outline-offset:3px;border-radius:12px;}
+  .checkout-hint.need-loc{color:#a8321c;font-weight:700;}
+  .place-search{margin-top:2px;}
+  .place-search .ps-or{font-size:0.78rem;color:var(--muted,#7a6a60);margin:2px 0 6px;font-weight:600;}
+  .place-search .ps-row{display:flex;gap:8px;}
+  .place-search input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:0.9rem;background:#fff;color:inherit;}
+  .place-search button.ps-go{flex:none;border:0;border-radius:10px;padding:0 16px;font:inherit;font-weight:700;font-size:0.85rem;background:var(--brand);color:#fff;cursor:pointer;}
+  .place-search .ps-list{margin-top:6px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden;}
+  .place-search .ps-list:empty{display:none;}
+  .place-search .ps-item{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 12px;font:inherit;font-size:0.85rem;color:inherit;cursor:pointer;}
+  .place-search .ps-item:last-child{border-bottom:0;}
+  .place-search .ps-item b{display:block;font-weight:700;}
+  .place-search .ps-item span{color:var(--muted,#7a6a60);font-size:0.78rem;}
+  .place-search .ps-msg{padding:10px 12px;font-size:0.82rem;color:var(--muted,#7a6a60);}
+  .oor-box{margin:10px 0 0;padding:12px 14px;border:1px solid #e3b9a8;background:#fbece5;border-radius:12px;font-size:0.86rem;}
+  .oor-box[hidden]{display:none!important;}
+  .oor-box p{margin:0 0 6px;}
+  .oor-box .oor-t{font-weight:700;color:#8a2f17;}
+  .oor-box .oor-go{width:100%;border:0;border-radius:10px;padding:11px 12px;font:inherit;font-weight:700;font-size:0.88rem;background:var(--brand);color:#fff;cursor:pointer;margin-top:4px;}
+  .oor-box .oor-go[hidden]{display:none;}
+  .oor-box .oor-m{margin:8px 0 0;font-weight:600;}
   .km-hint{
     display:block;
     margin-top:6px;
@@ -700,7 +733,7 @@
     display:flex;gap:6px;padding:6px;
     background:#2E170A;border-radius:22px;box-shadow:0 12px 28px -8px rgba(0,0,0,0.5);
   }
-  .tabbar button{
+  .tabbar button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;
     flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
     background:transparent;border:none;color:#E9D7C3;font-family:inherit;font-size:0.76rem;font-weight:600;
     padding:8px 6px;border-radius:16px;cursor:pointer;
@@ -720,6 +753,9 @@
   .pp-flat{display:inline-block;margin:10px 0 2px;padding:6px 16px;border-radius:999px;background:#8A3A18;color:#fff;font-weight:800;font-size:1.05rem;}
   .pp-prices{font-size:0.85rem;color:var(--ink-muted);margin:6px 0 0;}
   .pp-cutoff{background:#FFF3DC;border:1px solid #E9C98A;border-radius:14px;padding:12px 14px;margin:0 0 16px;font-size:0.92rem;line-height:1.45;}
+  .addon-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);}
+  .addon-row:last-child{border-bottom:none;} .ad-name{flex:1;font-weight:600;font-size:0.86rem;color:var(--ink);} .ad-price{color:var(--ink-muted);font-size:0.86rem;}
+  .mg-wa{display:block;text-align:center;margin-top:10px;}
   .pp-banner h2{font-size:1.45rem;margin:0;}
   .pp-sub{font-size:1.02rem;font-weight:700;color:var(--ink-muted);margin:6px 0 4px;}
   .pp-tag{font-size:0.88rem;color:var(--ink-muted);margin:0;line-height:1.45;}
@@ -733,7 +769,13 @@
   .menu-box{background:var(--surface-2);border-radius:14px;padding:12px 14px;}
   .menu-day{font-size:0.74rem;letter-spacing:0.05em;color:var(--ink-muted);font-weight:600;margin-bottom:8px;}
   .menu-row{display:flex;align-items:baseline;gap:8px;margin:6px 0;}
-  .menu-row b{font-size:1rem;font-weight:700;line-height:1.3;}
+  .menu-row span.mi{font-size:0.98rem;font-weight:400;line-height:1.35;}
+  .menu-oos{font-size:0.78rem;color:#B3261E;font-weight:600;}
+  #menuDays{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
+  #menuDays button{padding:8px 0;text-align:center;font-size:0.8rem;}
+  .chips button:disabled{opacity:.55;cursor:not-allowed;background:#EFE6DA;}
+  .chips button[aria-pressed="true"] small{color:#FFE3D6;}
+  .chips button small{display:block;font-size:0.66rem;font-weight:600;color:#B3261E;line-height:1.1;}
   .menu-tag{flex:none;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;}
   .menu-week{font-size:0.82rem;color:var(--ink-muted);margin:2px 0 8px;} .menu-tag.l{background:#8A3A18;}
   .menu-tag.nv{background:#A9381C;} .menu-tag.v{background:#3E7D32;}
@@ -786,6 +828,21 @@
 <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"669bb2dd1fe496bf2597489010fb4410"})});</script>
 </head>
 <body>
+<script>
+(function(){
+  var box=null,n=0;
+  function show(m){
+    try{
+      if(!/[?&]debug/.test(location.search)) return;
+      if(!box){box=document.createElement("pre");box.style.cssText="position:fixed;z-index:99999;left:0;right:0;top:0;max-height:40vh;overflow:auto;margin:0;padding:8px;background:#fee;color:#900;font:11px/1.3 monospace;white-space:pre-wrap";document.body.appendChild(box);}
+      if(n++<8) box.textContent+=m+"\n";
+    }catch(e){}
+  }
+  window.__dbg=show;
+  window.addEventListener("error",function(e){show("ERR: "+e.message+" @"+(e.lineno||"?")+":"+(e.colno||"?"));});
+  window.addEventListener("unhandledrejection",function(e){show("REJ: "+(e.reason&&e.reason.message||e.reason));});
+})();
+</script>
 
 <header class="top">
   <div class="brand-row">
@@ -797,12 +854,8 @@
   </div>
   <div class="chip-row">
     <span class="info-chip">
-      <svg class="icon" viewBox="0 0 20 20"><path d="M5 15L15 5M9 5h6v6"/></svg>
-      Available on Zomato &amp; Swiggy
-    </span>
-    <span class="info-chip">
       <svg class="icon filled" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>
-      4.4 &middot; 1000+ orders delivered daily
+      Rated 4.3 &middot; Fresh home-style food daily
     </span>
     <span class="info-chip">
       <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>
@@ -841,6 +894,7 @@
   </script>
   <div class="promo-banner" id="promoBanner">
     <div class="promo-title"><svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg>Savings for you<svg class="icon" viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z"/></svg></div>
+    <p class="direct-note">Order direct, pay less &mdash; no app commission, so the saving is yours.</p>
     <div class="offer-grid" id="offerGrid"></div>
     <p class="promo-note" id="offerBannerText">*Applied automatically at checkout.</p>
     <button type="button" class="promo-close" id="promoClose" aria-label="Dismiss offer">
@@ -863,7 +917,7 @@
 
   <div class="pp-card">
     <div class="pp-card-head"><h3>This Week's Menu</h3></div>
-    <div class="pp-card-sub"><b>Summi's Daily Meals</b><span class="pp-badge">New every week</span></div>
+    <div class="pp-card-sub"><span class="pp-badge">New every week</span></div>
     <p class="menu-week" id="menuWeek"></p>
     <div class="chips pp-days" id="menuDays"></div>
     <div class="chips pp-days" id="menuDiet" style="margin-top:8px">
@@ -875,10 +929,17 @@
       <div class="menu-day" id="menuDayTitle">MENU</div>
       <div id="menuBody"></div>
     </div>
+    <button type="button" id="menuStartBtn" class="checkout-btn" style="width:100%;margin-top:12px;border:0;cursor:pointer;font:inherit">Start your plan</button>
     <p class="menu-foot">Customers can view the upcoming meals before subscribing.</p>
   </div>
 
-  <div class="pp-card">
+  <div class="pp-card" id="planAddonCard">
+    <div class="pp-card-head"><h3>Add-ons</h3></div>
+    <p class="plan-help" style="margin-top:0">Optional extras, charged per delivery plus GST. Whatever you choose here is added to <b>every delivery</b> of the plan you buy below. For a single day only, use <b>Manage my plan &gt; Add-ons for a day</b>.</p>
+    <div id="planAddons"></div>
+  </div>
+
+  <div class="pp-card" id="startPlanCard" style="scroll-margin-top:12px">
     <div class="pp-card-head"><h3>Start your plan</h3></div>
     <div class="field">
       <label>Veg or non-veg?</label>
@@ -935,27 +996,29 @@
     <p class="privacy-note">We save your name, mobile number and address only to run your meal plan. We never sell or share them.</p>
     <div class="summary-row"><span id="planSumLabel">Plan</span><span id="planSumMeals">&mdash;</span></div>
     <div class="summary-row"><span>Rate per meal</span><span id="planSumRate">&mdash;</span></div>
-    <div class="summary-row"><span>Plan amount</span><span id="planSumAmount">&#8377;0</span></div>
+    <div class="summary-row"><span>Meals amount</span><span id="planSumAmount">&#8377;0</span></div>
+    <div class="summary-row" id="planSumAddonRow" hidden><span id="planSumAddonLbl">Add-ons</span><span id="planSumAddon">&#8377;0</span></div>
     <div class="summary-row"><span>GST (Govt taxes)</span><span id="planSumGst">&#8377;0</span></div>
     <div class="summary-row"><span>Delivery</span><span>Free (within 1 km)</span></div>
-    <div class="summary-row total"><span>Total (pay via UPI)</span><span id="planSumTotal">&#8377;0</span></div>
-    <p class="pay-note">Pay <b>vbtechspace1@kotak</b> by UPI and share the screenshot on WhatsApp. Your plan starts once we confirm your payment. Cart offers and discounts do not apply to meal plans.</p>
-    <a href="#" id="planSubmit" class="checkout-btn" target="_blank" rel="noopener" aria-disabled="true">
+    <div class="summary-row total"><span>Total</span><span id="planSumTotal">&#8377;0</span></div>
+    <p class="pay-note" id="planPayNote"></p>
+    <a href="#" id="planSubmit" class="checkout-btn" aria-disabled="true">
       <svg class="icon" viewBox="0 0 20 20" style="stroke:currentColor;"><path d="M3 6l7 5 7-5"/><rect x="2.5" y="4" width="15" height="12" rx="2"/></svg>
-      Subscribe on WhatsApp
+      <span id="planSubmitLabel">Pay online</span>
     </a>
-    <p class="checkout-hint" id="planHint">Opens WhatsApp with your plan filled in &mdash; review and hit send.</p>
+    <p class="checkout-hint" id="planHint">A secure payment window opens. You will not be charged until you pay.</p>
   </div>
 
   <div class="pp-card">
     <div class="pp-card-head"><h3>Manage my plan</h3></div>
-    <p class="plan-help" style="margin-top:0">Already a subscriber? Skip a day, pause or resume your plan here. Changes need to be made before 8 PM on the evening before.</p>
+    <p class="plan-help" style="margin-top:0">Already a subscriber? Skip a day, pause or resume your plan here. Skip, pause and resume need to be made before 8 PM on the evening before; add-ons for a delivery before 10 AM on the same morning.</p>
     <div class="field">
       <label>What would you like to do?</label>
       <div class="chips" id="mgAct">
         <button type="button" data-v="skip" aria-pressed="true">Skip a meal</button>
         <button type="button" data-v="pause" aria-pressed="false">Pause plan</button>
         <button type="button" data-v="resume" aria-pressed="false">Resume plan</button>
+        <button type="button" data-v="addon" aria-pressed="false">Add-ons for a day</button>
       </div>
     </div>
     <div class="field">
@@ -969,6 +1032,15 @@
     <div class="field">
       <label for="mgDate" id="mgDateLabel">Date to skip</label>
       <input type="date" id="mgDate">
+    </div>
+    <div class="field" id="mgAddonBox" hidden>
+      <label>Which delivery?</label>
+      <div class="chips" id="mgMeal">
+        <button type="button" data-v="Lunch" aria-pressed="true">Lunch</button>
+        <button type="button" data-v="Dinner" aria-pressed="false">Dinner</button>
+      </div>
+      <label style="margin-top:12px;display:block">Choose add-ons</label>
+      <div id="mgAddons"></div>
     </div>
     <button type="button" id="mgSubmit" class="checkout-btn">Skip this date</button>
     <p class="checkout-hint" id="mgMsg" aria-live="polite"></p>
@@ -990,16 +1062,32 @@
     <div id="acResult"></div>
   </div>
 
-  <div class="pp-card">
-    <div class="pp-card-head"><h3>Plan terms</h3></div>
-    <ul class="pp-terms" id="planTerms"></ul>
-  </div>
-  <p class="pp-cutoff"><b>Please note:</b> any new plan, and any change to your plan (skip, pause or resume), must be informed to us by <b>8 PM, one day before</b>.</p>
 </div>
 
 
   <section class="about">
-    <h2 style="font-size:1.15rem;font-weight:600;">Visit &amp; contact</h2>
+    <div class="terms-block" id="termsBlock">
+      <button type="button" class="terms-toggle" id="termsToggle" aria-expanded="false" aria-controls="termsBody">
+        <span>Terms of Service</span>
+        <svg class="icon chev" viewBox="0 0 20 20"><path d="M5 7.5l5 5 5-5"/></svg>
+      </button>
+      <div class="terms-body" id="termsBody" hidden>
+        <p>By placing an order with Summi&#39;s Kitchen (operated by VB Techspace Private Limited), you agree to the following:</p>
+        <ul>
+          <li>Orders are confirmed only once payment is received &mdash; either online, or by UPI with the screenshot shared with us on WhatsApp.</li>
+          <li>Prices shown are current at the time of ordering and may change without prior notice.</li>
+          <li id="termsPlans">Meal plans: available only within 1 km of our kitchen.</li>
+          <li id="termsOffers">Offers: discounts are applied automatically at checkout.</li>
+          <li>Delivery is free up to 8&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out. We currently deliver up to 20&nbsp;km from our kitchen &mdash; message us on WhatsApp if you're further away and want to check for an exception.</li>
+          <li>Delivery times are estimates; actual delivery may vary with traffic, weather or order volume.</li>
+          <li>Online payments: if you pay online, the payment is processed securely by Razorpay (UPI, cards, netbanking). We never see or store your card or bank details. If an order is cancelled by us or a payment succeeds but the order cannot be accepted, the amount is refunded to the original payment method, usually within 5&ndash;7 working days.</li>
+          <li>Cancellations are accepted only before we start preparing your order; once preparation begins, the order can&#39;t be cancelled or refunded.</li>
+          <li>If there&#39;s a genuine issue with your order (wrong item, quality concern, etc.), message us on WhatsApp within 2 hours of delivery so we can make it right.</li>
+          <li>All food is freshly prepared under FSSAI License No. 20823005002649. Please tell us about any allergies before ordering.</li>
+          <li>We reserve the right to refuse or cancel an order at our discretion, for example if an item is out of stock or delivery isn&#39;t possible.</li>
+        </ul>
+        <p>These terms are governed by the laws of India. This is a general summary, not a substitute for formal legal advice &mdash; message us on WhatsApp with any questions.</p>
+        <h4 class="terms-sub">Visit &amp; contact</h4>
     <div class="about-grid">
       <div class="about-card">
         <svg class="icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 5.5V10l3 2"/></svg>
@@ -1037,28 +1125,6 @@
         </div>
       </div>
     </div>
-
-    <div class="terms-block" id="termsBlock">
-      <button type="button" class="terms-toggle" id="termsToggle" aria-expanded="false" aria-controls="termsBody">
-        <span>Terms of Service</span>
-        <svg class="icon chev" viewBox="0 0 20 20"><path d="M5 7.5l5 5 5-5"/></svg>
-      </button>
-      <div class="terms-body" id="termsBody" hidden>
-        <p>By placing an order with Summi&#39;s Kitchen (operated by VB Techspace Private Limited), you agree to the following:</p>
-        <ul>
-          <li>Orders are confirmed only once payment is received via UPI and the screenshot is shared with us on WhatsApp.</li>
-          <li>Prices shown are current at the time of ordering and may change without prior notice.</li>
-          <li id="termsPlans">Meal plans: available only within 1 km of our kitchen.</li>
-          <li id="termsOffers">Offers: discounts are applied automatically at checkout.</li>
-          <li>Delivery is free up to 5&nbsp;km from our kitchen; beyond that, &#8377;15/km is added and shown in your cart before you check out. We currently deliver up to 20&nbsp;km from our kitchen &mdash; message us on WhatsApp if you're further away and want to check for an exception.</li>
-          <li>Delivery times are estimates; actual delivery may vary with traffic, weather or order volume.</li>
-          <li>Online payments: if you pay online, the payment is processed securely by Razorpay (UPI, cards, netbanking). We never see or store your card or bank details. If an order is cancelled by us or a payment succeeds but the order cannot be accepted, the amount is refunded to the original payment method, usually within 5&ndash;7 working days.</li>
-          <li>Cancellations are accepted only before we start preparing your order; once preparation begins, the order can&#39;t be cancelled or refunded.</li>
-          <li>If there&#39;s a genuine issue with your order (wrong item, quality concern, etc.), message us on WhatsApp within 2 hours of delivery so we can make it right.</li>
-          <li>All food is freshly prepared under FSSAI License No. 20823005002649. Please tell us about any allergies before ordering.</li>
-          <li>We reserve the right to refuse or cancel an order at our discretion, for example if an item is out of stock or delivery isn&#39;t possible.</li>
-        </ul>
-        <p>These terms are governed by the laws of India. This is a general summary, not a substitute for formal legal advice &mdash; message us on WhatsApp with any questions.</p>
         <h4 class="terms-sub">Delivery T&amp;C</h4>
         <p>Minimum order value: <b>&#8377;199</b> (excluding delivery charges). Free delivery up to 5&nbsp;km from our kitchen &middot; &#8377;15/km beyond that &middot; we currently deliver up to 20&nbsp;km.</p>
         <h4 class="terms-sub">Legal &amp; registration</h4>
@@ -1089,6 +1155,28 @@
     <span>Daily meal plans</span>
   </button>
 </nav>
+<script>
+// Tab switching lives in its own tiny script so it keeps working even if something later on the page fails.
+(function(){
+  function go(name){
+    var plans = name === "plans";
+    document.body.classList.toggle("tab-plans", plans);
+    var pg = document.getElementById("plansPage"); if (pg) pg.hidden = !plans;
+    var a = document.getElementById("tabAla"), p = document.getElementById("tabPlans");
+    if (a) a.setAttribute("aria-pressed", plans ? "false" : "true");
+    if (p) p.setAttribute("aria-pressed", plans ? "true" : "false");
+    window.scrollTo(0, 0);
+    if (plans && typeof window.__planRender === "function") { try { window.__planRender(); } catch (e) {} }
+  }
+  var bar = document.getElementById("tabBar");
+  if (!bar) return;
+  bar.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if (!b) return;
+    if (b.id === "tabPlans") go("plans"); else if (b.id === "tabAla") go("ala");
+  });
+})();
+</script>
 
 <button class="cart-bar" id="cartBar" hidden>
   <div class="left">
@@ -1131,11 +1219,11 @@
         <div class="loc-row">
           <button type="button" class="locate-btn" id="attachLocBtn">
             <svg class="icon" viewBox="0 0 20 20"><path d="M10 18s6-5.1 6-10a6 6 0 1 0-12 0c0 4.9 6 10 6 10z"/><circle cx="10" cy="8" r="2.3"/></svg>
-            Use my current location
+            <span>Tap here to use your current location<small>Fastest way to work out your delivery charge. Delivering elsewhere? Search that address below.</small></span>
           </button>
           <span class="loc-status" id="locStatus" hidden>
             <svg class="icon" viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9"/></svg>
-            Location used
+            <span id="locStatusText">Location used</span>
             <button type="button" id="locClear" aria-label="Remove used location">&times;</button>
           </span>
         </div>
@@ -1247,6 +1335,20 @@
   function computeGst(discountedSubtotal){
     return Math.round(discountedSubtotal * GST_PERCENT / 100);
   }
+
+  // Add-on items, for meal plans only (the same list is kept in the Apps Script, which re-checks the prices)
+  var ADDONS = [
+    { id: "butter_roti", name: "Butter Tawa Roti (1 pc)", price: 15 },
+    { id: "rumali_roti", name: "Rumali Roti (1 pc)", price: 15 },
+    { id: "chicken_curry", name: "Chicken Curry (2 pcs)", price: 169 },
+    { id: "fish_curry", name: "Fish Curry (2 pcs)", price: 189 },
+    { id: "egg_curry", name: "Egg Curry (2 pcs)", price: 169 },
+    { id: "rice", name: "Rice (1 plate)", price: 149 },
+    { id: "salad", name: "Salad", price: 50 },
+    { id: "gulab_jamun", name: "Gulab Jamun (1 pc)", price: 20 },
+    { id: "coke", name: "Coca-Cola (250 ml)", price: 20 },
+    { id: "water", name: "Water (1 L)", price: 20 }
+  ];
 
   var CATEGORIES = [
     {
@@ -1386,8 +1488,45 @@
       ]
     },
     {
-      id: "value-family", name: "Egg Thali & Family Packs", total: 4,
+      id: "love-egg", name: "Love for Egg", total: 4,
       items: [
+        {
+          id: "egg-homestyle-curry",
+          name: "Best Seller Home Style Egg Curry",
+          desc: "Perfectly boiled, lightly pan-seared eggs simmered in a rich, aromatic onion-tomato masala gravy infused with traditional Indian spices and topped with fresh coriander. Comforting, flavourful, and best paired with hot rotis, parathas or steamed rice.",
+          badges: [{ label: "Bestseller", cls: "gold" }],
+          img: "egg_curry_homestyle.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pcs", price: 169 },
+            { id: "4pc", label: "4 Pcs", price: 219 },
+            { id: "6pc", label: "6 Pcs", price: 279 },
+            { id: "8pc", label: "8 Pcs", price: 339 },
+            { id: "10pc", label: "10 Pcs", price: 389 }
+          ]
+        },
+        {
+          id: "egg-chawal-combo",
+          name: "Homestyle Chawal Egg Curry Combo",
+          sub: "with salad & gulab jamun",
+          desc: "Rich, slow-cooked homestyle egg curry simmered in a flavourful onion & tomato masala gravy, paired with a generous portion of fluffy steamed rice (chawal), a crisp fresh garden salad and a soft, syrup-soaked gulab jamun to finish your meal on a sweet note.",
+          img: "egg_chawal_combo.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pcs", price: 199 },
+            { id: "4pc", label: "4 Pcs", price: 239 }
+          ]
+        },
+        {
+          id: "egg-rumali-combo",
+          name: "Spicy Egg Curry & Rumali Roti Combo",
+          sub: "with salad & gulab jamun",
+          desc: "Turn up the heat with a bold, flavour-packed meal! Fiery, slow-cooked spicy egg curry in a rich onion-tomato masala gravy with aromatic spices, paired with ultra-soft, thin Rumali Rotis to scoop up every last drop, a crisp fresh garden salad to cool your palate, and a warm gulab jamun for the perfect sweet finish.",
+          spicy: true,
+          img: "egg_rumali_combo.jpg",
+          variants: [
+            { id: "2pc", label: "2 Pcs", price: 199 },
+            { id: "4pc", label: "4 Pcs", price: 249 }
+          ]
+        },
         {
           id: "egg-curry-thali",
           name: "Egg Curry Thali",
@@ -1396,14 +1535,19 @@
           badges: [{ label: "New", cls: "gold" }],
           img: "egg_curry_thali.jpg",
           price: 199, zomato: 219
-        },
+        }
+      ]
+    },
+    {
+      id: "value-family", name: "Family Packs", total: 3,
+      items: [
         {
           id: "family-pack",
           name: "Chicken Family Pack (serves 3–4)",
           sub: "chicken curry, rumali roti, rice, raita & gulab jamun",
           desc: "6 pcs home-style chicken curry, 8 rumali roti, a full plate of basmati rice, boondi raita and 4 gulab jamun.",
           badges: [{ label: "New", cls: "gold" }],
-          img: "special_chicken_curry.jpg",
+          img: "chicken_family_pack.jpg", imgPos: "20% 50%",
           price: 649, zomato: 769
         },
         {
@@ -1413,7 +1557,7 @@
           desc: "6 big pcs fresh Rohu fish curry, 8 rumali roti, a full plate of basmati rice, boondi raita and 4 gulab jamun.",
           badges: [{ label: "New", cls: "gold" }],
           spicy: true,
-          img: "fish_curry_rohu.jpg",
+          img: "fish_family_pack.jpg", imgPos: "20% 50%",
           price: 689, zomato: 849
         },
         {
@@ -1422,7 +1566,7 @@
           sub: "egg curry, rumali roti, rice, raita & gulab jamun",
           desc: "8 eggs in home-style curry, 8 rumali roti, a full plate of basmati rice, boondi raita and 4 gulab jamun.",
           badges: [{ label: "New", cls: "gold" }],
-          img: "summis_daily_thali.jpg",
+          img: "egg_family_pack.jpg", imgPos: "20% 50%",
           price: 449, zomato: 569
         }
       ]
@@ -1535,6 +1679,16 @@
   function saveCart(){
     try { localStorage.setItem("summis_cart_v1", JSON.stringify(cart)); } catch (e) {}
   }
+  // Drop anything in a saved cart that is no longer on the menu (old items, bad quantities).
+  (function(){
+    var changed = false;
+    Object.keys(cart).forEach(function(id){
+      var q = Number(cart[id]);
+      if (!allItems[id] || !isFinite(q) || q <= 0) { delete cart[id]; changed = true; }
+      else if (q !== cart[id]) { cart[id] = q; changed = true; }
+    });
+    if (changed) saveCart();
+  })();
 
   function setQty(id, qty){
     if (qty <= 0) delete cart[id];
@@ -1659,8 +1813,8 @@
 
       var rowsHtml = visibleVariants.map(function(v){
         return "<div class=\"variant-row\">" +
-          "<span class=\"v-label\">" + v.label + "</span>" +
-          "<span class=\"v-price\">" + (v.zomato ? "<s class=\"zp\">Zomato &#8377;" + v.zomato + "</s>" : "") + "&#8377;" + v.price + "</span>" +
+          "<span class=\"v-label\">" + v.label + (v.zomato > v.price ? "<span class=\"zp\">&#8377;" + (v.zomato - v.price) + " less than on food apps</span>" : "") + "</span>" +
+          "<span class=\"v-price\">&#8377;" + v.price + "</span>" +
           "<div class=\"qty-slot\" data-variant=\"" + v.id + "\"></div>" +
         "</div>";
       }).join("");
@@ -1681,13 +1835,13 @@
     } else {
       footHtml =
         "<div class=\"item-foot\">" +
-          "<span class=\"price\">" + (item.zomato ? "<s class=\"zp\">Zomato &#8377;" + item.zomato + "</s>" : "") + "&#8377;" + item.price + "</span>" +
+          "<span class=\"price\">&#8377;" + item.price + (item.zomato > item.price ? "<span class=\"zp zp-left\">&#8377;" + (item.zomato - item.price) + " less than on food apps</span>" : "") + "</span>" +
           "<div class=\"qty-slot\"></div>" +
         "</div>";
     }
 
     card.innerHTML =
-      "<div class=\"item-thumb\"><img src=\"" + item.img + "\" alt=\"" + item.name + "\" loading=\"lazy\"></div>" +
+      (item.img ? "<div class=\"item-thumb\"><img src=\"" + item.img + "\" alt=\"" + item.name + "\" loading=\"lazy\"" + (item.imgPos ? " style=\"object-position:" + item.imgPos + "\"" : "") + "></div>" : "") +
       "<div class=\"item-body\">" +
         "<div class=\"badge-row\">" + badgesHtml + "</div>" +
         "<h3>" + item.name + "</h3>" +
@@ -1902,7 +2056,7 @@
   noteField.addEventListener("input", updateCheckoutLink);
 
   // ---------- online payment (Razorpay, via our Google Apps Script) ----------
-  var CUSTOMER_LOG_URL_EARLY = "https://script.google.com/macros/s/AKfycbzkJq14hj9cOl7Luv_61GrWsHIEIP7LAOgVvlWm-ImSH8Ojii6dasx3vK6UXwgneMaX4A/exec";
+  var CUSTOMER_LOG_URL_EARLY = "https://script.google.com/macros/s/AKfycbySCmRqknFQpb-cYp2lhTiDqRRg9BUH36LMj84nkyzsZ_o-d2MvY3jOrqag70HzKqA0AQ/exec";
   var checkoutLabel = document.getElementById("checkoutLabel");
   var payMethodField = document.getElementById("payMethodField");
   var onlineAvailable = false, payMode = "online", lastMsgCore = "", lastGrand = 0, paying = false;
@@ -1983,15 +2137,17 @@
   (function(){
     if (!CUSTOMER_LOG_URL_EARLY) return;
     try {
-      fetch(CUSTOMER_LOG_URL_EARLY + "?action=rzp_config").then(function(r){ return r.json(); }).then(function(j){
-        if (j && j.enabled === true) { onlineAvailable = true; payMethodField.hidden = false; applyPayMode(); }
-      }).catch(function(){});
+      fetch(CUSTOMER_LOG_URL_EARLY + "?action=rzp_config&t=" + Date.now(), { cache: "no-store" }).then(function(r){ return r.text(); }).then(function(t){
+        var j = null; try { j = JSON.parse(t); } catch (e) {}
+        if (window.__dbg) window.__dbg("rzp_config reply: " + String(t).slice(0, 120));
+        if (j && j.enabled === true) { onlineAvailable = true; payMethodField.hidden = false; applyPayMode(); if (window.__planRender) window.__planRender(); }
+      }).catch(function(e){ if (window.__dbg) window.__dbg("rzp_config FAILED: " + (e && e.message)); });
     } catch (e) {}
   })();
 
   // Customer list: on checkout, name + mobile + offers choice are saved to our Google Sheet
   // (used only for order follow-up and, if ticked, WhatsApp offers). Empty URL = feature off.
-  var CUSTOMER_LOG_URL = "https://script.google.com/macros/s/AKfycbzkJq14hj9cOl7Luv_61GrWsHIEIP7LAOgVvlWm-ImSH8Ojii6dasx3vK6UXwgneMaX4A/exec";
+  var CUSTOMER_LOG_URL = "https://script.google.com/macros/s/AKfycbySCmRqknFQpb-cYp2lhTiDqRRg9BUH36LMj84nkyzsZ_o-d2MvY3jOrqag70HzKqA0AQ/exec";
   function logCustomer(paid){
     if (!CUSTOMER_LOG_URL) return;
     try {
@@ -2011,7 +2167,15 @@
     } catch (e) {}
   }
   checkoutBtn.addEventListener("click", function(ev){
-    if (checkoutBtn.getAttribute("aria-disabled") === "true") { ev.preventDefault(); return; }
+    if (checkoutBtn.getAttribute("aria-disabled") === "true") {
+      ev.preventDefault();
+      if (!customerLocation && attachLocBtn && !attachLocBtn.hidden) {
+        try { attachLocBtn.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { attachLocBtn.scrollIntoView(); }
+        attachLocBtn.classList.add("loc-need");
+        setTimeout(function(){ attachLocBtn.classList.remove("loc-need"); }, 2500);
+      }
+      return;
+    }
     if (payOnline()) { ev.preventDefault(); startOnlinePayment(); return; }
     logCustomer();
   });
@@ -2056,10 +2220,133 @@
   var locStatus = document.getElementById("locStatus");
   var locClear = document.getElementById("locClear");
 
+  // Address search (free OpenStreetMap data): lets a customer choose a delivery place other than
+  // where they are standing. Returns the wrapper element. onPick receives {lat, lng, label}.
+  function addPlaceSearch(afterEl, onPick, intro){
+    var wrap = document.createElement("div");
+    wrap.className = "place-search";
+    wrap.innerHTML =
+      '<div class="ps-or"></div>' +
+      '<div class="ps-row"><input type="search" placeholder="Society, sector or landmark" autocomplete="off" enterkeyhint="search" aria-label="Search delivery address">' +
+      '<button type="button" class="ps-go">Search</button></div><div class="ps-list"></div>';
+    wrap.querySelector(".ps-or").textContent = intro;
+    afterEl.parentNode.insertBefore(wrap, afterEl.nextSibling);
+    var input = wrap.querySelector("input"), go = wrap.querySelector(".ps-go"), list = wrap.querySelector(".ps-list");
+    var busy = false;
+    function say(t){ list.innerHTML = ""; var d = document.createElement("div"); d.className = "ps-msg"; d.textContent = t; list.appendChild(d); }
+    function near(lat, lng){ return haversineKm(KITCHEN_LAT, KITCHEN_LNG, lat, lng) <= 30; }
+    function viaPhoton(q){
+      return fetch("https://photon.komoot.io/api/?limit=8&lang=en&lat=" + KITCHEN_LAT + "&lon=" + KITCHEN_LNG + "&q=" + encodeURIComponent(q))
+        .then(function(r){ if (!r.ok) throw new Error("photon"); return r.json(); })
+        .then(function(j){
+          return ((j && j.features) || []).map(function(f){
+            var p = f.properties || {}, c = (f.geometry && f.geometry.coordinates) || [];
+            var parts = [p.street, p.district || p.suburb, p.city || p.county, p.postcode].filter(Boolean);
+            return { lat: c[1], lng: c[0], title: p.name || p.street || "Selected place", sub: parts.join(", ") };
+          });
+        });
+    }
+    function viaNominatim(q){
+      return fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=8&countrycodes=in&viewbox=76.75,28.55,77.25,28.25&q=" + encodeURIComponent(q))
+        .then(function(r){ if (!r.ok) throw new Error("nominatim"); return r.json(); })
+        .then(function(a){
+          return (a || []).map(function(x){
+            var bits = String(x.display_name || "").split(", ");
+            return { lat: parseFloat(x.lat), lng: parseFloat(x.lon), title: bits[0] || "Selected place", sub: bits.slice(1, 4).join(", ") };
+          });
+        });
+    }
+    function show(items){
+      items = items.filter(function(x){ return isFinite(x.lat) && isFinite(x.lng) && near(x.lat, x.lng); }).slice(0, 5);
+      if (!items.length) { say("We couldn't find that near Gurgaon. Try adding the sector or society name, or tap the location button above."); return false; }
+      list.innerHTML = "";
+      items.forEach(function(x){
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "ps-item";
+        var t = document.createElement("b"); t.textContent = x.title;
+        var u = document.createElement("span"); u.textContent = x.sub;
+        b.appendChild(t); b.appendChild(u);
+        b.addEventListener("click", function(){
+          list.innerHTML = "";
+          input.value = x.title;
+          onPick({ lat: x.lat, lng: x.lng, label: x.title + (x.sub ? ", " + x.sub : "") });
+        });
+        list.appendChild(b);
+      });
+      return true;
+    }
+    function run(){
+      var q = input.value.trim();
+      if (q.length < 3) { say("Type at least 3 letters, for example your society or sector name."); return; }
+      if (busy) return;
+      busy = true; go.disabled = true; say("Searching…");
+      var full = /gurgaon|gurugram/i.test(q) ? q : (q + ", Gurgaon");
+      viaPhoton(full).catch(function(){ return []; })
+        .then(function(items){
+          var ok = items.filter(function(x){ return isFinite(x.lat) && isFinite(x.lng) && near(x.lat, x.lng); }).length > 0;
+          if (ok) return items;
+          return viaNominatim(full).catch(function(){ return items; });
+        })
+        .then(function(items){ show(items); })
+        .catch(function(){ say("Search isn't available right now. Please tap the location button above."); })
+        .then(function(){ busy = false; go.disabled = false; });
+    }
+    go.addEventListener("click", run);
+    input.addEventListener("keydown", function(e){ if (e.key === "Enter") { e.preventDefault(); run(); } });
+    return wrap;
+  }
+
+  // ---------- out-of-range customers: the area is noted anonymously (no name, no number);
+  // contact details are saved only if the customer taps "message me when you deliver there". ----------
+  var oorLogged = {};
+  function oorPost(o){
+    if (!CUSTOMER_LOG_URL) return;
+    try {
+      o.kind = "outofrange";
+      fetch(CUSTOMER_LOG_URL, { method: "POST", mode: "no-cors", keepalive: true, headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(o) });
+    } catch (e) {}
+  }
+  function makeOorBox(afterEl, source, getName, getPhone, extra){
+    var box = document.createElement("div");
+    box.className = "oor-box"; box.hidden = true;
+    box.innerHTML = '<p class="oor-t"></p><p class="oor-s"></p><button type="button" class="oor-go">Yes, message me if you start delivering to my area</button><p class="oor-m" aria-live="polite"></p>';
+    afterEl.parentNode.insertBefore(box, afterEl.nextSibling);
+    var t = box.querySelector(".oor-t"), sm = box.querySelector(".oor-s"), go = box.querySelector(".oor-go"), msg = box.querySelector(".oor-m");
+    var cur = null, curLoc = null, curKm = 0;
+    function sync(out, km, loc, limit){
+      if (!out || !loc || km === null) { box.hidden = true; cur = null; return; }
+      box.hidden = false;
+      var key = loc.lat.toFixed(3) + "," + loc.lng.toFixed(3) + "|" + source;
+      if (!oorLogged[key]) {
+        oorLogged[key] = { ref: "OR" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), done: false };
+        oorPost({ ref: oorLogged[key].ref, source: source, km: Math.round(km * 10) / 10, area: loc.label || "", lat: loc.lat, lng: loc.lng, wants: false });
+      }
+      cur = oorLogged[key]; curLoc = loc; curKm = km;
+      t.textContent = "Sorry, we don't deliver to this address yet (" + km.toFixed(1) + " km away; we deliver up to " + limit + " km).";
+      sm.textContent = (extra ? extra + " " : "") + "Want us to message you once if we start delivering to your area? We only note the area, not your name, to decide where to expand.";
+      go.hidden = cur.done;
+      msg.textContent = cur.done ? "Thank you! We'll message you once if we start delivering there. You can reply STOP anytime." : "";
+    }
+    go.addEventListener("click", function(){
+      if (!cur || !curLoc) return;
+      var nm = String(getName() || "").trim(), ph = String(getPhone() || "").replace(/\D/g, "").slice(-10);
+      if (!nm || !/^[6-9]\d{9}$/.test(ph)) { msg.textContent = "Please fill in your name and 10-digit mobile number in the form above first."; return; }
+      oorPost({ ref: cur.ref, source: source, km: Math.round(curKm * 10) / 10, area: curLoc.label || "", lat: curLoc.lat, lng: curLoc.lng, wants: true, name: nm, phone: ph });
+      cur.done = true; go.hidden = true;
+      msg.textContent = "Thank you! We'll message you once if we start delivering there. You can reply STOP anytime.";
+    });
+    return { sync: sync };
+  }
+  var oorAla = null;
+
+  var placeSearchEl = null;
   function paintLocStatus(){
     if (!attachLocBtn || !locStatus) return;
     attachLocBtn.hidden = !!customerLocation;
     locStatus.hidden = !customerLocation;
+    if (placeSearchEl) placeSearchEl.hidden = !!customerLocation;
+    var tx = document.getElementById("locStatusText");
+    if (tx) tx.textContent = (customerLocation && customerLocation.label) ? ("Delivering near " + customerLocation.label) : "Location used";
   }
 
   if (attachLocBtn) {
@@ -2085,6 +2372,15 @@
         setTimeout(function(){ attachLocBtn.innerHTML = attachLocBtnDefault; }, 3000);
       }, { enableHighAccuracy: true, timeout: 8000 });
     });
+  }
+  if (attachLocBtn) {
+    placeSearchEl = addPlaceSearch(attachLocBtn, function(loc){
+      customerLocation = loc;
+      paintLocStatus();
+      updateDeliverySummary();
+      updateCheckoutLink();
+    }, "Or search a different delivery address:");
+    oorAla = makeOorBox(checkoutHint, "A la carte", function(){ return nameField.value; }, function(){ return phoneField.value; }, "");
   }
   if (locClear) {
     locClear.addEventListener("click", function(){
@@ -2150,6 +2446,8 @@
   }
 
   function updateCheckoutLink(){
+    checkoutHint.classList.remove("need-loc");
+    if (oorAla) { var _od = deliveryInfo(); oorAla.sync(_od.known && _od.outOfRange, _od.km, customerLocation, MAX_KM); }
     checkoutLabel.textContent = payOnline() ? "Pay online securely" : "Checkout on WhatsApp";
     var t = cartTotals();
     if (t.count === 0){
@@ -2223,7 +2521,8 @@
       if (!d.known) {
         checkoutBtn.setAttribute("aria-disabled", "true");
         checkoutBtn.removeAttribute("href");
-        checkoutHint.textContent = "To pay online, tap the location button above so we can work out delivery, or choose UPI + screenshot.";
+        checkoutHint.textContent = "First tap the brown location button above, or search the delivery address, so we can work out delivery. Or choose UPI + screenshot.";
+        checkoutHint.classList.add("need-loc");
         return;
       }
       if (!addrField.value.trim()) {
@@ -2294,7 +2593,7 @@
       b.classList.toggle("active", b.dataset.target === id);
     });
   }
-  if ("IntersectionObserver" in window){
+  if (typeof window.IntersectionObserver === "function"){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(entry){
         if (entry.isIntersecting) setActive(entry.target.id.replace("sec-", ""));
@@ -2305,10 +2604,9 @@
   if (navButtons[0]) navButtons[0].classList.add("active");
 
   // ---------- init ----------
-  paintLocStatus();
-  updateCartBar();
-  refreshOfferUses();
-  renderDrawer();
+  [paintLocStatus, updateCartBar, refreshOfferUses, renderDrawer].forEach(function(fn){
+    try { fn(); } catch (e) { if (window.__dbg) window.__dbg("INIT " + (fn.name||"") + ": " + e.message); }
+  });
 
   // ================= Daily meal plans: tabs, weekly menu, plan builder, manage my plan =================
   (function(){
@@ -2327,15 +2625,19 @@
         { id: "w2", label: "2 weeks", weeks: 2, price: 199, active: false },
         { id: "w4", label: "4 weeks", weeks: 4, price: 199, active: false }
       ],
+      soldOut: { diet: ["Veg", "Mix"], meals: ["Dinner", "Both"] },   // shown as out of stock and cannot be selected
+      addonCutoffHour: 10,
       dietLabel: { "Veg": "Veg", "Non-veg": "Non-veg", "Mix": "Veg & non-veg mix" },
       full: { Sun: "Sunday", Mon: "Monday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday", Sat: "Saturday" },
       // Built-in copy of the weekly menu, used only if the 'Weekly menu' sheet tab can't be reached.
       menuWeek: "2026-11-22",
       menuRows: [["Veg", "Lunch", "Sun", "Plain rice, 2 butter roti, Dal, 1 mix veg, 1 paneer sabji, Salad, 1 gulab jamun"], ["Veg", "Lunch", "Mon", "Plain rice, 2 butter roti, Dal, 1 mix veg, 1 rajma sabji, Salad, 1 gulab jamun"], ["Veg", "Lunch", "Wed", "Plain rice, 2 butter roti, Dal, 1 mix veg, 1 chhole, Salad, 1 gulab jamun"], ["Veg", "Lunch", "Thu", "Jeera rice, 2 butter roti, Dal, 1 mix veg, 1 rajma, Paneer, 1 gulab jamun"], ["Veg", "Lunch", "Fri", "Fried rice, 2 butter roti, Dal, 1 mix veg, 1 rajma, Salad, 1 gulab jamun"], ["Veg", "Lunch", "Sat", "Plain rice, 2 butter roti, Dal, 1 mix veg, 1 chhole, Salad, 1 gulab jamun"], ["Veg", "Dinner", "Sun", "Plain rice, 2 butter roti, Dal, 1 chhole, 1 paneer sabji, Salad, 1 gulab jamun"], ["Veg", "Dinner", "Mon", "Plain rice, 2 butter roti, Dal, 1 mix veg, Aloo matar, Salad, 1 gulab jamun"], ["Veg", "Dinner", "Wed", "Plain rice, 2 butter roti, Dal, Rajma, 1 seasonal veg, Salad, 1 gulab jamun"], ["Veg", "Dinner", "Thu", "Plain rice, Poori (5 pcs), Aloo matar sabji, Kheer, 1 gulab jamun, Salad"], ["Veg", "Dinner", "Fri", "Fried rice, 2 butter roti, Dal, 1 paneer sabji, Rajma, Salad, 1 gulab jamun"], ["Veg", "Dinner", "Sat", "Plain rice, 2 butter roti, Dal, 1 seasonal veg, Rajma, Salad, 1 gulab jamun"], ["Non-veg", "Lunch", "Sun", "Plain rice, 2 butter roti, Fish curry, Salad, 1 gulab jamun"], ["Non-veg", "Lunch", "Mon", "Plain rice, 2 butter roti, Chicken curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Lunch", "Wed", "Plain rice, 2 butter roti, Fish curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Lunch", "Thu", "Jeera rice, 2 butter roti, Egg curry (2 pcs), 1 gulab jamun"], ["Non-veg", "Lunch", "Fri", "Fried rice, 2 butter roti, Chicken curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Lunch", "Sat", "Plain rice, 2 butter roti, Fish curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Dinner", "Sun", "Plain rice, 2 butter roti, Chicken curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Dinner", "Mon", "Plain rice, 2 butter roti, Fish curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Dinner", "Wed", "Plain rice, 2 butter roti, Egg curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Dinner", "Thu", "Plain rice, 2 butter roti, Chicken curry (2 pcs), 1 gulab jamun, Salad"], ["Non-veg", "Dinner", "Fri", "Fried rice, 2 butter roti, Fish curry (2 pcs), Salad, 1 gulab jamun"], ["Non-veg", "Dinner", "Sat", "Plain rice, 2 butter roti, Chicken curry (2 pcs), Salad, 1 gulab jamun"], ["Mix", "Lunch", "Sun", "Plain rice, 2 butter roti, Dal, Fish curry (2 pcs), Salad, 1 gulab jamun"], ["Mix", "Lunch", "Mon", "Plain rice, 2 butter roti, Dal, 1 mix veg, 1 rajma sabji, Salad, 1 gulab jamun"], ["Mix", "Lunch", "Wed", "Plain rice, 2 butter roti, Egg curry (2 pcs), 1 gulab jamun"], ["Mix", "Lunch", "Thu", "Jeera rice, 2 butter roti, Dal, 1 mix veg, 1 rajma, Paneer, 1 gulab jamun"], ["Mix", "Lunch", "Fri", "Fried rice, 2 butter roti, Dal, Chicken curry (2 pcs), Salad, 1 gulab jamun"], ["Mix", "Lunch", "Sat", "Plain rice, 2 butter roti, Dal, 1 mix veg, 1 chhole, Salad, 1 gulab jamun"], ["Mix", "Dinner", "Sun", "Plain rice, 2 butter roti, Chicken curry (2 pcs), Salad, 1 gulab jamun"], ["Mix", "Dinner", "Mon", "Plain rice, 2 butter roti, Dal, 1 mix veg, Aloo matar, Salad, 1 gulab jamun"], ["Mix", "Dinner", "Wed", "Plain rice, 2 butter roti, Dal, Egg curry (2 pcs), Salad, 1 gulab jamun"], ["Mix", "Dinner", "Thu", "Plain rice, Poori (5 pcs), Aloo matar sabji, Kheer, 1 gulab jamun, Salad"], ["Mix", "Dinner", "Fri", "Fried rice, 2 butter roti, Fish curry (2 pcs), Rajma, Salad, 1 gulab jamun"], ["Mix", "Dinner", "Sat", "Plain rice, 2 butter roti, Dal, 1 seasonal veg, Rajma, Salad, 1 gulab jamun"]],
       terms: [
-        "Plans are available only for homes and offices within 1 km of our kitchen, Sunday to Saturday (closed on Tuesdays), and are paid in advance. A plan starts once we confirm your payment.",
+        "Plans are available only for homes and offices within 1 km of our kitchen, Sunday to Saturday (closed on Tuesdays), and are paid in advance.",
         "Any new plan, and any change to a plan (skip, pause or resume), must be informed to us by 8 PM on the day before it is to take effect.",
-        "At present the 1-day trial and the 3-day plan are open for booking. The 1-day trial can be taken once per customer (per mobile number).",
+        "At present only non-veg lunch plans are open for booking, as the 1-day trial or the 3-day plan. Veg, veg and non-veg mix, dinner and lunch-and-dinner plans, and longer plans, will be announced soon. The 1-day trial can be taken once per customer (per mobile number).",
+        "Add-ons: you may add extra items (such as roti, curry, rice, salad, sweet or a drink) to your plan when you subscribe, in which case they are delivered with every meal, or for any single delivery by ordering before 10 AM on the morning of that delivery. Add-ons are charged per delivery, plus GST, at the prices shown on this page.",
+        "Payment: plans and add-ons are paid online (UPI, cards or netbanking, through Razorpay). A plan is confirmed automatically once your payment is received.",
         "Veg and non-veg meals are prepared in the same kitchen.",
         "Skip a meal: you may skip a delivery date from the Manage my plan section, or by messaging us on WhatsApp, up to 8 PM on the evening before, for up to 4 skips a month. Skipped meals are added to the end of your plan.",
         "Pause and resume: you may pause and resume your plan with the same notice. Paused days are not counted against your plan and your remaining meals are retained.",
@@ -2347,7 +2649,7 @@
     };
     var DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    var st = { diet: "Non-veg", meals: "Lunch", days: {}, dur: "d3", loc: null, km: null, planNo: null };
+    var st = { diet: "Non-veg", meals: "Lunch", days: {}, dur: "d3", loc: null, km: null, planNo: null, addons: {} };
     PLAN.days.forEach(function(d){ st.days[d] = true; });
 
     var $ = function(id){ return document.getElementById(id); };
@@ -2371,6 +2673,8 @@
     tabAla.addEventListener("click", function(){ showTab("ala"); });
     tabPlans.addEventListener("click", function(){ showTab("plans"); });
 
+    function soldOut(kind, v){ return PLAN.soldOut[kind].indexOf(v) !== -1; }
+
     // ----- weekly menu (read from the 'Weekly menu' tab of the Google Sheet; built-in copy as a fallback)
     var today = new Date(); today.setHours(0, 0, 0, 0);
     var menuDay = DOW[today.getDay()]; if (PLAN.days.indexOf(menuDay) === -1) menuDay = "Wed";
@@ -2386,13 +2690,19 @@
       var h = "";
       ["Lunch", "Dinner"].forEach(function(meal){
         var t = menuText(menuDiet, meal, menuDay);
-        h += '<div class="menu-row"><span class="menu-tag l">' + meal + '</span><b>' + (t ? esc(t) : "Menu coming soon") + '</b></div>';
+        h += '<div class="menu-row"><span class="menu-tag l">' + meal + '</span><span class="mi">' + (t ? esc(t) : "Menu coming soon") + '</span></div>' +
+          (soldOut("meals", meal) ? '<div class="menu-oos">' + meal + ' plans: out of stock for now</div>' : "");
       });
+      if (soldOut("diet", menuDiet)) h = '<div class="menu-oos" style="margin-bottom:6px">' + PLAN.dietLabel[menuDiet] + ' plans: out of stock for now</div>' + h;
       $("menuBody").innerHTML = h;
       if (menuData.week) { var wd = menuData.week.split("-"); if (wd.length === 3) { var w = new Date(+wd[0], +wd[1] - 1, +wd[2]); $("menuWeek").textContent = "Menu for the week starting " + DOW[w.getDay()] + " " + w.getDate() + " " + MONTHS[w.getMonth()] + ". Tuesday is our weekly off."; } }
       Array.prototype.forEach.call($("menuDays").children, function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-d") === menuDay ? "true" : "false"); });
       Array.prototype.forEach.call($("menuDiet").children, function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-v") === menuDiet ? "true" : "false"); });
     }
+    $("menuStartBtn").addEventListener("click", function(){
+      var el = $("startPlanCard"); if (!el) return;
+      try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) { el.scrollIntoView(); }
+    });
     $("menuDays").addEventListener("click", function(e){
       var b = e.target.closest("button"); if (!b) return;
       menuDay = b.getAttribute("data-d"); renderMenu();
@@ -2431,14 +2741,48 @@
       return first ? { first: first, last: last, names: names } : null;
     }
     function planDayNames(sch){ return isShort() ? (sch ? sch.names : []) : chosenDays(); }
-    function amounts(){ var sub = totalMeals() * price(), gst = computeGst(sub); return { sub: sub, gst: gst, total: sub + gst }; }
+    function addonList(state){ return ADDONS.filter(function(a){ return state[a.id] > 0; }); }
+    function addonPerDelivery(state){ return addonList(state).reduce(function(t, a){ return t + a.price * state[a.id]; }, 0); }
+    function addonText(state){ return addonList(state).map(function(a){ return state[a.id] + "x " + a.name; }).join(", "); }
+    function amounts(){
+      var meals = totalMeals() * price(), add = addonPerDelivery(st.addons) * totalMeals(), sub = meals + add, gst = computeGst(sub);
+      return { meals: meals, add: add, sub: sub, gst: gst, total: sub + gst };
+    }
+    // add-on stepper list (used on the plan form and in "Manage my plan")
+    function buildAddons(boxId, state, onChange){
+      var box = $(boxId);
+      box.innerHTML = ADDONS.map(function(a){
+        return '<div class="addon-row"><span class="ad-name">' + esc(a.name) + '</span><span class="ad-price">&#8377;' + a.price + '</span>' +
+          '<div class="stepper" data-id="' + a.id + '"><button type="button" data-act="dec">' + minusIcon + '</button><span>0</span><button type="button" data-act="inc">' + plusIcon + '</button></div></div>';
+      }).join("");
+      box.addEventListener("click", function(e){
+        var b = e.target.closest("button[data-act]"); if (!b) return;
+        var row = b.closest(".stepper"), id = row.getAttribute("data-id");
+        state[id] = Math.max(0, Math.min(9, (state[id] || 0) + (b.getAttribute("data-act") === "inc" ? 1 : -1)));
+        row.querySelector("span").textContent = state[id];
+        onChange();
+      });
+    }
+    function resetAddons(boxId, state){
+      Object.keys(state).forEach(function(k){ delete state[k]; });
+      Array.prototype.forEach.call($(boxId).querySelectorAll(".stepper span"), function(x){ x.textContent = "0"; });
+    }
+
 
     // ----- static texts
-    $("planTerms").innerHTML = PLAN.terms.map(function(t){ return "<li>" + t.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</li>"; }).join("");
-    $("termsPlans").innerHTML = "Summi's Daily meal plans:<ul>" + $("planTerms").innerHTML + "</ul>";
+    $("termsPlans").innerHTML = "Summi's Daily meal plans:<ul>" + PLAN.terms.map(function(t){ return "<li>" + t.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</li>"; }).join("") + "</ul>";
 
     // ----- controls
+    ["planDiet", "menuDiet"].forEach(function(id){
+      Array.prototype.forEach.call($(id).children, function(b){
+        if (id === "planDiet" && soldOut("diet", b.getAttribute("data-v"))) { b.innerHTML += "<small>Out of stock</small>"; b.disabled = true; }
+      });
+    });
+    Array.prototype.forEach.call($("planMeals").children, function(b){
+      if (soldOut("meals", b.getAttribute("data-v"))) { b.innerHTML += "<small>Out of stock</small>"; b.disabled = true; }
+    });
     $("planDays").innerHTML = PLAN.days.map(function(d){ return '<button type="button" data-d="' + d + '" aria-pressed="' + !!st.days[d] + '">' + d + '</button>'; }).join("");
+    buildAddons("planAddons", st.addons, function(){ render(); });
     var durEl = $("planDur");
     durEl.innerHTML = PLAN.durations.map(function(x){
       return '<option value="' + x.id + '"' + (x.active ? "" : " disabled") + '>' + x.label + " · " + money(x.price) + " per meal" + (x.active ? "" : " (coming soon)") + "</option>";
@@ -2491,12 +2835,20 @@
         st.loc = null; st.km = null; locBtn.disabled = false; locBtn.textContent = "Couldn't get location — tap to retry"; render();
       }, { enableHighAccuracy: true, timeout: 10000 });
     });
+    var oorPlan = makeOorBox($("planHint"), "Meal plan", function(){ return nameEl.value; }, function(){ return phoneEl.value; }, "You can still order \u00e0 la carte up to " + MAX_KM + " km.");
+    addPlaceSearch(locBtn, function(loc){
+      st.loc = { lat: loc.lat, lng: loc.lng, label: loc.label }; st.km = haversineKm(KITCHEN_LAT, KITCHEN_LNG, loc.lat, loc.lng); render();
+    }, "Delivering somewhere else? Search that address:");
     function withinRange(){ return st.km !== null && st.km <= PLAN.radiusKm; }
 
     var submitEl = $("planSubmit"), hintEl = $("planHint"), hintDefault = hintEl.textContent;
+    var payingPlan = false;
+    window.__planRender = function(){ render(); };
+    function onlineMode(){ return onlineAvailable; }
     function problem(){
       if (!nameEl.value.trim()) return "Please add your name.";
       if (!isValidPhone(phoneEl.value)) return "Please enter a valid 10-digit mobile number.";
+      if (!onlineAvailable) return "Online payment is being set up. Meal plans will open for booking shortly.";
       if (!dur().active) return "This plan is not open for booking yet. Please choose the 1-day trial or the 3-day plan.";
       if (!isShort() && chosenDays().length < PLAN.minDays) return "Please pick at least " + PLAN.minDays + " days.";
       if (!startEl.value || parseISO(startEl.value) < earliest) return "New plans must be booked by 8 PM the day before. Please choose a start date of " + fmt(earliest) + " or later.";
@@ -2522,7 +2874,10 @@
       $("planSumLabel").textContent = PLAN.dietLabel[st.diet] + " · " + (st.meals === "Both" ? "Lunch & dinner" : st.meals) + " · " + d.label;
       $("planSumMeals").textContent = totalMeals() + (totalMeals() === 1 ? " meal" : " meals");
       $("planSumRate").textContent = money(price());
-      $("planSumAmount").textContent = money(a.sub);
+      $("planSumAmount").textContent = money(a.meals);
+      $("planSumAddonRow").hidden = a.add === 0;
+      $("planSumAddonLbl").textContent = "Add-ons (" + money(addonPerDelivery(st.addons)) + " × " + totalMeals() + (totalMeals() === 1 ? " delivery)" : " deliveries)");
+      $("planSumAddon").textContent = money(a.add);
       $("planSumGst").textContent = money(a.gst);
       $("planSumTotal").textContent = money(a.total);
       $("planFirst").textContent = sch ? ("First delivery: " + fmt(sch.first) + ". Plan runs until about " + fmt(sch.last) + " (skipped days are added at the end).") : "";
@@ -2532,34 +2887,20 @@
         radiusEl.className = "plan-radius " + (ok ? "ok" : "bad");
         radiusEl.textContent = ok ? ("✓ " + st.km.toFixed(2) + " km from our kitchen — you're in range") : ("✗ " + st.km.toFixed(2) + " km from our kitchen — meal plans are only within " + PLAN.radiusKm + " km");
       }
+      if (oorPlan) oorPlan.sync(st.km !== null && !withinRange(), st.km, st.loc, PLAN.radiusKm);
+      $("planPayNote").innerHTML = onlineAvailable
+        ? "Pay securely online with UPI, card or netbanking. Your plan is confirmed straight after payment. Cart offers and discounts do not apply to meal plans."
+        : "Online payment is being set up. Meal plans will open for booking shortly.";
+      $("planSubmitLabel").textContent = st.paid ? "Plan confirmed ✓" : "Pay " + money(a.total) + " online";
+      if (st.paid) { submitEl.setAttribute("aria-disabled", "true"); submitEl.removeAttribute("href"); hintEl.textContent = "Payment received ✓ Your plan number is " + st.planNo + ". Keep it to skip, pause or add extras from Manage my plan. We will contact you on WhatsApp to confirm your first delivery."; return; }
       var pr = problem();
       if (pr) { submitEl.setAttribute("aria-disabled", "true"); submitEl.removeAttribute("href"); hintEl.textContent = pr; return; }
       if (!st.planNo) st.planNo = "SP" + generateOrderNo().slice(2);
-      var sel = planDayNames(sch);
-      var msg = "Hi Summi's Kitchen! I'd like to start a Summi's Daily meal plan (Plan #" + st.planNo + "):" +
-        "\nType: " + PLAN.dietLabel[st.diet] +
-        "\nMeals: " + (st.meals === "Both" ? "Lunch & Dinner" : st.meals) +
-        "\nDays: " + sel.join(", ") +
-        "\nPlan: " + d.label + " — " + totalMeals() + " meals" +
-        "\nRate: " + money(price()) + " per meal" +
-        "\nPlan amount: " + money(a.sub) +
-        "\nGST (" + GST_PERCENT + "%): " + money(a.gst) +
-        "\nGrand total: " + money(a.total) +
-        "\nDelivery: Free (" + st.km.toFixed(2) + " km, within " + PLAN.radiusKm + " km)" +
-        "\nFirst delivery: " + fmt(sch.first) + " (until about " + fmt(sch.last) + ")" +
-        "\n\nCustomer name: " + nameEl.value.trim() +
-        "\nMobile number: " + formattedPhone(phoneEl.value) +
-        "\nDeliver to: " + addrEl.value.trim() +
-        "\nLocation pin: https://maps.google.com/?q=" + st.loc.lat.toFixed(6) + "," + st.loc.lng.toFixed(6) +
-        (noteEl.value.trim() ? ("\nNote: " + noteEl.value.trim()) : "") +
-        "\n\nI'll send the UPI payment screenshot here (" + UPI_ID + "). Please confirm my plan after payment.";
-      submitEl.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+      if (!st.planNo) st.planNo = "SP" + generateOrderNo().slice(2);
       submitEl.removeAttribute("aria-disabled");
       hintEl.textContent = hintDefault;
     }
-    submitEl.addEventListener("click", function(ev){
-      if (submitEl.getAttribute("aria-disabled") === "true") { ev.preventDefault(); return; }
-      try { localStorage.setItem("summis_planno_v1", st.planNo); $("mgPlan").value = st.planNo; $("mgPhone").value = phoneEl.value; } catch (e) {}
+    function logSubscription(){
       if (!CUSTOMER_LOG_URL) return;
       try {
         var a = amounts(), sch = schedule(), d = dur();
@@ -2568,19 +2909,83 @@
           body: JSON.stringify({
             kind: "subscription", plan: st.planNo, name: nameEl.value.trim(), phone: formattedPhone(phoneEl.value),
             address: addrEl.value.trim(), km: Math.round(st.km * 100) / 100, meals: st.meals, days: planDayNames(sch).join(","),
-            duration: d.label + " · " + st.diet, totalMeals: totalMeals(), amount: a.sub, total: a.total, start: iso(sch.first)
+            duration: d.label + " · " + st.diet, totalMeals: totalMeals(), amount: a.sub, total: a.total, start: iso(sch.first),
+            addons: a.add ? addonText(st.addons) + " (per delivery Rs " + addonPerDelivery(st.addons) + ")" : "",
+            pay: onlineMode() ? "online" : "upi"
           })
         });
       } catch (e) {}
+    }
+    // Razorpay checkout used for plan payments and add-on payments
+    function razorpayPay(o){
+      var ph = o.phone10;
+      fetch(CUSTOMER_LOG_URL + "?action=rzp_order&amount=" + Math.round(o.amount * 100) + "&order=" + encodeURIComponent(o.ref) + "&phone=" + ph)
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if (!j || !j.id) throw new Error("order");
+          loadRazorpay(function(ok){
+            if (!ok || !window.Razorpay) { o.onFail("Couldn't open the payment window. Please check your internet and try again."); return; }
+            var done = false;
+            var rz = new window.Razorpay({
+              key: j.key, amount: j.amount, currency: "INR", order_id: j.id,
+              name: "Summi's Kitchen", description: o.desc,
+              prefill: { name: o.name, contact: "+91" + ph }, theme: { color: "#8B3A1A" },
+              modal: { ondismiss: function(){ if (!done) o.onFail("Payment not completed. You have not been charged. Tap pay to try again."); } },
+              handler: function(resp){
+                done = true; o.onPaying();
+                fetch(CUSTOMER_LOG_URL + "?action=rzp_verify&order_id=" + encodeURIComponent(resp.razorpay_order_id) + "&payment_id=" + encodeURIComponent(resp.razorpay_payment_id) +
+                  "&signature=" + encodeURIComponent(resp.razorpay_signature) + "&order=" + encodeURIComponent(o.ref) + o.verifyExtra)
+                  .then(function(r){ return r.json(); })
+                  .then(function(v){ o.onPaid(resp.razorpay_payment_id, v || {}); })
+                  .catch(function(){ o.onPaid(resp.razorpay_payment_id, {}); });
+              }
+            });
+            rz.on("payment.failed", function(){ done = true; o.onFail("Payment failed. You have not been charged. Please try again."); });
+            rz.open();
+          });
+        })
+        .catch(function(){ o.onFail("Online payment isn't available right now. Please try again shortly."); });
+    }
+    submitEl.addEventListener("click", function(ev){
+      ev.preventDefault();
+      if (submitEl.getAttribute("aria-disabled") === "true") return;
+      try { localStorage.setItem("summis_planno_v1", st.planNo); $("mgPlan").value = st.planNo; $("mgPhone").value = phoneEl.value; } catch (e) {}
+      if (st.paid) return;
+      if (onlineMode() && CUSTOMER_LOG_URL) {
+        if (payingPlan) return;
+        payingPlan = true; submitEl.setAttribute("aria-disabled", "true"); hintEl.textContent = "Opening secure payment…";
+        logSubscription();
+        var a = amounts();
+        razorpayPay({
+          amount: a.total, ref: st.planNo, phone10: formattedPhone(phoneEl.value).replace(/\D/g, "").slice(-10), name: nameEl.value.trim(),
+          desc: "Meal plan #" + st.planNo, verifyExtra: "&plan=" + encodeURIComponent(st.planNo),
+          onPaying: function(){ hintEl.textContent = "Confirming payment…"; },
+          onPaid: function(payId){
+            payingPlan = false; st.paid = payId;
+            if (window.fbq) { try { fbq('track', 'Purchase', { value: a.total, currency: 'INR' }); } catch (e) {} }
+            render();
+          },
+          onFail: function(msg){ payingPlan = false; render(); hintEl.textContent = msg; }
+        });
+        return;
+      }
+      logSubscription();
     });
 
     // ----- manage my plan (skip / pause / resume)
     var mg = { act: "skip" };
     var mgDate = $("mgDate"), mgMsg = $("mgMsg"), mgBtn = $("mgSubmit");
     mgDate.min = iso(tomorrow);
-    var LABELS = { skip: ["Date to skip", "Skip this date"], pause: ["Pause from", "Pause my plan"], resume: ["Resume from", "Resume my plan"] };
+    var LABELS = { skip: ["Date to skip", "Skip this date"], pause: ["Pause from", "Pause my plan"], resume: ["Resume from", "Resume my plan"], addon: ["Date for the add-ons", "Add to my delivery"] };
+    var mgAdd = {}, mgMealSel = "Lunch";
+    buildAddons("mgAddons", mgAdd, function(){ mgMsg.textContent = ""; });
+    $("mgMeal").addEventListener("click", function(e){ var b = e.target.closest("button"); if (!b) return; mgMealSel = b.getAttribute("data-v"); Array.prototype.forEach.call($("mgMeal").children, function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); });
     function mgRefresh(){
       $("mgDateLabel").textContent = LABELS[mg.act][0]; mgBtn.textContent = LABELS[mg.act][1];
+      $("mgAddonBox").hidden = mg.act !== "addon";
+      mgDate.min = iso(mg.act === "addon" && new Date().getHours() < PLAN.addonCutoffHour ? today : tomorrow);
+      var wa = $("mgWa"); if (wa) wa.remove();
+      var pb0 = $("mgPay"); if (pb0) pb0.remove();
       Array.prototype.forEach.call($("mgAct").children, function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-v") === mg.act ? "true" : "false"); });
     }
     $("mgAct").addEventListener("click", function(e){
@@ -2595,12 +3000,52 @@
       if (!plan) return showMg("Please enter your plan number (it is in your WhatsApp plan message).", true);
       if (!mgDate.value) return showMg("Please choose a date.", true);
       var d = parseISO(mgDate.value), now = new Date();
-      if (d < tomorrow) return showMg("Please choose a date from tomorrow onwards.", true);
-      if (iso(d) === iso(tomorrow) && now.getHours() >= PLAN.cutoffHour) return showMg("Changes for tomorrow must be made before 8 PM today. Please pick a later date or message us on WhatsApp.", true);
+      if (mg.act === "addon") {
+        if (d < today) return showMg("Please choose today's date or a later date.", true);
+        if (iso(d) === iso(today) && now.getHours() >= PLAN.addonCutoffHour) return showMg("Add-ons for today must be ordered before 10 AM. Please choose tomorrow or a later date, or message us on WhatsApp.", true);
+      } else if (d < tomorrow) return showMg("Please choose a date from tomorrow onwards.", true);
+      else if (iso(d) === iso(tomorrow) && now.getHours() >= PLAN.cutoffHour) return showMg("Changes for tomorrow must be made before 8 PM today. Please pick a later date or message us on WhatsApp.", true);
       if (mg.act === "skip" && d.getDay() === 2) return showMg("Tuesday is our weekly off, so there is no delivery to skip.", true);
       if (!CUSTOMER_LOG_URL) return showMg("This isn't available right now. Please message us on WhatsApp.", true);
       var phone10 = formattedPhone(ph).replace(/\D/g, "").slice(-10);
-      mgBtn.disabled = true; showMg("Updating your plan…", false);
+      if (mg.act !== "addon") { mgBtn.disabled = true; showMg("Updating your plan…", false); }
+      if (mg.act === "addon") {
+        var items = addonList(mgAdd).map(function(a){ return a.id + ":" + mgAdd[a.id]; }).join(",");
+        if (!items) { return showMg("Please choose at least one add-on.", true); }
+        var per = addonPerDelivery(mgAdd), gstA = computeGst(per);
+        mgBtn.disabled = true; showMg("Adding your add-ons…", false);
+        fetch(CUSTOMER_LOG_URL + "?action=plan_addon&plan=" + encodeURIComponent(plan) + "&phone=" + phone10 + "&date=" + mgDate.value + "&meal=" + mgMealSel + "&items=" + encodeURIComponent(items))
+          .then(function(r){ return r.json(); })
+          .then(function(j){
+            mgBtn.disabled = false;
+            if (j && j.ok) {
+              try { localStorage.setItem("summis_planno_v1", plan); } catch (e) {}
+              showMg(j.message || "Done.", false);
+              var old = $("mgWa"); if (old) old.remove();
+              var old2 = $("mgPay"); if (old2) old2.remove();
+              var total = per + gstA, rid = j.rid;
+              if (!onlineAvailable) showMg("Added ✓ Online payment is being set up, so please message us on WhatsApp to pay for these add-ons.", false);
+              if (onlineAvailable && rid) {
+                var pb = document.createElement("button"); pb.type = "button"; pb.id = "mgPay"; pb.className = "checkout-btn mg-wa";
+                pb.textContent = "Pay " + money(total) + " online";
+                pb.addEventListener("click", function(){
+                  pb.disabled = true; showMg("Opening secure payment…", false);
+                  razorpayPay({
+                    amount: total, ref: "ADDON-" + plan + "-" + rid, phone10: phone10, name: "", desc: "Add-ons for plan #" + plan,
+                    verifyExtra: "&plan=" + encodeURIComponent(plan) + "&addon_row=" + rid,
+                    onPaying: function(){ showMg("Confirming payment…", false); },
+                    onPaid: function(payId, v){ pb.remove(); var w = $("mgWa"); if (w) w.remove(); showMg(v && v.activated ? "Payment received ✓ Your add-ons are confirmed. Thank you!" : "Payment received ✓ We will confirm your add-ons shortly. Payment ID " + payId, false); },
+                    onFail: function(msg){ pb.disabled = false; showMg(msg, true); }
+                  });
+                });
+                mgMsg.parentNode.insertBefore(pb, mgMsg.nextSibling);
+              }
+              resetAddons("mgAddons", mgAdd);
+            } else showMg((j && j.message) || "We couldn't add the add-ons. Please message us on WhatsApp.", true);
+          })
+          .catch(function(){ mgBtn.disabled = false; showMg("We couldn't reach our server. Please check your internet or message us on WhatsApp.", true); });
+        return;
+      }
       fetch(CUSTOMER_LOG_URL + "?action=plan_manage&op=" + mg.act + "&plan=" + encodeURIComponent(plan) + "&phone=" + phone10 + "&date=" + mgDate.value)
         .then(function(r){ return r.json(); })
         .then(function(j){
